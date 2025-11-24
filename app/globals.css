@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 15, 23, 42; /* Slate 900 */
+  --background-end-rgb: 2, 6, 23;    /* Slate 950 */
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-dark-900/60 backdrop-blur-md border border-white/5;
+  }
+  
+  .glass-card {
+    @apply bg-dark-800/40 backdrop-blur-sm border border-white/5 hover:bg-dark-800/60 transition-all duration-300;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+  }
+
+  /* 极简滚动条 */
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+}
