@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
 
 # vercel
@@ -36,5 +37,16 @@ next-env.d.ts
 /data/prompts_back.json
 /data/temp*.json
 
-
+# Prisma
 /lib/generated/prisma
+/lib/generated/client/*.node
+prisma/dev.db
+prisma/dev.db-journal
+
+# IDE & Editor
+.specstory/
+.claude/
+
+# Temp files
+*.html
+00-*.md

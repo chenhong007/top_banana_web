@@ -2,20 +2,20 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Prompt {
   id          String   @id @default(uuid())
-  title       String   // Maps to frontend effect
+  effect      String   // Effect/title description
   description String
-  content     String   // The actual prompt text
+  prompt      String   // The actual prompt content
   source      String
   imageUrl    String?
   createdAt   DateTime @default(now())

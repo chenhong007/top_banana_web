@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readPrompts, writePrompts, generateId } from '@/lib/storage';
-import { PromptItem, CreatePromptRequest } from '@/types';
+import { readPrompts, createPrompt } from '@/lib/storage';
+import { CreatePromptRequest } from '@/types';
 
 // GET all prompts
 export async function GET() {
   try {
-    const prompts = readPrompts();
+    const prompts = await readPrompts();
     return NextResponse.json({
       success: true,
       data: prompts,
     });
   } catch (error) {
+    console.error('GET /api/prompts error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch prompts' },
       { status: 500 }
@@ -23,41 +24,32 @@ export async function POST(request: NextRequest) {
   try {
     const body: CreatePromptRequest = await request.json();
     
-    // Validation
-    if (!body.effect || !body.description || !body.prompt || !body.source) {
+    // Validation - only effect and prompt are required
+    if (!body.effect || !body.prompt) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: 'Missing required fields (effect, prompt)' },
         { status: 400 }
       );
     }
     
-    const prompts = readPrompts();
-    const now = new Date().toISOString();
-    
-    const newPrompt: PromptItem = {
-      id: generateId(),
+    const newPrompt = await createPrompt({
       effect: body.effect,
-      description: body.description,
+      description: body.description || '',
       tags: body.tags || [],
       prompt: body.prompt,
-      source: body.source,
+      source: body.source || 'unknown',
       imageUrl: body.imageUrl,
-      createdAt: now,
-      updatedAt: now,
-    };
-    
-    prompts.unshift(newPrompt); // Add to beginning
-    writePrompts(prompts);
+    });
     
     return NextResponse.json({
       success: true,
       data: newPrompt,
     });
   } catch (error) {
+    console.error('POST /api/prompts error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to create prompt' },
       { status: 500 }
     );
   }
 }
-

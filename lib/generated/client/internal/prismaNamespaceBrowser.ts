@@ -68,9 +68,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const PromptScalarFieldEnum = {
   id: 'id',
-  title: 'title',
+  effect: 'effect',
   description: 'description',
-  content: 'content',
+  prompt: 'prompt',
   source: 'source',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',

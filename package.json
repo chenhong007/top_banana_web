@@ -6,11 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "build:frontend": "node scripts/build-frontend.js",
+    "build:full": "cross-env DEPLOY_MODE=full next build",
     "preview": "node scripts/preview-static.js",
     "deploy:manual": "bash scripts/deploy-gh-pages.sh",
     "start": "next start",
     "lint": "next lint",
-    "export": "npm run build:frontend"
+    "export": "npm run build:frontend",
+    "docker:build": "docker build -t topai .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env topai",
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma db push && next build"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

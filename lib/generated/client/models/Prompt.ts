@@ -26,9 +26,9 @@ export type AggregatePrompt = {
 
 export type PromptMinAggregateOutputType = {
   id: string | null
-  title: string | null
+  effect: string | null
   description: string | null
-  content: string | null
+  prompt: string | null
   source: string | null
   imageUrl: string | null
   createdAt: Date | null
@@ -37,9 +37,9 @@ export type PromptMinAggregateOutputType = {
 
 export type PromptMaxAggregateOutputType = {
   id: string | null
-  title: string | null
+  effect: string | null
   description: string | null
-  content: string | null
+  prompt: string | null
   source: string | null
   imageUrl: string | null
   createdAt: Date | null
@@ -48,9 +48,9 @@ export type PromptMaxAggregateOutputType = {
 
 export type PromptCountAggregateOutputType = {
   id: number
-  title: number
+  effect: number
   description: number
-  content: number
+  prompt: number
   source: number
   imageUrl: number
   createdAt: number
@@ -61,9 +61,9 @@ export type PromptCountAggregateOutputType = {
 
 export type PromptMinAggregateInputType = {
   id?: true
-  title?: true
+  effect?: true
   description?: true
-  content?: true
+  prompt?: true
   source?: true
   imageUrl?: true
   createdAt?: true
@@ -72,9 +72,9 @@ export type PromptMinAggregateInputType = {
 
 export type PromptMaxAggregateInputType = {
   id?: true
-  title?: true
+  effect?: true
   description?: true
-  content?: true
+  prompt?: true
   source?: true
   imageUrl?: true
   createdAt?: true
@@ -83,9 +83,9 @@ export type PromptMaxAggregateInputType = {
 
 export type PromptCountAggregateInputType = {
   id?: true
-  title?: true
+  effect?: true
   description?: true
-  content?: true
+  prompt?: true
   source?: true
   imageUrl?: true
   createdAt?: true
@@ -167,9 +167,9 @@ export type PromptGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type PromptGroupByOutputType = {
   id: string
-  title: string
+  effect: string
   description: string
-  content: string
+  prompt: string
   source: string
   imageUrl: string | null
   createdAt: Date
@@ -199,9 +199,9 @@ export type PromptWhereInput = {
   OR?: Prisma.PromptWhereInput[]
   NOT?: Prisma.PromptWhereInput | Prisma.PromptWhereInput[]
   id?: Prisma.StringFilter<"Prompt"> | string
-  title?: Prisma.StringFilter<"Prompt"> | string
+  effect?: Prisma.StringFilter<"Prompt"> | string
   description?: Prisma.StringFilter<"Prompt"> | string
-  content?: Prisma.StringFilter<"Prompt"> | string
+  prompt?: Prisma.StringFilter<"Prompt"> | string
   source?: Prisma.StringFilter<"Prompt"> | string
   imageUrl?: Prisma.StringNullableFilter<"Prompt"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Prompt"> | Date | string
@@ -211,9 +211,9 @@ export type PromptWhereInput = {
 
 export type PromptOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
+  effect?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  prompt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -226,9 +226,9 @@ export type PromptWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PromptWhereInput | Prisma.PromptWhereInput[]
   OR?: Prisma.PromptWhereInput[]
   NOT?: Prisma.PromptWhereInput | Prisma.PromptWhereInput[]
-  title?: Prisma.StringFilter<"Prompt"> | string
+  effect?: Prisma.StringFilter<"Prompt"> | string
   description?: Prisma.StringFilter<"Prompt"> | string
-  content?: Prisma.StringFilter<"Prompt"> | string
+  prompt?: Prisma.StringFilter<"Prompt"> | string
   source?: Prisma.StringFilter<"Prompt"> | string
   imageUrl?: Prisma.StringNullableFilter<"Prompt"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Prompt"> | Date | string
@@ -238,9 +238,9 @@ export type PromptWhereUniqueInput = Prisma.AtLeast<{
 
 export type PromptOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
+  effect?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  prompt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -255,9 +255,9 @@ export type PromptScalarWhereWithAggregatesInput = {
   OR?: Prisma.PromptScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PromptScalarWhereWithAggregatesInput | Prisma.PromptScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
-  title?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
+  effect?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
   description?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
-  content?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
+  prompt?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
   source?: Prisma.StringWithAggregatesFilter<"Prompt"> | string
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Prompt"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Prompt"> | Date | string
@@ -266,9 +266,9 @@ export type PromptScalarWhereWithAggregatesInput = {
 
 export type PromptCreateInput = {
   id?: string
-  title: string
+  effect: string
   description: string
-  content: string
+  prompt: string
   source: string
   imageUrl?: string | null
   createdAt?: Date | string
@@ -278,9 +278,9 @@ export type PromptCreateInput = {
 
 export type PromptUncheckedCreateInput = {
   id?: string
-  title: string
+  effect: string
   description: string
-  content: string
+  prompt: string
   source: string
   imageUrl?: string | null
   createdAt?: Date | string
@@ -290,9 +290,9 @@ export type PromptUncheckedCreateInput = {
 
 export type PromptUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,9 +302,9 @@ export type PromptUpdateInput = {
 
 export type PromptUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -314,9 +314,9 @@ export type PromptUncheckedUpdateInput = {
 
 export type PromptCreateManyInput = {
   id?: string
-  title: string
+  effect: string
   description: string
-  content: string
+  prompt: string
   source: string
   imageUrl?: string | null
   createdAt?: Date | string
@@ -325,9 +325,9 @@ export type PromptCreateManyInput = {
 
 export type PromptUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -336,9 +336,9 @@ export type PromptUpdateManyMutationInput = {
 
 export type PromptUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,9 +347,9 @@ export type PromptUncheckedUpdateManyInput = {
 
 export type PromptCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
+  effect?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  prompt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -358,9 +358,9 @@ export type PromptCountOrderByAggregateInput = {
 
 export type PromptMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
+  effect?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  prompt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -369,9 +369,9 @@ export type PromptMaxOrderByAggregateInput = {
 
 export type PromptMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
+  effect?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  prompt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -440,9 +440,9 @@ export type PromptUncheckedUpdateManyWithoutTagsNestedInput = {
 
 export type PromptCreateWithoutTagsInput = {
   id?: string
-  title: string
+  effect: string
   description: string
-  content: string
+  prompt: string
   source: string
   imageUrl?: string | null
   createdAt?: Date | string
@@ -451,9 +451,9 @@ export type PromptCreateWithoutTagsInput = {
 
 export type PromptUncheckedCreateWithoutTagsInput = {
   id?: string
-  title: string
+  effect: string
   description: string
-  content: string
+  prompt: string
   source: string
   imageUrl?: string | null
   createdAt?: Date | string
@@ -486,9 +486,9 @@ export type PromptScalarWhereInput = {
   OR?: Prisma.PromptScalarWhereInput[]
   NOT?: Prisma.PromptScalarWhereInput | Prisma.PromptScalarWhereInput[]
   id?: Prisma.StringFilter<"Prompt"> | string
-  title?: Prisma.StringFilter<"Prompt"> | string
+  effect?: Prisma.StringFilter<"Prompt"> | string
   description?: Prisma.StringFilter<"Prompt"> | string
-  content?: Prisma.StringFilter<"Prompt"> | string
+  prompt?: Prisma.StringFilter<"Prompt"> | string
   source?: Prisma.StringFilter<"Prompt"> | string
   imageUrl?: Prisma.StringNullableFilter<"Prompt"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Prompt"> | Date | string
@@ -497,9 +497,9 @@ export type PromptScalarWhereInput = {
 
 export type PromptUpdateWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -508,9 +508,9 @@ export type PromptUpdateWithoutTagsInput = {
 
 export type PromptUncheckedUpdateWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -519,9 +519,9 @@ export type PromptUncheckedUpdateWithoutTagsInput = {
 
 export type PromptUncheckedUpdateManyWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
+  effect?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.StringFieldUpdateOperationsInput | string
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
   source?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -561,9 +561,9 @@ export type PromptCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Ext
 
 export type PromptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  title?: boolean
+  effect?: boolean
   description?: boolean
-  content?: boolean
+  prompt?: boolean
   source?: boolean
   imageUrl?: boolean
   createdAt?: boolean
@@ -574,9 +574,9 @@ export type PromptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type PromptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  title?: boolean
+  effect?: boolean
   description?: boolean
-  content?: boolean
+  prompt?: boolean
   source?: boolean
   imageUrl?: boolean
   createdAt?: boolean
@@ -585,9 +585,9 @@ export type PromptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type PromptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  title?: boolean
+  effect?: boolean
   description?: boolean
-  content?: boolean
+  prompt?: boolean
   source?: boolean
   imageUrl?: boolean
   createdAt?: boolean
@@ -596,16 +596,16 @@ export type PromptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type PromptSelectScalar = {
   id?: boolean
-  title?: boolean
+  effect?: boolean
   description?: boolean
-  content?: boolean
+  prompt?: boolean
   source?: boolean
   imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PromptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "content" | "source" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["prompt"]>
+export type PromptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "effect" | "description" | "prompt" | "source" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["prompt"]>
 export type PromptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tags?: boolean | Prisma.Prompt$tagsArgs<ExtArgs>
   _count?: boolean | Prisma.PromptCountOutputTypeDefaultArgs<ExtArgs>
@@ -620,9 +620,9 @@ export type $PromptPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    title: string
+    effect: string
     description: string
-    content: string
+    prompt: string
     source: string
     imageUrl: string | null
     createdAt: Date
@@ -1052,9 +1052,9 @@ export interface Prisma__PromptClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface PromptFieldRefs {
   readonly id: Prisma.FieldRef<"Prompt", 'String'>
-  readonly title: Prisma.FieldRef<"Prompt", 'String'>
+  readonly effect: Prisma.FieldRef<"Prompt", 'String'>
   readonly description: Prisma.FieldRef<"Prompt", 'String'>
-  readonly content: Prisma.FieldRef<"Prompt", 'String'>
+  readonly prompt: Prisma.FieldRef<"Prompt", 'String'>
   readonly source: Prisma.FieldRef<"Prompt", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Prompt", 'String'>
   readonly createdAt: Prisma.FieldRef<"Prompt", 'DateTime'>

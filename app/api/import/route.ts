@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readPrompts, writePrompts, generateId } from '@/lib/storage';
-import { PromptItem } from '@/types';
+import { readPrompts, bulkCreatePrompts, generateId } from '@/lib/storage';
+import prisma from '@/lib/db';
 
 // POST import prompts from external data
 export async function POST(request: NextRequest) {
@@ -15,11 +15,10 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const existingPrompts = readPrompts();
     const now = new Date().toISOString();
     
     // Transform and validate imported items
-    const newPrompts: PromptItem[] = items.map((item: any) => {
+    const newPrompts = items.map((item: any) => {
       // Flexible field mapping
       const effect = item.effect || item.效果 || item.title || '';
       const description = item.description || item.描述 || item.desc || item.title || '';
@@ -35,53 +34,61 @@ export async function POST(request: NextRequest) {
       }
       
       return {
-        id: item.id || generateId(),
         effect,
         description,
         tags: Array.isArray(parsedTags) ? parsedTags : [],
         prompt,
         source,
         imageUrl,
-        createdAt: item.createdAt || item.创建时间 || item.更新时间 || now,
-        updatedAt: now,
       };
     });
     
-    // Validate required fields
+    // Validate required fields - only effect and prompt are required
     const invalidItems = newPrompts.filter(
-      item => !item.effect || !item.description || !item.prompt || !item.source
+      item => !item.effect || !item.prompt
     );
     
     if (invalidItems.length > 0) {
       return NextResponse.json(
         { 
           success: false, 
-          error: `${invalidItems.length} items missing required fields`,
+          error: `${invalidItems.length} items missing required fields (effect, prompt)`,
           invalidItems: invalidItems.map(item => item.effect || 'Unknown')
         },
         { status: 400 }
       );
     }
     
-    let finalPrompts: PromptItem[];
+    // Set default values for optional fields
+    newPrompts.forEach(item => {
+      item.description = item.description || '';
+      item.source = item.source || 'unknown';
+    });
+    
+    let importedCount = 0;
     
     if (mode === 'replace') {
-      // Replace all existing data
-      finalPrompts = newPrompts;
+      // Delete all existing data first
+      await prisma.prompt.deleteMany();
+      // Also clean up orphaned tags
+      await prisma.tag.deleteMany({ where: { prompts: { none: {} } } });
+      // Import new data
+      importedCount = await bulkCreatePrompts(newPrompts);
     } else {
       // Merge with existing data (avoid duplicates by checking effect)
+      const existingPrompts = await readPrompts();
       const existingEffects = new Set(existingPrompts.map(p => p.effect));
       const uniqueNewPrompts = newPrompts.filter(p => !existingEffects.has(p.effect));
-      finalPrompts = [...uniqueNewPrompts, ...existingPrompts];
+      importedCount = await bulkCreatePrompts(uniqueNewPrompts);
     }
     
-    writePrompts(finalPrompts);
+    const totalCount = (await readPrompts()).length;
     
     return NextResponse.json({
       success: true,
       data: {
-        imported: mode === 'replace' ? newPrompts.length : finalPrompts.length - existingPrompts.length,
-        total: finalPrompts.length,
+        imported: importedCount,
+        total: totalCount,
         mode,
       },
     });
@@ -93,4 +100,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

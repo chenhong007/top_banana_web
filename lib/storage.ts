@@ -1,64 +1,212 @@
+/**
+ * Storage Layer
+ * Handles all prompt data persistence using database
+ */
+
 import { PromptItem } from '@/types';
-import fs from 'fs';
-import path from 'path';
-import { STORAGE } from './constants';
+import prisma from './db';
 
-const DATA_DIR = path.join(process.cwd(), STORAGE.DATA_DIR);
-const DATA_FILE = path.join(DATA_DIR, STORAGE.PROMPTS_FILE);
-
-// Ensure data directory exists
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
-
-// Read all prompts from storage
-export function readPrompts(): PromptItem[] {
-  ensureDataDir();
-  
-  if (!fs.existsSync(DATA_FILE)) {
-    return [];
-  }
-  
+/**
+ * Read all prompts from database
+ */
+export async function readPrompts(): Promise<PromptItem[]> {
   try {
-    const data = fs.readFileSync(DATA_FILE, 'utf-8');
-    const rawData = JSON.parse(data);
-    
-    // Normalize field names for backward compatibility
-    return rawData.map((item: any) => ({
-      id: item.id,
-      effect: item.effect || item.title || '',
-      description: item.description || '',
-      tags: Array.isArray(item.tags) 
-        ? item.tags 
-        : (typeof item.category === 'string' ? [item.category] : []),
-      prompt: item.prompt || '',
-      source: item.source || item.link || '',
-      imageUrl: item.imageUrl || item.preview || item.image || '',
-      createdAt: item.createdAt || new Date().toISOString(),
-      updatedAt: item.updatedAt || new Date().toISOString(),
+    const prompts = await prisma.prompt.findMany({
+      include: { tags: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return prompts.map((p) => ({
+      id: p.id,
+      effect: p.effect,
+      description: p.description,
+      tags: p.tags.map((t) => t.name),
+      prompt: p.prompt,
+      source: p.source,
+      imageUrl: p.imageUrl || undefined,
+      createdAt: p.createdAt.toISOString(),
+      updatedAt: p.updatedAt.toISOString(),
     }));
   } catch (error) {
-    console.error('Error reading prompts:', error);
+    console.error('Error reading prompts from database:', error);
     return [];
   }
 }
 
-// Write prompts to storage
-export function writePrompts(prompts: PromptItem[]): void {
-  ensureDataDir();
-  
+/**
+ * Get a single prompt by ID
+ */
+export async function getPromptById(id: string): Promise<PromptItem | null> {
   try {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(prompts, null, 2), 'utf-8');
+    const prompt = await prisma.prompt.findUnique({
+      where: { id },
+      include: { tags: true },
+    });
+
+    if (!prompt) return null;
+
+    return {
+      id: prompt.id,
+      effect: prompt.effect,
+      description: prompt.description,
+      tags: prompt.tags.map((t) => t.name),
+      prompt: prompt.prompt,
+      source: prompt.source,
+      imageUrl: prompt.imageUrl || undefined,
+      createdAt: prompt.createdAt.toISOString(),
+      updatedAt: prompt.updatedAt.toISOString(),
+    };
   } catch (error) {
-    console.error('Error writing prompts:', error);
-    throw new Error('Failed to save prompts');
+    console.error('Error getting prompt by id:', error);
+    return null;
   }
 }
 
-// Generate unique ID
+/**
+ * Create a new prompt
+ */
+export async function createPrompt(
+  data: Omit<PromptItem, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<PromptItem> {
+  const prompt = await prisma.prompt.create({
+    data: {
+      effect: data.effect,
+      description: data.description,
+      prompt: data.prompt,
+      source: data.source,
+      imageUrl: data.imageUrl || null,
+      tags: {
+        connectOrCreate: data.tags.map((name) => ({
+          where: { name },
+          create: { name },
+        })),
+      },
+    },
+    include: { tags: true },
+  });
+
+  return {
+    id: prompt.id,
+    effect: prompt.effect,
+    description: prompt.description,
+    tags: prompt.tags.map((t) => t.name),
+    prompt: prompt.prompt,
+    source: prompt.source,
+    imageUrl: prompt.imageUrl || undefined,
+    createdAt: prompt.createdAt.toISOString(),
+    updatedAt: prompt.updatedAt.toISOString(),
+  };
+}
+
+/**
+ * Update an existing prompt
+ */
+export async function updatePrompt(
+  id: string,
+  data: Partial<Omit<PromptItem, 'id' | 'createdAt' | 'updatedAt'>>
+): Promise<PromptItem | null> {
+  try {
+    // First disconnect all existing tags if tags are being updated
+    if (data.tags) {
+      await prisma.prompt.update({
+        where: { id },
+        data: { tags: { set: [] } },
+      });
+    }
+
+    const prompt = await prisma.prompt.update({
+      where: { id },
+      data: {
+        ...(data.effect !== undefined && { effect: data.effect }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.prompt !== undefined && { prompt: data.prompt }),
+        ...(data.source !== undefined && { source: data.source }),
+        ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl || null }),
+        ...(data.tags && {
+          tags: {
+            connectOrCreate: data.tags.map((name) => ({
+              where: { name },
+              create: { name },
+            })),
+          },
+        }),
+      },
+      include: { tags: true },
+    });
+
+    return {
+      id: prompt.id,
+      effect: prompt.effect,
+      description: prompt.description,
+      tags: prompt.tags.map((t) => t.name),
+      prompt: prompt.prompt,
+      source: prompt.source,
+      imageUrl: prompt.imageUrl || undefined,
+      createdAt: prompt.createdAt.toISOString(),
+      updatedAt: prompt.updatedAt.toISOString(),
+    };
+  } catch (error) {
+    console.error('Error updating prompt:', error);
+    return null;
+  }
+}
+
+/**
+ * Delete a prompt by ID
+ */
+export async function deletePrompt(id: string): Promise<boolean> {
+  try {
+    await prisma.prompt.delete({ where: { id } });
+    return true;
+  } catch (error) {
+    console.error('Error deleting prompt:', error);
+    return false;
+  }
+}
+
+/**
+ * Bulk create prompts (for import functionality)
+ */
+export async function bulkCreatePrompts(
+  items: Omit<PromptItem, 'id' | 'createdAt' | 'updatedAt'>[]
+): Promise<number> {
+  let count = 0;
+
+  for (const item of items) {
+    try {
+      await prisma.prompt.create({
+        data: {
+          effect: item.effect,
+          description: item.description,
+          prompt: item.prompt,
+          source: item.source,
+          imageUrl: item.imageUrl || null,
+          tags: {
+            connectOrCreate: item.tags.map((name) => ({
+              where: { name },
+              create: { name },
+            })),
+          },
+        },
+      });
+      count++;
+    } catch (error) {
+      console.error(`Failed to import prompt "${item.effect}":`, error);
+    }
+  }
+
+  return count;
+}
+
+/**
+ * Generate unique ID (kept for compatibility)
+ */
 export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
+// Legacy sync functions - deprecated, will be removed
+// These are kept temporarily for backward compatibility during migration
+export function writePrompts(_prompts: PromptItem[]): void {
+  console.warn('writePrompts is deprecated. Use individual create/update/delete methods.');
+}

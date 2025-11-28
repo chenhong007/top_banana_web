@@ -8,13 +8,16 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const APP_DIR = path.join(__dirname, '../app');
+const ROOT_DIR = path.join(__dirname, '..');
 const ADMIN_DIR = path.join(APP_DIR, '(admin)');
 const API_DIR = path.join(APP_DIR, 'api');
+const MIDDLEWARE_FILE = path.join(ROOT_DIR, 'middleware.ts');
 const TEMP_DIR = path.join(__dirname, '../temp_exclude');
 
 // Backup directory names
 const ADMIN_BACKUP = path.join(TEMP_DIR, '(admin)');
 const API_BACKUP = path.join(TEMP_DIR, 'api');
+const MIDDLEWARE_BACKUP = path.join(TEMP_DIR, 'middleware.ts');
 
 console.log('🚀 Starting frontend-only build process...\n');
 
@@ -24,8 +27,8 @@ if (!fs.existsSync(TEMP_DIR)) {
   fs.mkdirSync(TEMP_DIR, { recursive: true });
 }
 
-// Step 2: Move admin and api directories
-console.log('📦 Moving admin and API directories to temporary location...');
+// Step 2: Move admin, api directories and middleware
+console.log('📦 Moving admin, API directories and middleware to temporary location...');
 try {
   if (fs.existsSync(ADMIN_DIR)) {
     fs.renameSync(ADMIN_DIR, ADMIN_BACKUP);
@@ -34,6 +37,10 @@ try {
   if (fs.existsSync(API_DIR)) {
     fs.renameSync(API_DIR, API_BACKUP);
     console.log('   ✓ Moved app/api');
+  }
+  if (fs.existsSync(MIDDLEWARE_FILE)) {
+    fs.renameSync(MIDDLEWARE_FILE, MIDDLEWARE_BACKUP);
+    console.log('   ✓ Moved middleware.ts');
   }
 } catch (error) {
   console.error('❌ Error moving directories:', error.message);
@@ -46,7 +53,7 @@ console.log('\n🔨 Building static frontend...');
 try {
   execSync('next build', {
     stdio: 'inherit',
-    env: { ...process.env, NEXT_PUBLIC_DEPLOY_ENV: 'frontend' }
+    env: { ...process.env, DEPLOY_MODE: 'frontend', NEXT_PUBLIC_DEPLOY_ENV: 'frontend' }
   });
   console.log('\n✅ Build completed successfully!');
 } catch (error) {
@@ -56,7 +63,7 @@ try {
 }
 
 // Step 4: Restore directories
-console.log('\n📂 Restoring admin and API directories...');
+console.log('\n📂 Restoring admin, API directories and middleware...');
 restoreDirectories();
 
 console.log('\n🎉 Frontend build completed! Static files are in the "out" directory.');
@@ -72,6 +79,10 @@ function restoreDirectories() {
     if (fs.existsSync(API_BACKUP)) {
       fs.renameSync(API_BACKUP, API_DIR);
       console.log('   ✓ Restored app/api');
+    }
+    if (fs.existsSync(MIDDLEWARE_BACKUP)) {
+      fs.renameSync(MIDDLEWARE_BACKUP, MIDDLEWARE_FILE);
+      console.log('   ✓ Restored middleware.ts');
     }
     // Clean up temp directory if empty
     if (fs.existsSync(TEMP_DIR) && fs.readdirSync(TEMP_DIR).length === 0) {

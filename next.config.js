@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+
+// Deployment mode: 'frontend' for static export, 'full' for complete app with admin
+const deployMode = process.env.DEPLOY_MODE || 'full';
+
+const baseConfig = {
   reactStrictMode: true,
-  output: 'export',
-  // Set basePath and trailingSlash for better static hosting compatibility
-  basePath: '/top_banana_web',
-  trailingSlash: true,
-  // Allow importing images from external domains
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -15,10 +14,30 @@ const nextConfig = {
       },
     ],
   },
-  // Environment variables for frontend-only deployment
-  env: {
-    NEXT_PUBLIC_DEPLOY_ENV: process.env.NEXT_PUBLIC_DEPLOY_ENV || 'frontend',
-  },
-}
+};
 
-module.exports = nextConfig
+// Frontend-only static export configuration
+const frontendConfig = {
+  ...baseConfig,
+  output: 'export',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  trailingSlash: true,
+  env: {
+    NEXT_PUBLIC_DEPLOY_ENV: 'frontend',
+  },
+};
+
+// Full application configuration (with admin + API)
+const fullConfig = {
+  ...baseConfig,
+  output: 'standalone',
+  env: {
+    NEXT_PUBLIC_DEPLOY_ENV: 'full',
+  },
+};
+
+const nextConfig = deployMode === 'frontend' ? frontendConfig : fullConfig;
+
+console.log(`📦 Building in ${deployMode.toUpperCase()} mode`);
+
+module.exports = nextConfig;

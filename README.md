@@ -85,39 +85,28 @@ topai/
 │   └── globals.css             # 全局样式
 ├── components/                  # 共享组件
 │   └── shared/                 # 通用组件
-│       ├── LoadingSpinner.tsx
-│       ├── EmptyState.tsx
-│       ├── Toast.tsx
-│       └── ToastContainer.tsx
-├── hooks/                       # 自定义 Hooks
-│   ├── usePrompts.ts           # 提示词数据管理
-│   ├── usePromptForm.ts        # 表单状态管理
-│   ├── useSearch.ts            # 搜索过滤逻辑
-│   ├── usePagination.ts        # 分页逻辑管理
-│   └── useImport.ts            # 导入逻辑管理
-├── services/                    # 服务层
-│   ├── prompt.service.ts       # 提示词 API 服务
-│   └── import.service.ts       # 导入 API 服务
-├── types/                       # TypeScript 类型定义
-│   ├── index.ts                # 类型导出
-│   ├── prompt.ts               # 提示词相关类型
-│   ├── api.ts                  # API 相关类型
-│   └── import.ts               # 导入相关类型
-├── lib/                         # 工具库
-│   ├── storage.ts              # 数据存储层
-│   ├── constants.ts            # 应用常量
-│   ├── styles.ts               # 样式工具
-│   ├── error-handler.ts        # 错误处理
-│   ├── csv-parser.ts           # CSV 解析
-│   └── feishu-scraper.ts       # 飞书爬虫
-├── data/                        # 数据目录（自动创建）
+├── data/                        # 数据文件
 │   └── prompts.json            # 提示词数据
-├── docs/                        # 文档
+├── docs/                        # 项目文档
+│   ├── ARCHITECTURE.md         # 架构设计
+│   ├── DEPLOYMENT.md           # 部署指南
 │   ├── IMPORT_GUIDE.md         # 导入指南
 │   ├── CSV_FORMAT_GUIDE.md     # CSV 格式说明
 │   ├── PAGINATION_GUIDE.md     # 分页功能说明
-│   └── ARCHITECTURE.md         # 架构设计文档
-└── public/                      # 静态资源
+│   ├── QUICKSTART.md           # 快速开始
+│   ├── GITHUB_PAGES_SETUP.md   # GitHub Pages 部署
+│   └── REQUIREMENTS.md         # 项目需求文档
+├── hooks/                       # 自定义 React Hooks
+├── lib/                         # 工具库和核心功能
+├── prisma/                      # Prisma 数据库配置
+│   ├── schema.prisma           # 数据库 schema
+│   └── migrations/             # 数据库迁移
+├── scripts/                     # 构建和部署脚本
+├── services/                    # API 服务层
+├── types/                       # TypeScript 类型定义
+├── docker-compose.yml           # Docker Compose 配置
+├── Dockerfile                   # Docker 镜像构建
+└── Dockerfile.frontend          # 前端 Docker 镜像
 ```
 
 ## 数据模型
@@ -178,17 +167,28 @@ DELETE /api/prompts/[id]
 
 ## 生产环境部署
 
-### 构建项目
+### 方式一：Node.js 部署
 
 ```bash
+# 构建项目
 npm run build
-```
 
-### 启动生产服务器
-
-```bash
+# 启动生产服务器
 npm start
 ```
+
+### 方式二：Docker 部署
+
+```bash
+# 使用 Docker Compose 一键部署
+docker-compose up -d
+
+# 或者手动构建和运行
+npm run docker:build
+npm run docker:run
+```
+
+详细部署指南请参考 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## 架构设计
 

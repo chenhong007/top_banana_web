@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readPrompts, writePrompts } from '@/lib/storage';
+import { getPromptById, updatePrompt, deletePrompt } from '@/lib/storage';
 import { UpdatePromptRequest } from '@/types';
 
 // GET single prompt
@@ -8,8 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const prompts = readPrompts();
-    const prompt = prompts.find(p => p.id === params.id);
+    const prompt = await getPromptById(params.id);
     
     if (!prompt) {
       return NextResponse.json(
@@ -23,6 +22,7 @@ export async function GET(
       data: prompt,
     });
   } catch (error) {
+    console.error(`GET /api/prompts/${params.id} error:`, error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch prompt' },
       { status: 500 }
@@ -37,31 +37,22 @@ export async function PUT(
 ) {
   try {
     const body: UpdatePromptRequest = await request.json();
-    const prompts = readPrompts();
-    const index = prompts.findIndex(p => p.id === params.id);
     
-    if (index === -1) {
+    const updatedPrompt = await updatePrompt(params.id, body);
+    
+    if (!updatedPrompt) {
       return NextResponse.json(
         { success: false, error: 'Prompt not found' },
         { status: 404 }
       );
     }
     
-    // Update prompt
-    prompts[index] = {
-      ...prompts[index],
-      ...body,
-      id: params.id, // Ensure ID doesn't change
-      updatedAt: new Date().toISOString(),
-    };
-    
-    writePrompts(prompts);
-    
     return NextResponse.json({
       success: true,
-      data: prompts[index],
+      data: updatedPrompt,
     });
   } catch (error) {
+    console.error(`PUT /api/prompts/${params.id} error:`, error);
     return NextResponse.json(
       { success: false, error: 'Failed to update prompt' },
       { status: 500 }
@@ -75,28 +66,24 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const prompts = readPrompts();
-    const index = prompts.findIndex(p => p.id === params.id);
+    const success = await deletePrompt(params.id);
     
-    if (index === -1) {
+    if (!success) {
       return NextResponse.json(
         { success: false, error: 'Prompt not found' },
         { status: 404 }
       );
     }
     
-    prompts.splice(index, 1);
-    writePrompts(prompts);
-    
     return NextResponse.json({
       success: true,
       data: { id: params.id },
     });
   } catch (error) {
+    console.error(`DELETE /api/prompts/${params.id} error:`, error);
     return NextResponse.json(
       { success: false, error: 'Failed to delete prompt' },
       { status: 500 }
     );
   }
 }
-

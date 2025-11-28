@@ -3,8 +3,11 @@
  * Header for admin page with navigation and actions
  */
 
-import { Plus, Home, Download, Sparkles } from 'lucide-react';
+'use client';
+
+import { Plus, Home, Download, Sparkles, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { BUTTON_STYLES, CONTAINER_STYLES } from '@/lib/styles';
 
 interface AdminHeaderProps {
@@ -13,6 +16,18 @@ interface AdminHeaderProps {
 }
 
 export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   return (
     <header className={CONTAINER_STYLES.header}>
       <div className={CONTAINER_STYLES.headerContent}>
@@ -40,6 +55,11 @@ export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
             <button onClick={onCreate} className={BUTTON_STYLES.primary}>
               <Plus className="w-4 h-4" />
               <span>新建提示词</span>
+            </button>
+            <div className="h-6 w-px bg-gray-200 mx-1" />
+            <button onClick={handleLogout} className={BUTTON_STYLES.ghost} title="退出登录">
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">退出</span>
             </button>
           </div>
         </div>
