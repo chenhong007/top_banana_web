@@ -130,7 +130,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
               ? new Date(prompt.updatedAt).toLocaleDateString('zh-CN')
               : '暂无日期'}
           </div>
-          {prompt.source && (
+          {prompt.source && prompt.source !== 'unknown' && (
             <a
               href={prompt.source}
               target="_blank"
