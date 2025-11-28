@@ -28,9 +28,9 @@ const frontendConfig = {
 };
 
 // Full application configuration (with admin + API)
+// Note: Don't use 'standalone' for Vercel deployment
 const fullConfig = {
   ...baseConfig,
-  output: 'standalone',
   env: {
     NEXT_PUBLIC_DEPLOY_ENV: 'full',
   },
