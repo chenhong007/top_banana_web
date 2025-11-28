@@ -1,12 +1,12 @@
 import { readPrompts } from '@/lib/storage';
 import HomeClient from './HomeClient';
 
-// This ensures the page is statically generated at build time
-export const dynamic = 'force-static';
+// Dynamic rendering to fetch data from database
+export const dynamic = 'force-dynamic';
 
-export default function Home() {
-  // Read prompts directly from file system during build
-  const prompts = readPrompts();
+export default async function Home() {
+  // Read prompts from database
+  const prompts = await readPrompts();
 
   return <HomeClient initialPrompts={prompts} />;
 }
