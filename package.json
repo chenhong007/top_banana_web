@@ -15,7 +15,7 @@
     "docker:build": "docker build -t topai .",
     "docker:run": "docker run -p 3000:3000 --env-file .env topai",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma db push && next build"
+    "vercel-build": "rm -rf node_modules/.prisma && prisma generate && prisma db push && next build"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
