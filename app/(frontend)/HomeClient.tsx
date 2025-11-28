@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, FileQuestion, Sparkles } from 'lucide-react';
+import { Search, FileQuestion, Sparkles, LogIn, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import PromptCard from './components/PromptCard';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -8,8 +8,10 @@ import EmptyState from '@/components/shared/EmptyState';
 import Pagination from './components/Pagination';
 import { useSearch } from '@/hooks/useSearch';
 import { usePagination } from '@/hooks/usePagination';
+import { useAuth } from '@/hooks/useAuth';
 import { PromptItem } from '@/types';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface HomeClientProps {
   initialPrompts: PromptItem[];
@@ -18,6 +20,10 @@ interface HomeClientProps {
 export default function HomeClient({ initialPrompts }: HomeClientProps) {
   const [prompts] = useState<PromptItem[]>(initialPrompts);
   const loading = false;
+  const router = useRouter();
+  
+  // Authentication state
+  const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
   
   // Search and filter
   const { 
@@ -28,6 +34,12 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
     allTags, 
     filteredPrompts 
   } = useSearch(prompts);
+  
+  // Handle logout
+  const handleLogout = async () => {
+    await logout();
+    router.refresh();
+  };
 
   // Pagination with configurable page size
   const pagination = usePagination(filteredPrompts);
@@ -66,17 +78,39 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
                 <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">top ai prompts</p>
               </div>
             </div>
-            {/* Admin link hidden in production build if deployed separately, but kept here just in case env var handles it */}
-            {process.env.NEXT_PUBLIC_DEPLOY_ENV !== 'frontend' && (
-              <Link 
-                href="/admin"
-                className="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md hover:border-tech-primary/30 group"
-              >
-                <span className="group-hover:text-tech-primary transition-colors duration-300">
-                  管理后台
-                </span>
-              </Link>
-            )}
+            {/* Auth buttons */}
+            <div className="flex items-center gap-3">
+              {authLoading ? (
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <div className="w-5 h-5 border-2 border-gray-500/30 border-t-gray-400 rounded-full animate-spin" />
+                </div>
+              ) : isAuthenticated ? (
+                <>
+                  <Link 
+                    href="/admin"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
+                  >
+                    <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
+                    <span>管理后台</span>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
+                    title="退出登录"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  href="/login"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-tech-primary/10 border border-white/10 hover:border-tech-primary/30 text-gray-300 hover:text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
+                >
+                  <LogIn className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  <span>登录管理</span>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </header>
