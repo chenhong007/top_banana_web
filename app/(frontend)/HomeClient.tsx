@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, FileQuestion, Sparkles, LogIn, Settings, LogOut } from 'lucide-react';
+import { Search, FileQuestion, Sparkles, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import PromptCard from './components/PromptCard';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -10,8 +10,9 @@ import { useSearch } from '@/hooks/useSearch';
 import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/hooks/useAuth';
 import { PromptItem } from '@/types';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { ADMIN_CONFIG } from '@/lib/constants';
 
 interface HomeClientProps {
   initialPrompts: PromptItem[];
@@ -24,6 +25,36 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
   
   // Authentication state
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  
+  // Check if admin entry should be shown based on domain and config
+  const [currentDomain, setCurrentDomain] = useState<string>('');
+  
+  useEffect(() => {
+    // Get current domain on client side
+    setCurrentDomain(window.location.hostname.toLowerCase());
+  }, []);
+  
+  // Determine if admin entry should be visible
+  const showAdminEntry = useMemo(() => {
+    // If admin entry is disabled globally, hide it
+    if (!ADMIN_CONFIG.SHOW_ADMIN_ENTRY) {
+      return false;
+    }
+    
+    // If no allowed domains configured, show for all domains
+    if (ADMIN_CONFIG.ALLOWED_DOMAINS.length === 0) {
+      return true;
+    }
+    
+    // Check if current domain is in allowed list
+    if (!currentDomain) return true; // Default to show during SSR/initial load
+    
+    return ADMIN_CONFIG.ALLOWED_DOMAINS.some(domain => 
+      currentDomain === domain || 
+      currentDomain.endsWith(`.${domain}`) ||
+      domain.includes('vercel.app') && currentDomain.includes('vercel.app')
+    );
+  }, [currentDomain]);
   
   // Search and filter
   const { 
@@ -78,39 +109,35 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
                 <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">top ai prompts</p>
               </div>
             </div>
-            {/* Auth buttons */}
-            <div className="flex items-center gap-3">
-              {authLoading ? (
-                <div className="w-8 h-8 flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-gray-500/30 border-t-gray-400 rounded-full animate-spin" />
-                </div>
-              ) : isAuthenticated ? (
-                <>
-                  <Link 
-                    href="/admin"
-                    className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
-                  >
-                    <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
-                    <span>管理后台</span>
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
-                    title="退出登录"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </>
-              ) : (
-                <Link 
-                  href="/login"
-                  className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-tech-primary/10 border border-white/10 hover:border-tech-primary/30 text-gray-300 hover:text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
-                >
-                  <LogIn className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
-                  <span>登录管理</span>
-                </Link>
-              )}
-            </div>
+            {/* Auth buttons - only show if admin entry is enabled for this domain */}
+            {showAdminEntry && (
+              <div className="flex items-center gap-3">
+                {authLoading ? (
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-gray-500/30 border-t-gray-400 rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <>
+                    <Link 
+                      href="/admin"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
+                    >
+                      <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
+                      <span>管理后台</span>
+                    </Link>
+                    {isAuthenticated && (
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
+                        title="退出登录"
+                      >
+                        <LogOut className="w-4 h-4" />
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </header>

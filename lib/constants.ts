@@ -84,3 +84,14 @@ export const STORAGE = {
   PROMPTS_FILE: 'prompts.json',
 } as const;
 
+// Admin Access Control
+export const ADMIN_CONFIG = {
+  // Whether to show admin entry by default
+  SHOW_ADMIN_ENTRY: process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY !== 'false',
+  // Allowed domains for admin access (empty array means all domains allowed)
+  ALLOWED_DOMAINS: (process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS || '')
+    .split(',')
+    .map(d => d.trim().toLowerCase())
+    .filter(Boolean),
+} as const;
+
