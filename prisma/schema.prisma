@@ -6,9 +6,10 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl 仅在使用连接池时需要（如 Vercel Postgres）
+  // 如需使用，在环境变量中设置 DIRECT_URL
 }
 
 model Prompt {
