@@ -127,8 +127,7 @@ export function usePromptForm(onSuccess?: () => void) {
     }
   };
 
-  const handleTagsChange = (tagsString: string) => {
-    const tags = tagsString.split(',').map(t => t.trim()).filter(t => t);
+  const handleTagsChange = (tags: string[]) => {
     setFormData({ ...formData, tags });
   };
 

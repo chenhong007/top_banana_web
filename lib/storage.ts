@@ -205,6 +205,65 @@ export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
+/**
+ * Get all unique tags
+ */
+export async function getAllTags(): Promise<string[]> {
+  try {
+    const tags = await prisma.tag.findMany({
+      orderBy: { name: 'asc' },
+    });
+    return tags.map((t) => t.name);
+  } catch (error) {
+    console.error('Error getting tags from database:', error);
+    return [];
+  }
+}
+
+/**
+ * Create a new tag
+ */
+export async function createTag(name: string): Promise<string | null> {
+  try {
+    const tag = await prisma.tag.create({
+      data: { name },
+    });
+    return tag.name;
+  } catch (error) {
+    console.error('Error creating tag:', error);
+    return null;
+  }
+}
+
+/**
+ * Update an existing tag
+ */
+export async function updateTag(oldName: string, newName: string): Promise<boolean> {
+  try {
+    await prisma.tag.update({
+      where: { name: oldName },
+      data: { name: newName },
+    });
+    return true;
+  } catch (error) {
+    console.error('Error updating tag:', error);
+    return false;
+  }
+}
+
+/**
+ * Delete a tag by name
+ */
+export async function deleteTag(name: string): Promise<boolean> {
+  try {
+    await prisma.tag.delete({ where: { name } });
+    return true;
+  } catch (error) {
+    console.error('Error deleting tag:', error);
+    return false;
+  }
+}
+
 // Legacy sync functions - deprecated, will be removed
 // These are kept temporarily for backward compatibility during migration
 export function writePrompts(_prompts: PromptItem[]): void {

@@ -12,14 +12,33 @@ export default function PromptCard({ prompt }: PromptCardProps) {
 
   const getImageUrl = (url: string | undefined) => {
     if (!url) return '';
-    // 如果是 http 开头，直接返回
-    if (url.startsWith('http') || url.startsWith('//')) {
-      return url;
-    }
+    
     // 如果是本地相对路径 (./data/image/... 或 data/image/...)
     if (url.startsWith('./data/image') || url.startsWith('data/image')) {
       return `/api/local-image?path=${encodeURIComponent(url)}`;
     }
+    
+    // 如果是 http/https 链接，检查是否需要代理
+    if (url.startsWith('http') || url.startsWith('//')) {
+      // 需要代理的域名（有防盗链保护）
+      const needsProxy = [
+        'cdn.nlark.com',      // 语雀
+        'mmbiz.qpic.cn',      // 微信
+        'pbs.twimg.com',      // Twitter
+      ];
+      
+      try {
+        const urlObj = new URL(url.startsWith('//') ? `https:${url}` : url);
+        if (needsProxy.some(domain => urlObj.hostname.includes(domain))) {
+          return `/api/image-proxy?url=${encodeURIComponent(url)}`;
+        }
+      } catch {
+        // URL 解析失败，原样返回
+      }
+      
+      return url;
+    }
+    
     // 其他情况原样返回
     return url;
   };

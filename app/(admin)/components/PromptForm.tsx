@@ -7,6 +7,7 @@ import { CreatePromptRequest } from '@/types';
 import { Save, X } from 'lucide-react';
 import { UI_TEXT, MESSAGES } from '@/lib/constants';
 import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
+import TagInput from './TagInput';
 
 interface PromptFormProps {
   formData: CreatePromptRequest;
@@ -15,7 +16,7 @@ interface PromptFormProps {
   onSubmit: () => void;
   onCancel: () => void;
   onChange: (data: CreatePromptRequest) => void;
-  onTagsChange: (tags: string) => void;
+  onTagsChange: (tags: string[]) => void;
 }
 
 export default function PromptForm({
@@ -81,16 +82,12 @@ export default function PromptForm({
 
         {/* Tags Field */}
         <div>
-          <label className={LABEL_STYLES.base}>标签（用逗号分隔）</label>
-          <input
-            type="text"
-            value={formData.tags.join(', ')}
-            onChange={(e) => onTagsChange(e.target.value)}
+          <TagInput
+            selectedTags={formData.tags}
+            onChange={onTagsChange}
             disabled={submitting}
-            className={submitting ? INPUT_STYLES.disabled : INPUT_STYLES.base}
-            placeholder={UI_TEXT.PLACEHOLDER.TAGS}
           />
-          <p className="text-xs text-gray-400 mt-1.5">例如: 文案, 营销, 小红书</p>
+          <p className="text-xs text-gray-400 mt-1.5">选择已有标签或输入新标签名创建</p>
         </div>
 
         {/* Description Field */}

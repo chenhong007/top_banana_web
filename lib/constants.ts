@@ -7,6 +7,7 @@
 export const API_ENDPOINTS = {
   PROMPTS: '/api/prompts',
   PROMPTS_BY_ID: (id: string) => `/api/prompts/${id}`,
+  TAGS: '/api/tags',
   IMPORT: '/api/import',
   IMPORT_CSV: '/api/import/csv',
   IMPORT_FEISHU: '/api/import/feishu',
