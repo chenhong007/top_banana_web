@@ -55,7 +55,7 @@ export default function PromptForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Effect Field */}
           <div>
-            <label className={LABEL_STYLES.required}>效果目标</label>
+            <label className={LABEL_STYLES.required}>卡片标题</label>
             <input
               type="text"
               value={formData.effect}
@@ -80,16 +80,6 @@ export default function PromptForm({
           </div>
         </div>
 
-        {/* Tags Field */}
-        <div>
-          <TagInput
-            selectedTags={formData.tags}
-            onChange={onTagsChange}
-            disabled={submitting}
-          />
-          <p className="text-xs text-gray-400 mt-1.5">选择已有标签或输入新标签名创建</p>
-        </div>
-
         {/* Description Field */}
         <div>
           <label className={LABEL_STYLES.required}>详细描述</label>
@@ -100,6 +90,16 @@ export default function PromptForm({
             className={submitting ? `${INPUT_STYLES.disabled} h-24` : `${INPUT_STYLES.textarea} h-24`}
             placeholder={UI_TEXT.PLACEHOLDER.DESCRIPTION}
           />
+        </div>
+
+        {/* Tags Field */}
+        <div>
+          <TagInput
+            selectedTags={formData.tags}
+            onChange={onTagsChange}
+            disabled={submitting}
+          />
+          <p className="text-xs text-gray-400 mt-1.5">选择已有标签或输入新标签名创建</p>
         </div>
 
         {/* Prompt Field */}

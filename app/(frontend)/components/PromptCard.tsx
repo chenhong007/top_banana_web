@@ -18,25 +18,11 @@ export default function PromptCard({ prompt }: PromptCardProps) {
       return `/api/local-image?path=${encodeURIComponent(url)}`;
     }
     
-    // 如果是 http/https 链接，检查是否需要代理
+    // 如果是外部 URL，使用代理绕过防盗链
     if (url.startsWith('http') || url.startsWith('//')) {
-      // 需要代理的域名（有防盗链保护）
-      const needsProxy = [
-        'cdn.nlark.com',      // 语雀
-        'mmbiz.qpic.cn',      // 微信
-        'pbs.twimg.com',      // Twitter
-      ];
-      
-      try {
-        const urlObj = new URL(url.startsWith('//') ? `https:${url}` : url);
-        if (needsProxy.some(domain => urlObj.hostname.includes(domain))) {
-          return `/api/image-proxy?url=${encodeURIComponent(url)}`;
-        }
-      } catch {
-        // URL 解析失败，原样返回
-      }
-      
-      return url;
+      // 处理 // 开头的协议相对 URL
+      const fullUrl = url.startsWith('//') ? `https:${url}` : url;
+      return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
     }
     
     // 其他情况原样返回
