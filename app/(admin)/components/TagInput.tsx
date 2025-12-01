@@ -308,8 +308,7 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
                                 <Check className="w-3 h-3 text-white" />
                               )}
                             </div>
-                            <Tag className="w-3.5 h-3.5 text-gray-400" />
-                            <span className={selectedTags.includes(tag) ? 'text-blue-700 font-medium' : 'text-gray-700'}>
+                            <span className={getTagStyle(tag)}>
                               {tag}
                             </span>
                           </div>

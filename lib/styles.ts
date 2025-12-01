@@ -36,7 +36,7 @@ export const CARD_STYLES = {
 
 // Table cell styles - more spacing and better font
 export const TABLE_STYLES = {
-  header: 'px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50/50 border-b border-gray-100',
+  header: 'px-6 py-4 text-left text-sm font-semibold text-gray-600 bg-gray-50/50 border-b border-gray-100',
   cell: 'px-6 py-4 align-middle border-b border-gray-50 last:border-0',
   cellText: 'text-sm text-gray-600 font-medium',
   row: 'hover:bg-gray-50/80 transition-colors duration-150 group',
