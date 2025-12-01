@@ -51,7 +51,7 @@ export default function PromptTable({ prompts, onEdit, onDelete }: PromptTablePr
         <table className="w-full">
           <thead>
             <tr>
-              <th className={TABLE_STYLES.header}>效果目标</th>
+              <th className={TABLE_STYLES.header}>标题</th>
               <th className={TABLE_STYLES.header}>详细描述</th>
               <th className={TABLE_STYLES.header}>标签分类</th>
               <th className={TABLE_STYLES.header}>更新时间</th>
