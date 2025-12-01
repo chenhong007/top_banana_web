@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ToastProvider } from '@/components/shared/ToastContainer'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={inter.className}>
         <ToastProvider>{children}</ToastProvider>
-        <Analytics />
+        <Analytics debug={true} />
       </body>
     </html>
   )
