@@ -8,7 +8,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Plus, Tag, ChevronDown, Check, Edit2, Trash2 } from 'lucide-react';
 import { API_ENDPOINTS } from '@/lib/constants';
-import { INPUT_STYLES, LABEL_STYLES } from '@/lib/styles';
+import { INPUT_STYLES, LABEL_STYLES, BADGE_STYLES } from '@/lib/styles';
+
+// 根据标签名获取对应的样式（与列表保持一致）
+const getTagStyle = (tag: string) => {
+  const styles = [
+    BADGE_STYLES.primary,
+    BADGE_STYLES.success,
+    BADGE_STYLES.warning,
+    BADGE_STYLES.neutral
+  ];
+  return styles[tag.length % styles.length];
+};
 
 interface TagInputProps {
   selectedTags: string[];
@@ -193,9 +204,8 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
         {selectedTags.map(tag => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md text-sm font-medium border border-blue-200"
+            className={`${getTagStyle(tag)} gap-1`}
           >
-            <Tag className="w-3 h-3" />
             {tag}
             {!disabled && (
               <button
@@ -204,7 +214,7 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
                   e.stopPropagation();
                   removeTag(tag);
                 }}
-                className="ml-1 text-blue-500 hover:text-blue-700"
+                className="ml-1 hover:opacity-70"
               >
                 <X className="w-3 h-3" />
               </button>
