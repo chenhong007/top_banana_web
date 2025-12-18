@@ -9,8 +9,10 @@ import { PromptItem } from '@/types';
 export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedModelTag, setSelectedModelTag] = useState<string>('');
 
-  // Get all unique tags
+  // Get all unique tags (场景/用途标签)
   const allTags = useMemo(() => {
     if (!prompts) return [];
     return Array.from(
@@ -18,7 +20,23 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
     ).sort();
   }, [prompts]);
 
-  // Filter prompts based on search and tag
+  // Get all unique categories (生成类型)
+  const allCategories = useMemo(() => {
+    if (!prompts) return [];
+    return Array.from(
+      new Set(prompts.map(p => p.category).filter((c): c is string => !!c))
+    ).sort();
+  }, [prompts]);
+
+  // Get all unique model tags (AI模型标签)
+  const allModelTags = useMemo(() => {
+    if (!prompts) return [];
+    return Array.from(
+      new Set(prompts.flatMap(p => p.modelTags || []))
+    ).sort();
+  }, [prompts]);
+
+  // Filter prompts based on search, tag, category, and model tag
   const filteredPrompts = useMemo(() => {
     if (!prompts) return [];
     return prompts.filter(prompt => {
@@ -29,18 +47,24 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
       
       const matchesTag = !selectedTag || (prompt.tags || []).includes(selectedTag);
       
-      return matchesSearch && matchesTag;
+      const matchesCategory = !selectedCategory || prompt.category === selectedCategory;
+      
+      const matchesModelTag = !selectedModelTag || (prompt.modelTags || []).includes(selectedModelTag);
+      
+      return matchesSearch && matchesTag && matchesCategory && matchesModelTag;
     });
-  }, [prompts, searchTerm, selectedTag]);
+  }, [prompts, searchTerm, selectedTag, selectedCategory, selectedModelTag]);
 
   // Notify when filters change
   useEffect(() => {
     onFilterChange?.();
-  }, [searchTerm, selectedTag, onFilterChange]);
+  }, [searchTerm, selectedTag, selectedCategory, selectedModelTag, onFilterChange]);
 
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedTag('');
+    setSelectedCategory('');
+    setSelectedModelTag('');
   };
 
   return {
@@ -48,10 +72,16 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
     setSearchTerm,
     selectedTag,
     setSelectedTag,
+    selectedCategory,
+    setSelectedCategory,
+    selectedModelTag,
+    setSelectedModelTag,
     allTags,
+    allCategories,
+    allModelTags,
     filteredPrompts,
     clearFilters,
-    hasFilters: searchTerm !== '' || selectedTag !== '',
+    hasFilters: searchTerm !== '' || selectedTag !== '' || selectedCategory !== '' || selectedModelTag !== '',
   };
 }
 

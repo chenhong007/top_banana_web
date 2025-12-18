@@ -13,9 +13,11 @@ const initialFormData: CreatePromptRequest = {
   effect: '',
   description: '',
   tags: [],
+  modelTags: [],
   prompt: '',
   source: '',
   imageUrl: '',
+  category: '',
 };
 
 export function usePromptForm(onSuccess?: () => void) {
@@ -50,9 +52,11 @@ export function usePromptForm(onSuccess?: () => void) {
       effect: prompt.effect || '',
       description: prompt.description || '',
       tags: prompt.tags || [],
+      modelTags: prompt.modelTags || [],
       prompt: prompt.prompt || '',
       source: prompt.source || '',
       imageUrl: prompt.imageUrl || '',
+      category: prompt.category || '',
     });
     setIsCreating(false);
     
@@ -131,6 +135,10 @@ export function usePromptForm(onSuccess?: () => void) {
     setFormData({ ...formData, tags });
   };
 
+  const handleModelTagsChange = (modelTags: string[]) => {
+    setFormData({ ...formData, modelTags });
+  };
+
   return {
     // State
     formData,
@@ -149,6 +157,7 @@ export function usePromptForm(onSuccess?: () => void) {
     handleUpdate,
     handleDelete,
     handleTagsChange,
+    handleModelTagsChange,
   };
 }
 

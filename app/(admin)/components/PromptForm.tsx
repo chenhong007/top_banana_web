@@ -4,32 +4,40 @@
  */
 
 import { CreatePromptRequest } from '@/types';
-import { Save, X } from 'lucide-react';
-import { UI_TEXT, MESSAGES } from '@/lib/constants';
+import { Save, X, FolderOpen } from 'lucide-react';
+import { UI_TEXT, MESSAGES, DEFAULT_CATEGORIES } from '@/lib/constants';
 import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
 import TagInput from './TagInput';
+import ModelTagInput from './ModelTagInput';
 
 interface PromptFormProps {
   formData: CreatePromptRequest;
   isCreating: boolean;
   submitting: boolean;
+  categories: string[];
   onSubmit: () => void;
   onCancel: () => void;
   onChange: (data: CreatePromptRequest) => void;
   onTagsChange: (tags: string[]) => void;
+  onModelTagsChange: (modelTags: string[]) => void;
 }
 
 export default function PromptForm({
   formData,
   isCreating,
   submitting,
+  categories,
   onSubmit,
   onCancel,
   onChange,
   onTagsChange,
+  onModelTagsChange,
 }: PromptFormProps) {
   // Validate form
   const isValid = formData.effect && formData.description && formData.prompt && formData.source;
+  
+  // Merge default categories with fetched categories
+  const allCategories = Array.from(new Set([...DEFAULT_CATEGORIES, ...categories]));
   
   return (
     <div className={`${CARD_STYLES.withPadding} mb-8 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 border-l-4 ${isCreating ? 'border-blue-500' : 'border-green-500'}`}>
@@ -78,6 +86,38 @@ export default function PromptForm({
               placeholder={UI_TEXT.PLACEHOLDER.SOURCE}
             />
           </div>
+        </div>
+
+        {/* Category Field */}
+        <div>
+          <label className={LABEL_STYLES.base}>
+            <FolderOpen className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
+            生成类型（可选）
+          </label>
+          <select
+            value={formData.category || ''}
+            onChange={(e) => onChange({ ...formData, category: e.target.value })}
+            disabled={submitting}
+            className={submitting ? INPUT_STYLES.disabled : INPUT_STYLES.base}
+          >
+            <option value="">选择生成类型（默认：文生图）</option>
+            {allCategories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-400 mt-1.5">不选择将默认使用"文生图"类别</p>
+        </div>
+
+        {/* Model Tags Field */}
+        <div>
+          <ModelTagInput
+            selectedTags={formData.modelTags || []}
+            onChange={onModelTagsChange}
+            disabled={submitting}
+          />
+          <p className="text-xs text-gray-400 mt-1.5">选择该提示词适用的 AI 模型（如 Midjourney、DALL-E 等）</p>
         </div>
 
         {/* Description Field */}
@@ -155,4 +195,3 @@ export default function PromptForm({
     </div>
   );
 }
-

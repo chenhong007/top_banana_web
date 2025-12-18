@@ -8,10 +8,37 @@ export const API_ENDPOINTS = {
   PROMPTS: '/api/prompts',
   PROMPTS_BY_ID: (id: string) => `/api/prompts/${id}`,
   TAGS: '/api/tags',
+  MODEL_TAGS: '/api/model-tags',
+  CATEGORIES: '/api/categories',
+  INIT_CATEGORIES: '/api/init-categories',
+  INIT_MODEL_TAGS: '/api/init-model-tags',
   IMPORT: '/api/import',
   IMPORT_CSV: '/api/import/csv',
   IMPORT_FEISHU: '/api/import/feishu',
 } as const;
+
+// Default Categories (生成类型)
+export const DEFAULT_CATEGORIES = ['文生图', '文生视频', '文生音频', '其他'] as const;
+export const DEFAULT_CATEGORY = '文生图' as const;
+
+// Default AI Model Tags (AI模型标签)
+export const DEFAULT_MODEL_TAGS = [
+  { name: 'Midjourney', type: '文生图', color: '#5865F2' },
+  { name: 'DALL-E 3', type: '文生图', color: '#10A37F' },
+  { name: 'Stable Diffusion', type: '文生图', color: '#A855F7' },
+  { name: 'Flux', type: '文生图', color: '#EC4899' },
+  { name: 'Leonardo.AI', type: '文生图', color: '#F97316' },
+  { name: 'ComfyUI', type: '文生图', color: '#22C55E' },
+  { name: 'Runway', type: '文生视频', color: '#3B82F6' },
+  { name: 'Sora', type: '文生视频', color: '#000000' },
+  { name: 'Pika', type: '文生视频', color: '#8B5CF6' },
+  { name: 'Kling', type: '文生视频', color: '#FF6B35' },
+  { name: 'Suno', type: '文生音频', color: '#FACC15' },
+  { name: 'Udio', type: '文生音频', color: '#06B6D4' },
+  { name: 'DeepSeek', type: '多模态', color: '#2563EB' },
+  { name: 'Banana', type: '其他', color: '#FBBF24' },
+  { name: '其他模型', type: '通用', color: '#6B7280' },
+] as const;
 
 // Default Values
 export const DEFAULTS = {

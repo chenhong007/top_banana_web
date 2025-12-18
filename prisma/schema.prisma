@@ -13,19 +13,40 @@ datasource db {
 }
 
 model Prompt {
-  id          String   @id @default(uuid())
-  effect      String   // Effect/title description
+  id          String     @id @default(uuid())
+  effect      String     // Effect/title description
   description String
-  prompt      String   // The actual prompt content
+  prompt      String     // The actual prompt content
   source      String
   imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  tags        Tag[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  tags        Tag[]      // 场景/用途标签
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?    // 生成类型类别ID
+  modelTags   ModelTag[] // AI模型标签（多对多）
 }
 
 model Tag {
   id      String   @id @default(uuid())
   name    String   @unique
   prompts Prompt[]
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  prompts   Prompt[]
+}
+
+// AI模型标签
+model ModelTag {
+  id        String   @id @default(uuid())
+  name      String   @unique  // 模型名称
+  icon      String?           // 模型图标URL（可选）
+  color     String?           // 显示颜色（可选）
+  type      String?           // 模型类型：文生图/文生视频/文生音频/多模态/其他
+  createdAt DateTime @default(now())
+  prompts   Prompt[]          // 多对多关联
 }

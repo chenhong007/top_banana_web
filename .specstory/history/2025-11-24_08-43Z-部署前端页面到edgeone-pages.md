@@ -34,7 +34,7 @@ I'm solidifying my approach. I'm confirming my suspicion of a Next.js project. N
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -148,7 +148,7 @@ I've just initiated the build process with `npm run build`. My immediate focus i
 ---
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
-<details><summary>Tool use: **command** • Run command: npm run build</summary>
+<details><summary>Tool use: **run_terminal_cmd** • Run command: npm run build</summary>
 
 ```bash
 npm run build
@@ -168,7 +168,7 @@ $ npm run build
  ✓ Linting and checking validity of types    
 
 &gt; Build error occurred
-Error: Page &quot;/api/prompts/[id]&quot; is missing &quot;generateStaticParams()&quot; so it cannot be used with &quot;output: export&quot; config.                                          
+Error: Page "/api/prompts/[id]" is missing "generateStaticParams()" so it cannot be used with "output: export" config.                                          
     at D:\code\cursor\topai\node_modules\next\dist\build\index.js:1294:59
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)                                                                              
     at async Span.traceAsyncFn (D:\code\cursor\topai\node_modules\next\dist\trace\trace.js:154:20)                                                              
@@ -274,14 +274,14 @@ I've initiated the file transfer process. My initial step involves the relocatio
 ---
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
-<details><summary>Tool use: **command** • Run command: mkdir -p temp_exclude && mv app/api temp_exclude/api && mv "app/(admin)" temp_exclude/admin_group</summary>
+<details><summary>Tool use: **run_terminal_cmd** • Run command: mkdir -p temp_exclude && mv app/api temp_exclude/api && mv "app/(admin)" temp_exclude/admin_group</summary>
 
 ```bash
 mkdir -p temp_exclude && mv app/api temp_exclude/api && mv "app/(admin)" temp_exclude/admin_group
 ```
 
 ```
-mv: cannot move &#39;app/api&#39; to &#39;temp_exclude/api&#39;: Permission denied
+mv: cannot move 'app/api' to 'temp_exclude/api': Permission denied
 ```
 </details>
 </tool-use>
@@ -309,15 +309,15 @@ I'm now focusing on a rename strategy to sidestep the permission errors. The Win
 ---
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
-<details><summary>Tool use: **command** • Run command: mv app/api app/_api && mv "app/(admin)" "app/_admin_backup"</summary>
+<details><summary>Tool use: **run_terminal_cmd** • Run command: mv app/api app/_api && mv "app/(admin)" "app/_admin_backup"</summary>
 
 ```bash
 mv app/api app/_api && mv "app/(admin)" "app/_admin_backup"
 ```
 
 ```
-$ mv app/api app/_api &amp;&amp; mv &quot;app/(admin)&quot; &quot;app/_admin_backup&quot;
-mv: cannot move &#39;app/api&#39; to &#39;app/_api&#39;: Permission denied
+$ mv app/api app/_api &amp;&amp; mv "app/(admin)" "app/_admin_backup"
+mv: cannot move 'app/api' to 'app/_api': Permission denied
 ```
 </details>
 </tool-use>

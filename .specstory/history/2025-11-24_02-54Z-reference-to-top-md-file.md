@@ -50,7 +50,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -103,7 +103,7 @@ No results found
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: package.json</summary>
+<details><summary>Tool use: **write** • Edit file: package.json</summary>
 
 **Chunk 1**
 Lines added: 27, lines removed: 1
@@ -112,29 +112,29 @@ Lines added: 27, lines removed: 1
 @@ -1,1 +1,27 @@
 - 
 + {
-+   &quot;name&quot;: &quot;topai&quot;,
-+   &quot;version&quot;: &quot;0.1.0&quot;,
-+   &quot;private&quot;: true,
-+   &quot;scripts&quot;: {
-+     &quot;dev&quot;: &quot;next dev&quot;,
-+     &quot;build&quot;: &quot;next build&quot;,
-+     &quot;start&quot;: &quot;next start&quot;,
-+     &quot;lint&quot;: &quot;next lint&quot;
++   "name": "topai",
++   "version": "0.1.0",
++   "private": true,
++   "scripts": {
++     "dev": "next dev",
++     "build": "next build",
++     "start": "next start",
++     "lint": "next lint"
 +   },
-+   &quot;dependencies&quot;: {
-+     &quot;next&quot;: &quot;14.2.0&quot;,
-+     &quot;react&quot;: &quot;^18.3.0&quot;,
-+     &quot;react-dom&quot;: &quot;^18.3.0&quot;,
-+     &quot;lucide-react&quot;: &quot;^0.344.0&quot;
++   "dependencies": {
++     "next": "14.2.0",
++     "react": "^18.3.0",
++     "react-dom": "^18.3.0",
++     "lucide-react": "^0.344.0"
 +   },
-+   &quot;devDependencies&quot;: {
-+     &quot;@types/node&quot;: &quot;^20.11.0&quot;,
-+     &quot;@types/react&quot;: &quot;^18.2.0&quot;,
-+     &quot;@types/react-dom&quot;: &quot;^18.2.0&quot;,
-+     &quot;autoprefixer&quot;: &quot;^10.4.0&quot;,
-+     &quot;postcss&quot;: &quot;^8.4.0&quot;,
-+     &quot;tailwindcss&quot;: &quot;^3.4.0&quot;,
-+     &quot;typescript&quot;: &quot;^5.3.0&quot;
++   "devDependencies": {
++     "@types/node": "^20.11.0",
++     "@types/react": "^18.2.0",
++     "@types/react-dom": "^18.2.0",
++     "autoprefixer": "^10.4.0",
++     "postcss": "^8.4.0",
++     "tailwindcss": "^3.4.0",
++     "typescript": "^5.3.0"
 +   }
 + }
 + 
@@ -148,7 +148,7 @@ Lines added: 27, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: tsconfig.json</summary>
+<details><summary>Tool use: **write** • Edit file: tsconfig.json</summary>
 
 **Chunk 1**
 Lines added: 28, lines removed: 1
@@ -157,31 +157,31 @@ Lines added: 28, lines removed: 1
 @@ -1,1 +1,28 @@
 - 
 + {
-+   &quot;compilerOptions&quot;: {
-+     &quot;target&quot;: &quot;ES2017&quot;,
-+     &quot;lib&quot;: [&quot;dom&quot;, &quot;dom.iterable&quot;, &quot;esnext&quot;],
-+     &quot;allowJs&quot;: true,
-+     &quot;skipLibCheck&quot;: true,
-+     &quot;strict&quot;: true,
-+     &quot;noEmit&quot;: true,
-+     &quot;esModuleInterop&quot;: true,
-+     &quot;module&quot;: &quot;esnext&quot;,
-+     &quot;moduleResolution&quot;: &quot;bundler&quot;,
-+     &quot;resolveJsonModule&quot;: true,
-+     &quot;isolatedModules&quot;: true,
-+     &quot;jsx&quot;: &quot;preserve&quot;,
-+     &quot;incremental&quot;: true,
-+     &quot;plugins&quot;: [
++   "compilerOptions": {
++     "target": "ES2017",
++     "lib": ["dom", "dom.iterable", "esnext"],
++     "allowJs": true,
++     "skipLibCheck": true,
++     "strict": true,
++     "noEmit": true,
++     "esModuleInterop": true,
++     "module": "esnext",
++     "moduleResolution": "bundler",
++     "resolveJsonModule": true,
++     "isolatedModules": true,
++     "jsx": "preserve",
++     "incremental": true,
++     "plugins": [
 +       {
-+         &quot;name&quot;: &quot;next&quot;
++         "name": "next"
 +       }
 +     ],
-+     &quot;paths&quot;: {
-+       &quot;@/*&quot;: [&quot;./*&quot;]
++     "paths": {
++       "@/*": ["./*"]
 +     }
 +   },
-+   &quot;include&quot;: [&quot;next-env.d.ts&quot;, &quot;**/*.ts&quot;, &quot;**/*.tsx&quot;, &quot;.next/types/**/*.ts&quot;],
-+   &quot;exclude&quot;: [&quot;node_modules&quot;]
++   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
++   "exclude": ["node_modules"]
 + }
 + 
 ```
@@ -194,7 +194,7 @@ Lines added: 28, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: next.config.js</summary>
+<details><summary>Tool use: **write** • Edit file: next.config.js</summary>
 
 **Chunk 1**
 Lines added: 7, lines removed: 1
@@ -202,7 +202,7 @@ Lines added: 7, lines removed: 1
 ```diff
 @@ -1,1 +1,7 @@
 - 
-+ /** @type {import(&#39;next&#39;).NextConfig} */
++ /** @type {import('next').NextConfig} */
 + const nextConfig = {
 +   reactStrictMode: true,
 + }
@@ -219,7 +219,7 @@ Lines added: 7, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: tailwind.config.ts</summary>
+<details><summary>Tool use: **write** • Edit file: tailwind.config.ts</summary>
 
 **Chunk 1**
 Lines added: 30, lines removed: 1
@@ -227,28 +227,28 @@ Lines added: 30, lines removed: 1
 ```diff
 @@ -1,1 +1,30 @@
 - 
-+ import type { Config } from &#39;tailwindcss&#39;
++ import type { Config } from 'tailwindcss'
 + 
 + const config: Config = {
 +   content: [
-+     &#39;./pages/**/*.{js,ts,jsx,tsx,mdx}&#39;,
-+     &#39;./components/**/*.{js,ts,jsx,tsx,mdx}&#39;,
-+     &#39;./app/**/*.{js,ts,jsx,tsx,mdx}&#39;,
++     './pages/**/*.{js,ts,jsx,tsx,mdx}',
++     './components/**/*.{js,ts,jsx,tsx,mdx}',
++     './app/**/*.{js,ts,jsx,tsx,mdx}',
 +   ],
 +   theme: {
 +     extend: {
 +       colors: {
 +         primary: {
-+           50: &#39;#f0f9ff&#39;,
-+           100: &#39;#e0f2fe&#39;,
-+           200: &#39;#bae6fd&#39;,
-+           300: &#39;#7dd3fc&#39;,
-+           400: &#39;#38bdf8&#39;,
-+           500: &#39;#0ea5e9&#39;,
-+           600: &#39;#0284c7&#39;,
-+           700: &#39;#0369a1&#39;,
-+           800: &#39;#075985&#39;,
-+           900: &#39;#0c4a6e&#39;,
++           50: '#f0f9ff',
++           100: '#e0f2fe',
++           200: '#bae6fd',
++           300: '#7dd3fc',
++           400: '#38bdf8',
++           500: '#0ea5e9',
++           600: '#0284c7',
++           700: '#0369a1',
++           800: '#075985',
++           900: '#0c4a6e',
 +         },
 +       },
 +     },
@@ -267,7 +267,7 @@ Lines added: 30, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: postcss.config.js</summary>
+<details><summary>Tool use: **write** • Edit file: postcss.config.js</summary>
 
 **Chunk 1**
 Lines added: 7, lines removed: 1
@@ -292,7 +292,7 @@ Lines added: 7, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: .gitignore</summary>
+<details><summary>Tool use: **write** • Edit file: .gitignore</summary>
 
 **Chunk 1**
 Lines added: 37, lines removed: 1
@@ -377,7 +377,7 @@ Lines added: 37, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: types/index.ts</summary>
+<details><summary>Tool use: **write** • Edit file: types/index.ts</summary>
 
 **Chunk 1**
 Lines added: 34, lines removed: 1
@@ -429,7 +429,7 @@ Lines added: 34, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: lib/storage.ts</summary>
+<details><summary>Tool use: **write** • Edit file: lib/storage.ts</summary>
 
 **Chunk 1**
 Lines added: 48, lines removed: 1
@@ -437,12 +437,12 @@ Lines added: 48, lines removed: 1
 ```diff
 @@ -1,1 +1,48 @@
 - 
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import fs from &#39;fs&#39;;
-+ import path from &#39;path&#39;;
++ import { PromptItem } from '@/types';
++ import fs from 'fs';
++ import path from 'path';
 + 
-+ const DATA_DIR = path.join(process.cwd(), &#39;data&#39;);
-+ const DATA_FILE = path.join(DATA_DIR, &#39;prompts.json&#39;);
++ const DATA_DIR = path.join(process.cwd(), 'data');
++ const DATA_FILE = path.join(DATA_DIR, 'prompts.json');
 + 
 + // Ensure data directory exists
 + function ensureDataDir() {
@@ -460,10 +460,10 @@ Lines added: 48, lines removed: 1
 +   }
 +   
 +   try {
-+     const data = fs.readFileSync(DATA_FILE, &#39;utf-8&#39;);
++     const data = fs.readFileSync(DATA_FILE, 'utf-8');
 +     return JSON.parse(data);
 +   } catch (error) {
-+     console.error(&#39;Error reading prompts:&#39;, error);
++     console.error('Error reading prompts:', error);
 +     return [];
 +   }
 + }
@@ -473,10 +473,10 @@ Lines added: 48, lines removed: 1
 +   ensureDataDir();
 +   
 +   try {
-+     fs.writeFileSync(DATA_FILE, JSON.stringify(prompts, null, 2), &#39;utf-8&#39;);
++     fs.writeFileSync(DATA_FILE, JSON.stringify(prompts, null, 2), 'utf-8');
 +   } catch (error) {
-+     console.error(&#39;Error writing prompts:&#39;, error);
-+     throw new Error(&#39;Failed to save prompts&#39;);
++     console.error('Error writing prompts:', error);
++     throw new Error('Failed to save prompts');
 +   }
 + }
 + 
@@ -519,7 +519,7 @@ Lines added: 48, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/api/prompts/route.ts</summary>
+<details><summary>Tool use: **write** • Edit file: app/api/prompts/route.ts</summary>
 
 **Chunk 1**
 Lines added: 63, lines removed: 1
@@ -527,9 +527,9 @@ Lines added: 63, lines removed: 1
 ```diff
 @@ -1,1 +1,63 @@
 - 
-+ import { NextRequest, NextResponse } from &#39;next/server&#39;;
-+ import { readPrompts, writePrompts, generateId } from &#39;@/lib/storage&#39;;
-+ import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
++ import { NextRequest, NextResponse } from 'next/server';
++ import { readPrompts, writePrompts, generateId } from '@/lib/storage';
++ import { PromptItem, CreatePromptRequest } from '@/types';
 + 
 + // GET all prompts
 + export async function GET() {
@@ -541,7 +541,7 @@ Lines added: 63, lines removed: 1
 +     });
 +   } catch (error) {
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to fetch prompts&#39; },
++       { success: false, error: 'Failed to fetch prompts' },
 +       { status: 500 }
 +     );
 +   }
@@ -555,7 +555,7 @@ Lines added: 63, lines removed: 1
 +     // Validation
 +     if (!body.effect || !body.description || !body.prompt || !body.source) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;Missing required fields&#39; },
++         { success: false, error: 'Missing required fields' },
 +         { status: 400 }
 +       );
 +     }
@@ -584,7 +584,7 @@ Lines added: 63, lines removed: 1
 +     });
 +   } catch (error) {
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to create prompt&#39; },
++       { success: false, error: 'Failed to create prompt' },
 +       { status: 500 }
 +     );
 +   }
@@ -600,7 +600,7 @@ Lines added: 63, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/api/prompts/[id]/route.ts</summary>
+<details><summary>Tool use: **write** • Edit file: app/api/prompts/[id]/route.ts</summary>
 
 **Chunk 1**
 Lines added: 102, lines removed: 1
@@ -608,9 +608,9 @@ Lines added: 102, lines removed: 1
 ```diff
 @@ -1,1 +1,102 @@
 - 
-+ import { NextRequest, NextResponse } from &#39;next/server&#39;;
-+ import { readPrompts, writePrompts } from &#39;@/lib/storage&#39;;
-+ import { UpdatePromptRequest } from &#39;@/types&#39;;
++ import { NextRequest, NextResponse } from 'next/server';
++ import { readPrompts, writePrompts } from '@/lib/storage';
++ import { UpdatePromptRequest } from '@/types';
 + 
 + // GET single prompt
 + export async function GET(
@@ -623,7 +623,7 @@ Lines added: 102, lines removed: 1
 +     
 +     if (!prompt) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;Prompt not found&#39; },
++         { success: false, error: 'Prompt not found' },
 +         { status: 404 }
 +       );
 +     }
@@ -634,7 +634,7 @@ Lines added: 102, lines removed: 1
 +     });
 +   } catch (error) {
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to fetch prompt&#39; },
++       { success: false, error: 'Failed to fetch prompt' },
 +       { status: 500 }
 +     );
 +   }
@@ -652,7 +652,7 @@ Lines added: 102, lines removed: 1
 +     
 +     if (index === -1) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;Prompt not found&#39; },
++         { success: false, error: 'Prompt not found' },
 +         { status: 404 }
 +       );
 +     }
@@ -661,7 +661,7 @@ Lines added: 102, lines removed: 1
 +     prompts[index] = {
 +       ...prompts[index],
 +       ...body,
-+       id: params.id, // Ensure ID doesn&#39;t change
++       id: params.id, // Ensure ID doesn't change
 +       updatedAt: new Date().toISOString(),
 +     };
 +     
@@ -673,7 +673,7 @@ Lines added: 102, lines removed: 1
 +     });
 +   } catch (error) {
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to update prompt&#39; },
++       { success: false, error: 'Failed to update prompt' },
 +       { status: 500 }
 +     );
 +   }
@@ -690,7 +690,7 @@ Lines added: 102, lines removed: 1
 +     
 +     if (index === -1) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;Prompt not found&#39; },
++         { success: false, error: 'Prompt not found' },
 +         { status: 404 }
 +       );
 +     }
@@ -704,7 +704,7 @@ Lines added: 102, lines removed: 1
 +     });
 +   } catch (error) {
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to delete prompt&#39; },
++       { success: false, error: 'Failed to delete prompt' },
 +       { status: 500 }
 +     );
 +   }
@@ -744,7 +744,7 @@ API 路由已经创建完成。现在创建全局样式文件和前端展示页�
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/globals.css</summary>
+<details><summary>Tool use: **write** • Edit file: app/globals.css</summary>
 
 **Chunk 1**
 Lines added: 26, lines removed: 1
@@ -788,7 +788,7 @@ Lines added: 26, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/layout.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/layout.tsx</summary>
 
 **Chunk 1**
 Lines added: 23, lines removed: 1
@@ -796,15 +796,15 @@ Lines added: 23, lines removed: 1
 ```diff
 @@ -1,1 +1,23 @@
 - 
-+ import type { Metadata } from &#39;next&#39;
-+ import { Inter } from &#39;next/font/google&#39;
-+ import &#39;./globals.css&#39;
++ import type { Metadata } from 'next'
++ import { Inter } from 'next/font/google'
++ import './globals.css'
 + 
-+ const inter = Inter({ subsets: [&#39;latin&#39;] })
++ const inter = Inter({ subsets: ['latin'] })
 + 
 + export const metadata: Metadata = {
-+   title: &#39;AI 提示词库&#39;,
-+   description: &#39;优质 AI 提示词收集与管理平台&#39;,
++   title: 'AI 提示词库',
++   description: '优质 AI 提示词收集与管理平台',
 + }
 + 
 + export default function RootLayout({
@@ -813,7 +813,7 @@ Lines added: 23, lines removed: 1
 +   children: React.ReactNode
 + }) {
 +   return (
-+     &lt;html lang=&quot;zh-CN&quot;&gt;
++     &lt;html lang="zh-CN"&gt;
 +       &lt;body className={inter.className}&gt;{children}&lt;/body&gt;
 +     &lt;/html&gt;
 +   )
@@ -829,7 +829,7 @@ Lines added: 23, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/page.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 206, lines removed: 1
@@ -837,17 +837,17 @@ Lines added: 206, lines removed: 1
 ```diff
 @@ -1,1 +1,206 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { useEffect, useState } from &#39;react&#39;;
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import { Search, Tag, Calendar, ExternalLink } from &#39;lucide-react&#39;;
-+ import Link from &#39;next/link&#39;;
++ import { useEffect, useState } from 'react';
++ import { PromptItem } from '@/types';
++ import { Search, Tag, Calendar, ExternalLink } from 'lucide-react';
++ import Link from 'next/link';
 + 
 + export default function Home() {
 +   const [prompts, setPrompts] = useState&lt;PromptItem[]&gt;([]);
-+   const [searchTerm, setSearchTerm] = useState(&#39;&#39;);
-+   const [selectedTag, setSelectedTag] = useState&lt;string&gt;(&#39;&#39;);
++   const [searchTerm, setSearchTerm] = useState('');
++   const [selectedTag, setSelectedTag] = useState&lt;string&gt;('');
 +   const [loading, setLoading] = useState(true);
 + 
 +   useEffect(() =&gt; {
@@ -856,13 +856,13 @@ Lines added: 206, lines removed: 1
 + 
 +   const fetchPrompts = async () =&gt; {
 +     try {
-+       const response = await fetch(&#39;/api/prompts&#39;);
++       const response = await fetch('/api/prompts');
 +       const result = await response.json();
 +       if (result.success) {
 +         setPrompts(result.data);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to fetch prompts:&#39;, error);
++       console.error('Failed to fetch prompts:', error);
 +     } finally {
 +       setLoading(false);
 +     }
@@ -886,18 +886,18 @@ Lines added: 206, lines removed: 1
 +   });
 + 
 +   return (
-+     &lt;div className=&quot;min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50&quot;&gt;
++     &lt;div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50"&gt;
 +       {/* Header */}
-+       &lt;header className=&quot;bg-white shadow-sm border-b sticky top-0 z-10&quot;&gt;
-+         &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
-+           &lt;div className=&quot;flex justify-between items-center&quot;&gt;
++       &lt;header className="bg-white shadow-sm border-b sticky top-0 z-10"&gt;
++         &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"&gt;
++           &lt;div className="flex justify-between items-center"&gt;
 +             &lt;div&gt;
-+               &lt;h1 className=&quot;text-3xl font-bold text-gray-900&quot;&gt;AI 提示词库&lt;/h1&gt;
-+               &lt;p className=&quot;text-gray-600 mt-1&quot;&gt;优质 AI 提示词收集与管理&lt;/p&gt;
++               &lt;h1 className="text-3xl font-bold text-gray-900"&gt;AI 提示词库&lt;/h1&gt;
++               &lt;p className="text-gray-600 mt-1"&gt;优质 AI 提示词收集与管理&lt;/p&gt;
 +             &lt;/div&gt;
 +             &lt;Link 
-+               href=&quot;/admin&quot;
-+               className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm&quot;
++               href="/admin"
++               className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
 +             &gt;
 +               管理后台
 +             &lt;/Link&gt;
@@ -905,29 +905,29 @@ Lines added: 206, lines removed: 1
 +         &lt;/div&gt;
 +       &lt;/header&gt;
 + 
-+       &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
++       &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 +         {/* Search and Filter */}
-+         &lt;div className=&quot;mb-8 space-y-4&quot;&gt;
-+           &lt;div className=&quot;relative&quot;&gt;
-+             &lt;Search className=&quot;absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5&quot; /&gt;
++         &lt;div className="mb-8 space-y-4"&gt;
++           &lt;div className="relative"&gt;
++             &lt;Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /&gt;
 +             &lt;input
-+               type=&quot;text&quot;
-+               placeholder=&quot;搜索提示词、效果或描述...&quot;
++               type="text"
++               placeholder="搜索提示词、效果或描述..."
 +               value={searchTerm}
 +               onChange={(e) =&gt; setSearchTerm(e.target.value)}
-+               className=&quot;w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm&quot;
++               className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
 +             /&gt;
 +           &lt;/div&gt;
 + 
 +           {/* Tags Filter */}
 +           {allTags.length &gt; 0 &amp;&amp; (
-+             &lt;div className=&quot;flex flex-wrap gap-2&quot;&gt;
++             &lt;div className="flex flex-wrap gap-2"&gt;
 +               &lt;button
-+                 onClick={() =&gt; setSelectedTag(&#39;&#39;)}
++                 onClick={() =&gt; setSelectedTag('')}
 +                 className={&#96;px-4 py-2 rounded-lg font-medium transition-colors ${
 +                   !selectedTag
-+                     ? &#39;bg-blue-600 text-white&#39;
-+                     : &#39;bg-white text-gray-700 border border-gray-300 hover:bg-gray-50&#39;
++                     ? 'bg-blue-600 text-white'
++                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 +                 }&#96;}
 +               &gt;
 +                 全部
@@ -938,8 +938,8 @@ Lines added: 206, lines removed: 1
 +                   onClick={() =&gt; setSelectedTag(tag)}
 +                   className={&#96;px-4 py-2 rounded-lg font-medium transition-colors ${
 +                     selectedTag === tag
-+                       ? &#39;bg-blue-600 text-white&#39;
-+                       : &#39;bg-white text-gray-700 border border-gray-300 hover:bg-gray-50&#39;
++                       ? 'bg-blue-600 text-white'
++                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 +                   }&#96;}
 +                 &gt;
 +                   {tag}
@@ -951,58 +951,58 @@ Lines added: 206, lines removed: 1
 + 
 +         {/* Loading State */}
 +         {loading &amp;&amp; (
-+           &lt;div className=&quot;text-center py-12&quot;&gt;
-+             &lt;div className=&quot;inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
-+             &lt;p className=&quot;mt-4 text-gray-600&quot;&gt;加载中...&lt;/p&gt;
++           &lt;div className="text-center py-12"&gt;
++             &lt;div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
++             &lt;p className="mt-4 text-gray-600"&gt;加载中...&lt;/p&gt;
 +           &lt;/div&gt;
 +         )}
 + 
 +         {/* Empty State */}
 +         {!loading &amp;&amp; filteredPrompts.length === 0 &amp;&amp; (
-+           &lt;div className=&quot;text-center py-12 bg-white rounded-xl shadow-sm&quot;&gt;
-+             &lt;p className=&quot;text-gray-600 text-lg&quot;&gt;暂无提示词数据&lt;/p&gt;
-+             &lt;p className=&quot;text-gray-500 mt-2&quot;&gt;前往管理后台添加第一条提示词&lt;/p&gt;
++           &lt;div className="text-center py-12 bg-white rounded-xl shadow-sm"&gt;
++             &lt;p className="text-gray-600 text-lg"&gt;暂无提示词数据&lt;/p&gt;
++             &lt;p className="text-gray-500 mt-2"&gt;前往管理后台添加第一条提示词&lt;/p&gt;
 +           &lt;/div&gt;
 +         )}
 + 
 +         {/* Prompts Grid */}
-+         &lt;div className=&quot;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;&gt;
++         &lt;div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;
 +           {filteredPrompts.map(prompt =&gt; (
 +             &lt;div
 +               key={prompt.id}
-+               className=&quot;bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100&quot;
++               className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
 +             &gt;
 +               {/* Image */}
 +               {prompt.imageUrl &amp;&amp; (
-+                 &lt;div className=&quot;aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden&quot;&gt;
++                 &lt;div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden"&gt;
 +                   &lt;img
 +                     src={prompt.imageUrl}
 +                     alt={prompt.effect}
-+                     className=&quot;w-full h-full object-cover&quot;
++                     className="w-full h-full object-cover"
 +                   /&gt;
 +                 &lt;/div&gt;
 +               )}
 + 
-+               &lt;div className=&quot;p-6&quot;&gt;
++               &lt;div className="p-6"&gt;
 +                 {/* Effect Title */}
-+                 &lt;h3 className=&quot;text-xl font-bold text-gray-900 mb-2&quot;&gt;
++                 &lt;h3 className="text-xl font-bold text-gray-900 mb-2"&gt;
 +                   {prompt.effect}
 +                 &lt;/h3&gt;
 + 
 +                 {/* Description */}
-+                 &lt;p className=&quot;text-gray-600 mb-4 line-clamp-2&quot;&gt;
++                 &lt;p className="text-gray-600 mb-4 line-clamp-2"&gt;
 +                   {prompt.description}
 +                 &lt;/p&gt;
 + 
 +                 {/* Tags */}
 +                 {prompt.tags.length &gt; 0 &amp;&amp; (
-+                   &lt;div className=&quot;flex flex-wrap gap-2 mb-4&quot;&gt;
++                   &lt;div className="flex flex-wrap gap-2 mb-4"&gt;
 +                     {prompt.tags.map(tag =&gt; (
 +                       &lt;span
 +                         key={tag}
-+                         className=&quot;inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium&quot;
++                         className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
 +                       &gt;
-+                         &lt;Tag className=&quot;w-3 h-3 mr-1&quot; /&gt;
++                         &lt;Tag className="w-3 h-3 mr-1" /&gt;
 +                         {tag}
 +                       &lt;/span&gt;
 +                     ))}
@@ -1010,26 +1010,26 @@ Lines added: 206, lines removed: 1
 +                 )}
 + 
 +                 {/* Prompt */}
-+                 &lt;div className=&quot;bg-gray-50 rounded-lg p-4 mb-4&quot;&gt;
-+                   &lt;p className=&quot;text-sm text-gray-700 font-mono line-clamp-3&quot;&gt;
++                 &lt;div className="bg-gray-50 rounded-lg p-4 mb-4"&gt;
++                   &lt;p className="text-sm text-gray-700 font-mono line-clamp-3"&gt;
 +                     {prompt.prompt}
 +                   &lt;/p&gt;
 +                 &lt;/div&gt;
 + 
 +                 {/* Footer */}
-+                 &lt;div className=&quot;flex items-center justify-between text-sm text-gray-500 pt-4 border-t&quot;&gt;
-+                   &lt;div className=&quot;flex items-center&quot;&gt;
-+                     &lt;Calendar className=&quot;w-4 h-4 mr-1&quot; /&gt;
-+                     {new Date(prompt.updatedAt).toLocaleDateString(&#39;zh-CN&#39;)}
++                 &lt;div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t"&gt;
++                   &lt;div className="flex items-center"&gt;
++                     &lt;Calendar className="w-4 h-4 mr-1" /&gt;
++                     {new Date(prompt.updatedAt).toLocaleDateString('zh-CN')}
 +                   &lt;/div&gt;
 +                   {prompt.source &amp;&amp; (
 +                     &lt;a
 +                       href={prompt.source}
-+                       target=&quot;_blank&quot;
-+                       rel=&quot;noopener noreferrer&quot;
-+                       className=&quot;flex items-center text-blue-600 hover:text-blue-700&quot;
++                       target="_blank"
++                       rel="noopener noreferrer"
++                       className="flex items-center text-blue-600 hover:text-blue-700"
 +                     &gt;
-+                       &lt;ExternalLink className=&quot;w-4 h-4 mr-1&quot; /&gt;
++                       &lt;ExternalLink className="w-4 h-4 mr-1" /&gt;
 +                       来源
 +                     &lt;/a&gt;
 +                   )}
@@ -1077,7 +1077,7 @@ Lines added: 206, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 381, lines removed: 1
@@ -1085,12 +1085,12 @@ Lines added: 381, lines removed: 1
 ```diff
 @@ -1,1 +1,381 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { useEffect, useState } from &#39;react&#39;;
-+ import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
-+ import { Plus, Edit2, Trash2, Save, X, Home } from &#39;lucide-react&#39;;
-+ import Link from &#39;next/link&#39;;
++ import { useEffect, useState } from 'react';
++ import { PromptItem, CreatePromptRequest } from '@/types';
++ import { Plus, Edit2, Trash2, Save, X, Home } from 'lucide-react';
++ import Link from 'next/link';
 + 
 + export default function AdminPage() {
 +   const [prompts, setPrompts] = useState&lt;PromptItem[]&gt;([]);
@@ -1098,12 +1098,12 @@ Lines added: 381, lines removed: 1
 +   const [editingId, setEditingId] = useState&lt;string | null&gt;(null);
 +   const [isCreating, setIsCreating] = useState(false);
 +   const [formData, setFormData] = useState&lt;CreatePromptRequest&gt;({
-+     effect: &#39;&#39;,
-+     description: &#39;&#39;,
++     effect: '',
++     description: '',
 +     tags: [],
-+     prompt: &#39;&#39;,
-+     source: &#39;&#39;,
-+     imageUrl: &#39;&#39;,
++     prompt: '',
++     source: '',
++     imageUrl: '',
 +   });
 + 
 +   useEffect(() =&gt; {
@@ -1112,14 +1112,14 @@ Lines added: 381, lines removed: 1
 + 
 +   const fetchPrompts = async () =&gt; {
 +     try {
-+       const response = await fetch(&#39;/api/prompts&#39;);
++       const response = await fetch('/api/prompts');
 +       const result = await response.json();
 +       if (result.success) {
 +         setPrompts(result.data);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to fetch prompts:&#39;, error);
-+       alert(&#39;获取数据失败&#39;);
++       console.error('Failed to fetch prompts:', error);
++       alert('获取数据失败');
 +     } finally {
 +       setLoading(false);
 +     }
@@ -1127,14 +1127,14 @@ Lines added: 381, lines removed: 1
 + 
 +   const handleCreate = async () =&gt; {
 +     if (!formData.effect || !formData.description || !formData.prompt || !formData.source) {
-+       alert(&#39;请填写所有必填字段&#39;);
++       alert('请填写所有必填字段');
 +       return;
 +     }
 + 
 +     try {
-+       const response = await fetch(&#39;/api/prompts&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const response = await fetch('/api/prompts', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify(formData),
 +       });
 +       
@@ -1145,19 +1145,19 @@ Lines added: 381, lines removed: 1
 +         resetForm();
 +         setIsCreating(false);
 +       } else {
-+         alert(&#39;创建失败：&#39; + result.error);
++         alert('创建失败：' + result.error);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to create prompt:&#39;, error);
-+       alert(&#39;创建失败&#39;);
++       console.error('Failed to create prompt:', error);
++       alert('创建失败');
 +     }
 +   };
 + 
 +   const handleUpdate = async (id: string) =&gt; {
 +     try {
 +       const response = await fetch(&#96;/api/prompts/${id}&#96;, {
-+         method: &#39;PUT&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++         method: 'PUT',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify(formData),
 +       });
 +       
@@ -1168,22 +1168,22 @@ Lines added: 381, lines removed: 1
 +         resetForm();
 +         setEditingId(null);
 +       } else {
-+         alert(&#39;更新失败：&#39; + result.error);
++         alert('更新失败：' + result.error);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to update prompt:&#39;, error);
-+       alert(&#39;更新失败&#39;);
++       console.error('Failed to update prompt:', error);
++       alert('更新失败');
 +     }
 +   };
 + 
 +   const handleDelete = async (id: string) =&gt; {
-+     if (!confirm(&#39;确定要删除这条提示词吗？&#39;)) {
++     if (!confirm('确定要删除这条提示词吗？')) {
 +       return;
 +     }
 + 
 +     try {
 +       const response = await fetch(&#96;/api/prompts/${id}&#96;, {
-+         method: &#39;DELETE&#39;,
++         method: 'DELETE',
 +       });
 +       
 +       const result = await response.json();
@@ -1191,11 +1191,11 @@ Lines added: 381, lines removed: 1
 +       if (result.success) {
 +         setPrompts(prompts.filter(p =&gt; p.id !== id));
 +       } else {
-+         alert(&#39;删除失败：&#39; + result.error);
++         alert('删除失败：' + result.error);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to delete prompt:&#39;, error);
-+       alert(&#39;删除失败&#39;);
++       console.error('Failed to delete prompt:', error);
++       alert('删除失败');
 +     }
 +   };
 + 
@@ -1207,19 +1207,19 @@ Lines added: 381, lines removed: 1
 +       tags: prompt.tags,
 +       prompt: prompt.prompt,
 +       source: prompt.source,
-+       imageUrl: prompt.imageUrl || &#39;&#39;,
++       imageUrl: prompt.imageUrl || '',
 +     });
 +     setIsCreating(false);
 +   };
 + 
 +   const resetForm = () =&gt; {
 +     setFormData({
-+       effect: &#39;&#39;,
-+       description: &#39;&#39;,
++       effect: '',
++       description: '',
 +       tags: [],
-+       prompt: &#39;&#39;,
-+       source: &#39;&#39;,
-+       imageUrl: &#39;&#39;,
++       prompt: '',
++       source: '',
++       imageUrl: '',
 +     });
 +   };
 + 
@@ -1230,26 +1230,26 @@ Lines added: 381, lines removed: 1
 +   };
 + 
 +   const handleTagsChange = (tagsString: string) =&gt; {
-+     const tags = tagsString.split(&#39;,&#39;).map(t =&gt; t.trim()).filter(t =&gt; t);
++     const tags = tagsString.split(',').map(t =&gt; t.trim()).filter(t =&gt; t);
 +     setFormData({ ...formData, tags });
 +   };
 + 
 +   return (
-+     &lt;div className=&quot;min-h-screen bg-gray-50&quot;&gt;
++     &lt;div className="min-h-screen bg-gray-50"&gt;
 +       {/* Header */}
-+       &lt;header className=&quot;bg-white shadow-sm border-b sticky top-0 z-10&quot;&gt;
-+         &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
-+           &lt;div className=&quot;flex justify-between items-center&quot;&gt;
++       &lt;header className="bg-white shadow-sm border-b sticky top-0 z-10"&gt;
++         &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"&gt;
++           &lt;div className="flex justify-between items-center"&gt;
 +             &lt;div&gt;
-+               &lt;h1 className=&quot;text-3xl font-bold text-gray-900&quot;&gt;管理后台&lt;/h1&gt;
-+               &lt;p className=&quot;text-gray-600 mt-1&quot;&gt;提示词库管理系统&lt;/p&gt;
++               &lt;h1 className="text-3xl font-bold text-gray-900"&gt;管理后台&lt;/h1&gt;
++               &lt;p className="text-gray-600 mt-1"&gt;提示词库管理系统&lt;/p&gt;
 +             &lt;/div&gt;
-+             &lt;div className=&quot;flex gap-3&quot;&gt;
++             &lt;div className="flex gap-3"&gt;
 +               &lt;Link
-+                 href=&quot;/&quot;
-+                 className=&quot;px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2&quot;
++                 href="/"
++                 className="px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2"
 +               &gt;
-+                 &lt;Home className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Home className="w-4 h-4" /&gt;
 +                 返回首页
 +               &lt;/Link&gt;
 +               &lt;button
@@ -1258,9 +1258,9 @@ Lines added: 381, lines removed: 1
 +                   setEditingId(null);
 +                   resetForm();
 +                 }}
-+                 className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
++                 className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 +               &gt;
-+                 &lt;Plus className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Plus className="w-4 h-4" /&gt;
 +                 新建提示词
 +               &lt;/button&gt;
 +             &lt;/div&gt;
@@ -1268,104 +1268,104 @@ Lines added: 381, lines removed: 1
 +         &lt;/div&gt;
 +       &lt;/header&gt;
 + 
-+       &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
++       &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 +         {/* Create/Edit Form */}
 +         {(isCreating || editingId) &amp;&amp; (
-+           &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6&quot;&gt;
-+             &lt;h2 className=&quot;text-xl font-bold mb-4&quot;&gt;
-+               {isCreating ? &#39;新建提示词&#39; : &#39;编辑提示词&#39;}
++           &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"&gt;
++             &lt;h2 className="text-xl font-bold mb-4"&gt;
++               {isCreating ? '新建提示词' : '编辑提示词'}
 +             &lt;/h2&gt;
 +             
-+             &lt;div className=&quot;space-y-4&quot;&gt;
++             &lt;div className="space-y-4"&gt;
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   效果 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   效果 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={formData.effect}
 +                   onChange={(e) =&gt; setFormData({ ...formData, effect: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;例如：生成产品介绍文案&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="例如：生成产品介绍文案"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   描述 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   描述 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;textarea
 +                   value={formData.description}
 +                   onChange={(e) =&gt; setFormData({ ...formData, description: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24&quot;
-+                   placeholder=&quot;详细描述该提示词的用途和特点&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
++                   placeholder="详细描述该提示词的用途和特点"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 +                   标签（用逗号分隔）
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
-+                   value={formData.tags.join(&#39;, &#39;)}
++                   type="text"
++                   value={formData.tags.join(', ')}
 +                   onChange={(e) =&gt; handleTagsChange(e.target.value)}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;例如：营销, 文案, 创意&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="例如：营销, 文案, 创意"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   提示词 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   提示词 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;textarea
 +                   value={formData.prompt}
 +                   onChange={(e) =&gt; setFormData({ ...formData, prompt: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm&quot;
-+                   placeholder=&quot;输入完整的提示词内容&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm"
++                   placeholder="输入完整的提示词内容"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   来源 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   来源 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={formData.source}
 +                   onChange={(e) =&gt; setFormData({ ...formData, source: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;例如：https://example.com&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="例如：https://example.com"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 +                   图片 URL（可选）
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={formData.imageUrl}
 +                   onChange={(e) =&gt; setFormData({ ...formData, imageUrl: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;https://example.com/image.jpg&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="https://example.com/image.jpg"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
-+               &lt;div className=&quot;flex gap-3 pt-4&quot;&gt;
++               &lt;div className="flex gap-3 pt-4"&gt;
 +                 &lt;button
 +                   onClick={() =&gt; isCreating ? handleCreate() : handleUpdate(editingId!)}
-+                   className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
++                   className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 +                 &gt;
-+                   &lt;Save className=&quot;w-4 h-4&quot; /&gt;
++                   &lt;Save className="w-4 h-4" /&gt;
 +                   保存
 +                 &lt;/button&gt;
 +                 &lt;button
 +                   onClick={cancelEdit}
-+                   className=&quot;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2&quot;
++                   className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2"
 +                 &gt;
-+                   &lt;X className=&quot;w-4 h-4&quot; /&gt;
++                   &lt;X className="w-4 h-4" /&gt;
 +                   取消
 +                 &lt;/button&gt;
 +               &lt;/div&gt;
@@ -1375,75 +1375,75 @@ Lines added: 381, lines removed: 1
 + 
 +         {/* Loading State */}
 +         {loading &amp;&amp; (
-+           &lt;div className=&quot;text-center py-12&quot;&gt;
-+             &lt;div className=&quot;inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
-+             &lt;p className=&quot;mt-4 text-gray-600&quot;&gt;加载中...&lt;/p&gt;
++           &lt;div className="text-center py-12"&gt;
++             &lt;div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
++             &lt;p className="mt-4 text-gray-600"&gt;加载中...&lt;/p&gt;
 +           &lt;/div&gt;
 +         )}
 + 
 +         {/* Empty State */}
 +         {!loading &amp;&amp; prompts.length === 0 &amp;&amp; (
-+           &lt;div className=&quot;text-center py-12 bg-white rounded-xl shadow-sm&quot;&gt;
-+             &lt;p className=&quot;text-gray-600 text-lg&quot;&gt;暂无数据&lt;/p&gt;
-+             &lt;p className=&quot;text-gray-500 mt-2&quot;&gt;点击&quot;新建提示词&quot;开始添加&lt;/p&gt;
++           &lt;div className="text-center py-12 bg-white rounded-xl shadow-sm"&gt;
++             &lt;p className="text-gray-600 text-lg"&gt;暂无数据&lt;/p&gt;
++             &lt;p className="text-gray-500 mt-2"&gt;点击"新建提示词"开始添加&lt;/p&gt;
 +           &lt;/div&gt;
 +         )}
 + 
 +         {/* Prompts Table */}
 +         {!loading &amp;&amp; prompts.length &gt; 0 &amp;&amp; (
-+           &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden&quot;&gt;
-+             &lt;div className=&quot;overflow-x-auto&quot;&gt;
-+               &lt;table className=&quot;w-full&quot;&gt;
-+                 &lt;thead className=&quot;bg-gray-50 border-b border-gray-200&quot;&gt;
++           &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"&gt;
++             &lt;div className="overflow-x-auto"&gt;
++               &lt;table className="w-full"&gt;
++                 &lt;thead className="bg-gray-50 border-b border-gray-200"&gt;
 +                   &lt;tr&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;效果&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;描述&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;标签&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;更新时间&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-right text-sm font-semibold text-gray-900&quot;&gt;操作&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;效果&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;描述&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;标签&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;更新时间&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-right text-sm font-semibold text-gray-900"&gt;操作&lt;/th&gt;
 +                   &lt;/tr&gt;
 +                 &lt;/thead&gt;
-+                 &lt;tbody className=&quot;divide-y divide-gray-200&quot;&gt;
++                 &lt;tbody className="divide-y divide-gray-200"&gt;
 +                   {prompts.map(prompt =&gt; (
-+                     &lt;tr key={prompt.id} className=&quot;hover:bg-gray-50 transition-colors&quot;&gt;
-+                       &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                         &lt;div className=&quot;font-medium text-gray-900&quot;&gt;{prompt.effect}&lt;/div&gt;
++                     &lt;tr key={prompt.id} className="hover:bg-gray-50 transition-colors"&gt;
++                       &lt;td className="px-6 py-4"&gt;
++                         &lt;div className="font-medium text-gray-900"&gt;{prompt.effect}&lt;/div&gt;
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                         &lt;div className=&quot;text-sm text-gray-600 line-clamp-2 max-w-md&quot;&gt;
++                       &lt;td className="px-6 py-4"&gt;
++                         &lt;div className="text-sm text-gray-600 line-clamp-2 max-w-md"&gt;
 +                           {prompt.description}
 +                         &lt;/div&gt;
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                         &lt;div className=&quot;flex flex-wrap gap-1&quot;&gt;
++                       &lt;td className="px-6 py-4"&gt;
++                         &lt;div className="flex flex-wrap gap-1"&gt;
 +                           {prompt.tags.map(tag =&gt; (
 +                             &lt;span
 +                               key={tag}
-+                               className=&quot;px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs&quot;
++                               className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
 +                             &gt;
 +                               {tag}
 +                             &lt;/span&gt;
 +                           ))}
 +                         &lt;/div&gt;
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4 text-sm text-gray-600&quot;&gt;
-+                         {new Date(prompt.updatedAt).toLocaleString(&#39;zh-CN&#39;)}
++                       &lt;td className="px-6 py-4 text-sm text-gray-600"&gt;
++                         {new Date(prompt.updatedAt).toLocaleString('zh-CN')}
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4 text-right&quot;&gt;
-+                         &lt;div className=&quot;flex justify-end gap-2&quot;&gt;
++                       &lt;td className="px-6 py-4 text-right"&gt;
++                         &lt;div className="flex justify-end gap-2"&gt;
 +                           &lt;button
 +                             onClick={() =&gt; startEdit(prompt)}
-+                             className=&quot;p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors&quot;
-+                             title=&quot;编辑&quot;
++                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
++                             title="编辑"
 +                           &gt;
-+                             &lt;Edit2 className=&quot;w-4 h-4&quot; /&gt;
++                             &lt;Edit2 className="w-4 h-4" /&gt;
 +                           &lt;/button&gt;
 +                           &lt;button
 +                             onClick={() =&gt; handleDelete(prompt.id)}
-+                             className=&quot;p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors&quot;
-+                             title=&quot;删除&quot;
++                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
++                             title="删除"
 +                           &gt;
-+                             &lt;Trash2 className=&quot;w-4 h-4&quot; /&gt;
++                             &lt;Trash2 className="w-4 h-4" /&gt;
 +                           &lt;/button&gt;
 +                         &lt;/div&gt;
 +                       &lt;/td&gt;
@@ -1457,7 +1457,7 @@ Lines added: 381, lines removed: 1
 + 
 +         {/* Stats */}
 +         {!loading &amp;&amp; prompts.length &gt; 0 &amp;&amp; (
-+           &lt;div className=&quot;mt-6 text-center text-sm text-gray-600&quot;&gt;
++           &lt;div className="mt-6 text-center text-sm text-gray-600"&gt;
 +             共 {prompts.length} 条提示词
 +           &lt;/div&gt;
 +         )}
@@ -1502,7 +1502,7 @@ Lines added: 381, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **write** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 142, lines removed: 1
@@ -1601,12 +1601,12 @@ Lines added: 142, lines removed: 1
 + Content-Type: application/json
 + 
 + {
-+   &quot;effect&quot;: &quot;效果描述&quot;,
-+   &quot;description&quot;: &quot;详细说明&quot;,
-+   &quot;tags&quot;: [&quot;标签1&quot;, &quot;标签2&quot;],
-+   &quot;prompt&quot;: &quot;提示词内容&quot;,
-+   &quot;source&quot;: &quot;来源链接&quot;,
-+   &quot;imageUrl&quot;: &quot;图片URL（可选）&quot;
++   "effect": "效果描述",
++   "description": "详细说明",
++   "tags": ["标签1", "标签2"],
++   "prompt": "提示词内容",
++   "source": "来源链接",
++   "imageUrl": "图片URL（可选）"
 + }
 + &#96;&#96;&#96;
 + 
@@ -1616,7 +1616,7 @@ Lines added: 142, lines removed: 1
 + Content-Type: application/json
 + 
 + {
-+   &quot;effect&quot;: &quot;新的效果描述&quot;,
++   "effect": "新的效果描述",
 +   ...
 + }
 + &#96;&#96;&#96;
@@ -1662,7 +1662,7 @@ Lines added: 142, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: data/.gitkeep</summary>
+<details><summary>Tool use: **write** • Edit file: data/.gitkeep</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 1
@@ -1720,7 +1720,7 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/PromptCard.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/PromptCard.tsx</summary>
 
 **Chunk 1**
 Lines added: 101, lines removed: 1
@@ -1728,9 +1728,9 @@ Lines added: 101, lines removed: 1
 ```diff
 @@ -1,1 +1,101 @@
 - 
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import { Tag, Calendar, ExternalLink, Copy, Check } from &#39;lucide-react&#39;;
-+ import { useState } from &#39;react&#39;;
++ import { PromptItem } from '@/types';
++ import { Tag, Calendar, ExternalLink, Copy, Check } from 'lucide-react';
++ import { useState } from 'react';
 + 
 + interface PromptCardProps {
 +   prompt: PromptItem;
@@ -1745,43 +1745,43 @@ Lines added: 101, lines removed: 1
 +       setCopied(true);
 +       setTimeout(() =&gt; setCopied(false), 2000);
 +     } catch (error) {
-+       console.error(&#39;Failed to copy:&#39;, error);
++       console.error('Failed to copy:', error);
 +     }
 +   };
 + 
 +   return (
-+     &lt;div className=&quot;bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100&quot;&gt;
++     &lt;div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"&gt;
 +       {/* Image */}
 +       {prompt.imageUrl &amp;&amp; (
-+         &lt;div className=&quot;aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden&quot;&gt;
++         &lt;div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden"&gt;
 +           &lt;img
 +             src={prompt.imageUrl}
 +             alt={prompt.effect}
-+             className=&quot;w-full h-full object-cover&quot;
++             className="w-full h-full object-cover"
 +           /&gt;
 +         &lt;/div&gt;
 +       )}
 + 
-+       &lt;div className=&quot;p-6&quot;&gt;
++       &lt;div className="p-6"&gt;
 +         {/* Effect Title */}
-+         &lt;h3 className=&quot;text-xl font-bold text-gray-900 mb-2&quot;&gt;
++         &lt;h3 className="text-xl font-bold text-gray-900 mb-2"&gt;
 +           {prompt.effect}
 +         &lt;/h3&gt;
 + 
 +         {/* Description */}
-+         &lt;p className=&quot;text-gray-600 mb-4 line-clamp-2&quot;&gt;
++         &lt;p className="text-gray-600 mb-4 line-clamp-2"&gt;
 +           {prompt.description}
 +         &lt;/p&gt;
 + 
 +         {/* Tags */}
 +         {prompt.tags.length &gt; 0 &amp;&amp; (
-+           &lt;div className=&quot;flex flex-wrap gap-2 mb-4&quot;&gt;
++           &lt;div className="flex flex-wrap gap-2 mb-4"&gt;
 +             {prompt.tags.map(tag =&gt; (
 +               &lt;span
 +                 key={tag}
-+                 className=&quot;inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium&quot;
++                 className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
 +               &gt;
-+                 &lt;Tag className=&quot;w-3 h-3 mr-1&quot; /&gt;
++                 &lt;Tag className="w-3 h-3 mr-1" /&gt;
 +                 {tag}
 +               &lt;/span&gt;
 +             ))}
@@ -1789,37 +1789,37 @@ Lines added: 101, lines removed: 1
 +         )}
 + 
 +         {/* Prompt */}
-+         &lt;div className=&quot;bg-gray-50 rounded-lg p-4 mb-4 relative group&quot;&gt;
-+           &lt;p className=&quot;text-sm text-gray-700 font-mono line-clamp-3 pr-8&quot;&gt;
++         &lt;div className="bg-gray-50 rounded-lg p-4 mb-4 relative group"&gt;
++           &lt;p className="text-sm text-gray-700 font-mono line-clamp-3 pr-8"&gt;
 +             {prompt.prompt}
 +           &lt;/p&gt;
 +           &lt;button
 +             onClick={copyPrompt}
-+             className=&quot;absolute top-2 right-2 p-2 bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100&quot;
-+             title={copied ? &#39;已复制&#39; : &#39;复制提示词&#39;}
++             className="absolute top-2 right-2 p-2 bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100"
++             title={copied ? '已复制' : '复制提示词'}
 +           &gt;
 +             {copied ? (
-+               &lt;Check className=&quot;w-4 h-4 text-green-600&quot; /&gt;
++               &lt;Check className="w-4 h-4 text-green-600" /&gt;
 +             ) : (
-+               &lt;Copy className=&quot;w-4 h-4 text-gray-600&quot; /&gt;
++               &lt;Copy className="w-4 h-4 text-gray-600" /&gt;
 +             )}
 +           &lt;/button&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Footer */}
-+         &lt;div className=&quot;flex items-center justify-between text-sm text-gray-500 pt-4 border-t&quot;&gt;
-+           &lt;div className=&quot;flex items-center&quot;&gt;
-+             &lt;Calendar className=&quot;w-4 h-4 mr-1&quot; /&gt;
-+             {new Date(prompt.updatedAt).toLocaleDateString(&#39;zh-CN&#39;)}
++         &lt;div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t"&gt;
++           &lt;div className="flex items-center"&gt;
++             &lt;Calendar className="w-4 h-4 mr-1" /&gt;
++             {new Date(prompt.updatedAt).toLocaleDateString('zh-CN')}
 +           &lt;/div&gt;
 +           {prompt.source &amp;&amp; (
 +             &lt;a
 +               href={prompt.source}
-+               target=&quot;_blank&quot;
-+               rel=&quot;noopener noreferrer&quot;
-+               className=&quot;flex items-center text-blue-600 hover:text-blue-700&quot;
++               target="_blank"
++               rel="noopener noreferrer"
++               className="flex items-center text-blue-600 hover:text-blue-700"
 +             &gt;
-+               &lt;ExternalLink className=&quot;w-4 h-4 mr-1&quot; /&gt;
++               &lt;ExternalLink className="w-4 h-4 mr-1" /&gt;
 +               来源
 +             &lt;/a&gt;
 +           )}
@@ -1839,7 +1839,7 @@ Lines added: 101, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/LoadingSpinner.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/LoadingSpinner.tsx</summary>
 
 **Chunk 1**
 Lines added: 9, lines removed: 1
@@ -1849,9 +1849,9 @@ Lines added: 9, lines removed: 1
 - 
 + export default function LoadingSpinner() {
 +   return (
-+     &lt;div className=&quot;text-center py-12&quot;&gt;
-+       &lt;div className=&quot;inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
-+       &lt;p className=&quot;mt-4 text-gray-600&quot;&gt;加载中...&lt;/p&gt;
++     &lt;div className="text-center py-12"&gt;
++       &lt;div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
++       &lt;p className="mt-4 text-gray-600"&gt;加载中...&lt;/p&gt;
 +     &lt;/div&gt;
 +   );
 + }
@@ -1866,7 +1866,7 @@ Lines added: 9, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/EmptyState.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/EmptyState.tsx</summary>
 
 **Chunk 1**
 Lines added: 18, lines removed: 1
@@ -1874,7 +1874,7 @@ Lines added: 18, lines removed: 1
 ```diff
 @@ -1,1 +1,18 @@
 - 
-+ import { ReactNode } from &#39;react&#39;;
++ import { ReactNode } from 'react';
 + 
 + interface EmptyStateProps {
 +   title: string;
@@ -1884,10 +1884,10 @@ Lines added: 18, lines removed: 1
 + 
 + export default function EmptyState({ title, description, icon }: EmptyStateProps) {
 +   return (
-+     &lt;div className=&quot;text-center py-12 bg-white rounded-xl shadow-sm&quot;&gt;
-+       {icon &amp;&amp; &lt;div className=&quot;flex justify-center mb-4&quot;&gt;{icon}&lt;/div&gt;}
-+       &lt;p className=&quot;text-gray-600 text-lg&quot;&gt;{title}&lt;/p&gt;
-+       {description &amp;&amp; &lt;p className=&quot;text-gray-500 mt-2&quot;&gt;{description}&lt;/p&gt;}
++     &lt;div className="text-center py-12 bg-white rounded-xl shadow-sm"&gt;
++       {icon &amp;&amp; &lt;div className="flex justify-center mb-4"&gt;{icon}&lt;/div&gt;}
++       &lt;p className="text-gray-600 text-lg"&gt;{title}&lt;/p&gt;
++       {description &amp;&amp; &lt;p className="text-gray-500 mt-2"&gt;{description}&lt;/p&gt;}
 +     &lt;/div&gt;
 +   );
 + }
@@ -1911,21 +1911,21 @@ Lines added: 18, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 4, lines removed: 1
 
 ```diff
 @@ -3,6 +3,9 @@
-  import { useEffect, useState } from &#39;react&#39;;
-  import { PromptItem } from &#39;@/types&#39;;
-- import { Search, Tag, Calendar, ExternalLink } from &#39;lucide-react&#39;;
-+ import { Search, FileQuestion } from &#39;lucide-react&#39;;
-  import Link from &#39;next/link&#39;;
-+ import PromptCard from &#39;@/components/PromptCard&#39;;
-+ import LoadingSpinner from &#39;@/components/LoadingSpinner&#39;;
-+ import EmptyState from &#39;@/components/EmptyState&#39;;
+  import { useEffect, useState } from 'react';
+  import { PromptItem } from '@/types';
+- import { Search, Tag, Calendar, ExternalLink } from 'lucide-react';
++ import { Search, FileQuestion } from 'lucide-react';
+  import Link from 'next/link';
++ import PromptCard from '@/components/PromptCard';
++ import LoadingSpinner from '@/components/LoadingSpinner';
++ import EmptyState from '@/components/EmptyState';
   
   export default function Home() {
 ```
@@ -1938,7 +1938,7 @@ Lines added: 4, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 6, lines removed: 10
@@ -1948,23 +1948,23 @@ Lines added: 6, lines removed: 10
   
           {/* Loading State */}
 -         {loading &amp;&amp; (
--           &lt;div className=&quot;text-center py-12&quot;&gt;
--             &lt;div className=&quot;inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
--             &lt;p className=&quot;mt-4 text-gray-600&quot;&gt;加载中...&lt;/p&gt;
+-           &lt;div className="text-center py-12"&gt;
+-             &lt;div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
+-             &lt;p className="mt-4 text-gray-600"&gt;加载中...&lt;/p&gt;
 -           &lt;/div&gt;
 -         )}
 +         {loading &amp;&amp; &lt;LoadingSpinner /&gt;}
   
           {/* Empty State */}
           {!loading &amp;&amp; filteredPrompts.length === 0 &amp;&amp; (
--           &lt;div className=&quot;text-center py-12 bg-white rounded-xl shadow-sm&quot;&gt;
--             &lt;p className=&quot;text-gray-600 text-lg&quot;&gt;暂无提示词数据&lt;/p&gt;
--             &lt;p className=&quot;text-gray-500 mt-2&quot;&gt;前往管理后台添加第一条提示词&lt;/p&gt;
+-           &lt;div className="text-center py-12 bg-white rounded-xl shadow-sm"&gt;
+-             &lt;p className="text-gray-600 text-lg"&gt;暂无提示词数据&lt;/p&gt;
+-             &lt;p className="text-gray-500 mt-2"&gt;前往管理后台添加第一条提示词&lt;/p&gt;
 -           &lt;/div&gt;
 +           &lt;EmptyState
-+             icon={&lt;FileQuestion className=&quot;w-16 h-16 text-gray-400&quot; /&gt;}
-+             title=&quot;暂无提示词数据&quot;
-+             description=&quot;前往管理后台添加第一条提示词&quot;
++             icon={&lt;FileQuestion className="w-16 h-16 text-gray-400" /&gt;}
++             title="暂无提示词数据"
++             description="前往管理后台添加第一条提示词"
 +           /&gt;
           )}
   
@@ -1978,50 +1978,50 @@ Lines added: 6, lines removed: 10
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 68
 
 ```diff
 @@ -129,72 +129,5 @@
-          &lt;div className=&quot;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;&gt;
+          &lt;div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;
             {filteredPrompts.map(prompt =&gt; (
 -             &lt;div
 -               key={prompt.id}
--               className=&quot;bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100&quot;
+-               className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
 -             &gt;
 -               {/* Image */}
 -               {prompt.imageUrl &amp;&amp; (
--                 &lt;div className=&quot;aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden&quot;&gt;
+-                 &lt;div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden"&gt;
 -                   &lt;img
 -                     src={prompt.imageUrl}
 -                     alt={prompt.effect}
--                     className=&quot;w-full h-full object-cover&quot;
+-                     className="w-full h-full object-cover"
 -                   /&gt;
 -                 &lt;/div&gt;
 -               )}
 - 
--               &lt;div className=&quot;p-6&quot;&gt;
+-               &lt;div className="p-6"&gt;
 -                 {/* Effect Title */}
--                 &lt;h3 className=&quot;text-xl font-bold text-gray-900 mb-2&quot;&gt;
+-                 &lt;h3 className="text-xl font-bold text-gray-900 mb-2"&gt;
 -                   {prompt.effect}
 -                 &lt;/h3&gt;
 - 
 -                 {/* Description */}
--                 &lt;p className=&quot;text-gray-600 mb-4 line-clamp-2&quot;&gt;
+-                 &lt;p className="text-gray-600 mb-4 line-clamp-2"&gt;
 -                   {prompt.description}
 -                 &lt;/p&gt;
 - 
 -                 {/* Tags */}
 -                 {prompt.tags.length &gt; 0 &amp;&amp; (
--                   &lt;div className=&quot;flex flex-wrap gap-2 mb-4&quot;&gt;
+-                   &lt;div className="flex flex-wrap gap-2 mb-4"&gt;
 -                     {prompt.tags.map(tag =&gt; (
 -                       &lt;span
 -                         key={tag}
--                         className=&quot;inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium&quot;
+-                         className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
 -                       &gt;
--                         &lt;Tag className=&quot;w-3 h-3 mr-1&quot; /&gt;
+-                         &lt;Tag className="w-3 h-3 mr-1" /&gt;
 -                         {tag}
 -                       &lt;/span&gt;
 -                     ))}
@@ -2029,26 +2029,26 @@ Lines added: 1, lines removed: 68
 -                 )}
 - 
 -                 {/* Prompt */}
--                 &lt;div className=&quot;bg-gray-50 rounded-lg p-4 mb-4&quot;&gt;
--                   &lt;p className=&quot;text-sm text-gray-700 font-mono line-clamp-3&quot;&gt;
+-                 &lt;div className="bg-gray-50 rounded-lg p-4 mb-4"&gt;
+-                   &lt;p className="text-sm text-gray-700 font-mono line-clamp-3"&gt;
 -                     {prompt.prompt}
 -                   &lt;/p&gt;
 -                 &lt;/div&gt;
 - 
 -                 {/* Footer */}
--                 &lt;div className=&quot;flex items-center justify-between text-sm text-gray-500 pt-4 border-t&quot;&gt;
--                   &lt;div className=&quot;flex items-center&quot;&gt;
--                     &lt;Calendar className=&quot;w-4 h-4 mr-1&quot; /&gt;
--                     {new Date(prompt.updatedAt).toLocaleDateString(&#39;zh-CN&#39;)}
+-                 &lt;div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t"&gt;
+-                   &lt;div className="flex items-center"&gt;
+-                     &lt;Calendar className="w-4 h-4 mr-1" /&gt;
+-                     {new Date(prompt.updatedAt).toLocaleDateString('zh-CN')}
 -                   &lt;/div&gt;
 -                   {prompt.source &amp;&amp; (
 -                     &lt;a
 -                       href={prompt.source}
--                       target=&quot;_blank&quot;
--                       rel=&quot;noopener noreferrer&quot;
--                       className=&quot;flex items-center text-blue-600 hover:text-blue-700&quot;
+-                       target="_blank"
+-                       rel="noopener noreferrer"
+-                       className="flex items-center text-blue-600 hover:text-blue-700"
 -                     &gt;
--                       &lt;ExternalLink className=&quot;w-4 h-4 mr-1&quot; /&gt;
+-                       &lt;ExternalLink className="w-4 h-4 mr-1" /&gt;
 -                       来源
 -                     &lt;/a&gt;
 -                   )}
@@ -2077,20 +2077,20 @@ Lines added: 1, lines removed: 68
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 1
 
 ```diff
 @@ -3,6 +3,8 @@
-  import { useEffect, useState } from &#39;react&#39;;
-  import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
-- import { Plus, Edit2, Trash2, Save, X, Home } from &#39;lucide-react&#39;;
-+ import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen } from &#39;lucide-react&#39;;
-  import Link from &#39;next/link&#39;;
-+ import LoadingSpinner from &#39;@/components/LoadingSpinner&#39;;
-+ import EmptyState from &#39;@/components/EmptyState&#39;;
+  import { useEffect, useState } from 'react';
+  import { PromptItem, CreatePromptRequest } from '@/types';
+- import { Plus, Edit2, Trash2, Save, X, Home } from 'lucide-react';
++ import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen } from 'lucide-react';
+  import Link from 'next/link';
++ import LoadingSpinner from '@/components/LoadingSpinner';
++ import EmptyState from '@/components/EmptyState';
   
   export default function AdminPage() {
 ```
@@ -2103,7 +2103,7 @@ Lines added: 3, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 6, lines removed: 10
@@ -2113,23 +2113,23 @@ Lines added: 6, lines removed: 10
   
           {/* Loading State */}
 -         {loading &amp;&amp; (
--           &lt;div className=&quot;text-center py-12&quot;&gt;
--             &lt;div className=&quot;inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
--             &lt;p className=&quot;mt-4 text-gray-600&quot;&gt;加载中...&lt;/p&gt;
+-           &lt;div className="text-center py-12"&gt;
+-             &lt;div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
+-             &lt;p className="mt-4 text-gray-600"&gt;加载中...&lt;/p&gt;
 -           &lt;/div&gt;
 -         )}
 +         {loading &amp;&amp; &lt;LoadingSpinner /&gt;}
   
           {/* Empty State */}
           {!loading &amp;&amp; prompts.length === 0 &amp;&amp; (
--           &lt;div className=&quot;text-center py-12 bg-white rounded-xl shadow-sm&quot;&gt;
--             &lt;p className=&quot;text-gray-600 text-lg&quot;&gt;暂无数据&lt;/p&gt;
--             &lt;p className=&quot;text-gray-500 mt-2&quot;&gt;点击&quot;新建提示词&quot;开始添加&lt;/p&gt;
+-           &lt;div className="text-center py-12 bg-white rounded-xl shadow-sm"&gt;
+-             &lt;p className="text-gray-600 text-lg"&gt;暂无数据&lt;/p&gt;
+-             &lt;p className="text-gray-500 mt-2"&gt;点击"新建提示词"开始添加&lt;/p&gt;
 -           &lt;/div&gt;
 +           &lt;EmptyState
-+             icon={&lt;FolderOpen className=&quot;w-16 h-16 text-gray-400&quot; /&gt;}
-+             title=&quot;暂无数据&quot;
-+             description=&#39;点击&quot;新建提示词&quot;开始添加&#39;
++             icon={&lt;FolderOpen className="w-16 h-16 text-gray-400" /&gt;}
++             title="暂无数据"
++             description='点击"新建提示词"开始添加'
 +           /&gt;
           )}
   
@@ -2181,7 +2181,7 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: data/prompts.example.json</summary>
+<details><summary>Tool use: **write** • Edit file: data/prompts.example.json</summary>
 
 **Chunk 1**
 Lines added: 36, lines removed: 1
@@ -2191,37 +2191,37 @@ Lines added: 36, lines removed: 1
 - 
 + [
 +   {
-+     &quot;id&quot;: &quot;example-1&quot;,
-+     &quot;effect&quot;: &quot;生成产品营销文案&quot;,
-+     &quot;description&quot;: &quot;帮助你快速生成吸引人的产品营销文案，适用于电商、社交媒体等多种场景&quot;,
-+     &quot;tags&quot;: [&quot;营销&quot;, &quot;文案&quot;, &quot;电商&quot;],
-+     &quot;prompt&quot;: &quot;请为以下产品生成一段吸引人的营销文案：\n\n产品名称：[在此填写产品名称]\n产品特点：[在此列出3-5个主要特点]\n目标受众：[描述目标客户群体]\n\n要求：\n1. 文案长度控制在100-150字\n2. 突出产品核心优势\n3. 语言生动有感染力\n4. 包含行动号召&quot;,
-+     &quot;source&quot;: &quot;https://example.com&quot;,
-+     &quot;imageUrl&quot;: &quot;&quot;,
-+     &quot;createdAt&quot;: &quot;2024-01-01T00:00:00.000Z&quot;,
-+     &quot;updatedAt&quot;: &quot;2024-01-01T00:00:00.000Z&quot;
++     "id": "example-1",
++     "effect": "生成产品营销文案",
++     "description": "帮助你快速生成吸引人的产品营销文案，适用于电商、社交媒体等多种场景",
++     "tags": ["营销", "文案", "电商"],
++     "prompt": "请为以下产品生成一段吸引人的营销文案：\n\n产品名称：[在此填写产品名称]\n产品特点：[在此列出3-5个主要特点]\n目标受众：[描述目标客户群体]\n\n要求：\n1. 文案长度控制在100-150字\n2. 突出产品核心优势\n3. 语言生动有感染力\n4. 包含行动号召",
++     "source": "https://example.com",
++     "imageUrl": "",
++     "createdAt": "2024-01-01T00:00:00.000Z",
++     "updatedAt": "2024-01-01T00:00:00.000Z"
 +   },
 +   {
-+     &quot;id&quot;: &quot;example-2&quot;,
-+     &quot;effect&quot;: &quot;代码审查助手&quot;,
-+     &quot;description&quot;: &quot;帮助开发者进行代码审查，识别潜在问题、优化建议和最佳实践&quot;,
-+     &quot;tags&quot;: [&quot;开发&quot;, &quot;代码审查&quot;, &quot;技术&quot;],
-+     &quot;prompt&quot;: &quot;请对以下代码进行详细审查：\n\n[在此粘贴代码]\n\n请从以下几个方面进行分析：\n1. 代码质量和可读性\n2. 潜在的bug和安全问题\n3. 性能优化建议\n4. 是否符合最佳实践\n5. 改进建议\n\n请提供具体的修改建议和优化后的代码示例。&quot;,
-+     &quot;source&quot;: &quot;https://example.com&quot;,
-+     &quot;imageUrl&quot;: &quot;&quot;,
-+     &quot;createdAt&quot;: &quot;2024-01-02T00:00:00.000Z&quot;,
-+     &quot;updatedAt&quot;: &quot;2024-01-02T00:00:00.000Z&quot;
++     "id": "example-2",
++     "effect": "代码审查助手",
++     "description": "帮助开发者进行代码审查，识别潜在问题、优化建议和最佳实践",
++     "tags": ["开发", "代码审查", "技术"],
++     "prompt": "请对以下代码进行详细审查：\n\n[在此粘贴代码]\n\n请从以下几个方面进行分析：\n1. 代码质量和可读性\n2. 潜在的bug和安全问题\n3. 性能优化建议\n4. 是否符合最佳实践\n5. 改进建议\n\n请提供具体的修改建议和优化后的代码示例。",
++     "source": "https://example.com",
++     "imageUrl": "",
++     "createdAt": "2024-01-02T00:00:00.000Z",
++     "updatedAt": "2024-01-02T00:00:00.000Z"
 +   },
 +   {
-+     &quot;id&quot;: &quot;example-3&quot;,
-+     &quot;effect&quot;: &quot;学习计划制定&quot;,
-+     &quot;description&quot;: &quot;根据学习目标和时间安排，生成个性化的学习计划&quot;,
-+     &quot;tags&quot;: [&quot;学习&quot;, &quot;教育&quot;, &quot;规划&quot;],
-+     &quot;prompt&quot;: &quot;请帮我制定一个详细的学习计划：\n\n学习目标：[描述你想学习的内容]\n当前水平：[描述你的现有基础]\n可用时间：[每天/每周可投入的学习时间]\n期望达到的目标：[具体的学习成果]\n\n请提供：\n1. 分阶段的学习路径\n2. 每个阶段的学习内容和重点\n3. 推荐的学习资源\n4. 学习进度检查点\n5. 实践项目建议&quot;,
-+     &quot;source&quot;: &quot;https://example.com&quot;,
-+     &quot;imageUrl&quot;: &quot;&quot;,
-+     &quot;createdAt&quot;: &quot;2024-01-03T00:00:00.000Z&quot;,
-+     &quot;updatedAt&quot;: &quot;2024-01-03T00:00:00.000Z&quot;
++     "id": "example-3",
++     "effect": "学习计划制定",
++     "description": "根据学习目标和时间安排，生成个性化的学习计划",
++     "tags": ["学习", "教育", "规划"],
++     "prompt": "请帮我制定一个详细的学习计划：\n\n学习目标：[描述你想学习的内容]\n当前水平：[描述你的现有基础]\n可用时间：[每天/每周可投入的学习时间]\n期望达到的目标：[具体的学习成果]\n\n请提供：\n1. 分阶段的学习路径\n2. 每个阶段的学习内容和重点\n3. 推荐的学习资源\n4. 学习进度检查点\n5. 实践项目建议",
++     "source": "https://example.com",
++     "imageUrl": "",
++     "createdAt": "2024-01-03T00:00:00.000Z",
++     "updatedAt": "2024-01-03T00:00:00.000Z"
 +   }
 + ]
 + 
@@ -2263,7 +2263,7 @@ Cannot edit files blocked by globalignore
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -2415,7 +2415,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/api/import/route.ts</summary>
+<details><summary>Tool use: **write** • Edit file: app/api/import/route.ts</summary>
 
 **Chunk 1**
 Lines added: 96, lines removed: 1
@@ -2423,19 +2423,19 @@ Lines added: 96, lines removed: 1
 ```diff
 @@ -1,1 +1,96 @@
 - 
-+ import { NextRequest, NextResponse } from &#39;next/server&#39;;
-+ import { readPrompts, writePrompts, generateId } from &#39;@/lib/storage&#39;;
-+ import { PromptItem } from &#39;@/types&#39;;
++ import { NextRequest, NextResponse } from 'next/server';
++ import { readPrompts, writePrompts, generateId } from '@/lib/storage';
++ import { PromptItem } from '@/types';
 + 
 + // POST import prompts from external data
 + export async function POST(request: NextRequest) {
 +   try {
 +     const body = await request.json();
-+     const { items, mode = &#39;merge&#39; } = body; // mode: &#39;merge&#39; or &#39;replace&#39;
++     const { items, mode = 'merge' } = body; // mode: 'merge' or 'replace'
 +     
 +     if (!Array.isArray(items) || items.length === 0) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;Invalid data format&#39; },
++         { success: false, error: 'Invalid data format' },
 +         { status: 400 }
 +       );
 +     }
@@ -2446,16 +2446,16 @@ Lines added: 96, lines removed: 1
 +     // Transform and validate imported items
 +     const newPrompts: PromptItem[] = items.map((item: any) =&gt; {
 +       // Flexible field mapping
-+       const effect = item.effect || item.效果 || item.title || &#39;&#39;;
-+       const description = item.description || item.描述 || item.desc || &#39;&#39;;
-+       const prompt = item.prompt || item.提示词 || item.content || &#39;&#39;;
-+       const source = item.source || item.来源 || item.提示词来源 || &#39;&#39;;
++       const effect = item.effect || item.效果 || item.title || '';
++       const description = item.description || item.描述 || item.desc || '';
++       const prompt = item.prompt || item.提示词 || item.content || '';
++       const source = item.source || item.来源 || item.提示词来源 || '';
 +       const tags = item.tags || item.标签 || item.评测对象 || [];
-+       const imageUrl = item.imageUrl || item.图片 || item.image || &#39;&#39;;
++       const imageUrl = item.imageUrl || item.图片 || item.image || '';
 +       
-+       // Parse tags if it&#39;s a string
++       // Parse tags if it's a string
 +       let parsedTags = tags;
-+       if (typeof tags === &#39;string&#39;) {
++       if (typeof tags === 'string') {
 +         parsedTags = tags.split(/[,，、]/).map((t: string) =&gt; t.trim()).filter((t: string) =&gt; t);
 +       }
 +       
@@ -2482,7 +2482,7 @@ Lines added: 96, lines removed: 1
 +         { 
 +           success: false, 
 +           error: &#96;${invalidItems.length} items missing required fields&#96;,
-+           invalidItems: invalidItems.map(item =&gt; item.effect || &#39;Unknown&#39;)
++           invalidItems: invalidItems.map(item =&gt; item.effect || 'Unknown')
 +         },
 +         { status: 400 }
 +       );
@@ -2490,7 +2490,7 @@ Lines added: 96, lines removed: 1
 +     
 +     let finalPrompts: PromptItem[];
 +     
-+     if (mode === &#39;replace&#39;) {
++     if (mode === 'replace') {
 +       // Replace all existing data
 +       finalPrompts = newPrompts;
 +     } else {
@@ -2505,15 +2505,15 @@ Lines added: 96, lines removed: 1
 +     return NextResponse.json({
 +       success: true,
 +       data: {
-+         imported: mode === &#39;replace&#39; ? newPrompts.length : finalPrompts.length - existingPrompts.length,
++         imported: mode === 'replace' ? newPrompts.length : finalPrompts.length - existingPrompts.length,
 +         total: finalPrompts.length,
 +         mode,
 +       },
 +     });
 +   } catch (error) {
-+     console.error(&#39;Import error:&#39;, error);
++     console.error('Import error:', error);
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to import data&#39; },
++       { success: false, error: 'Failed to import data' },
 +       { status: 500 }
 +     );
 +   }
@@ -2529,7 +2529,7 @@ Lines added: 96, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: scripts/import-feishu.ts</summary>
+<details><summary>Tool use: **write** • Edit file: scripts/import-feishu.ts</summary>
 
 **Chunk 1**
 Lines added: 100, lines removed: 1
@@ -2553,40 +2553,40 @@ Lines added: 100, lines removed: 1
 + }
 + 
 + async function importFromFeishu() {
-+   const FEISHU_URL = &#39;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1&#39;;
++   const FEISHU_URL = 'https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1';
 +   
-+   console.log(&#39;🚀 Starting Feishu data import...&#39;);
-+   console.log(&#39;📄 Source:&#39;, FEISHU_URL);
++   console.log('🚀 Starting Feishu data import...');
++   console.log('📄 Source:', FEISHU_URL);
 +   
 +   try {
 +     // Note: Direct web scraping of Feishu may require authentication
 +     // This is a template - you may need to manually export data from Feishu
 +     
-+     console.log(&#39;\n⚠️  Note: Feishu documents typically require authentication.&#39;);
-+     console.log(&#39;📋 Please follow these steps:&#39;);
-+     console.log(&#39;   1. Open the Feishu document in your browser&#39;);
-+     console.log(&#39;   2. Export the table as JSON or CSV&#39;);
-+     console.log(&#39;   3. Save the file as: scripts/feishu-data.json&#39;);
-+     console.log(&#39;   4. Run this script again\n&#39;);
++     console.log('\n⚠️  Note: Feishu documents typically require authentication.');
++     console.log('📋 Please follow these steps:');
++     console.log('   1. Open the Feishu document in your browser');
++     console.log('   2. Export the table as JSON or CSV');
++     console.log('   3. Save the file as: scripts/feishu-data.json');
++     console.log('   4. Run this script again\n');
 +     
 +     // Try to read exported data
-+     const fs = await import(&#39;fs&#39;);
-+     const path = await import(&#39;path&#39;);
++     const fs = await import('fs');
++     const path = await import('path');
 +     
-+     const dataPath = path.join(process.cwd(), &#39;scripts&#39;, &#39;feishu-data.json&#39;);
++     const dataPath = path.join(process.cwd(), 'scripts', 'feishu-data.json');
 +     
 +     if (!fs.existsSync(dataPath)) {
-+       console.log(&#39;❌ File not found: scripts/feishu-data.json&#39;);
-+       console.log(&#39;\n💡 Alternative: Use the import feature in the admin panel&#39;);
-+       console.log(&#39;   URL: http://localhost:3000/admin\n&#39;);
++       console.log('❌ File not found: scripts/feishu-data.json');
++       console.log('\n💡 Alternative: Use the import feature in the admin panel');
++       console.log('   URL: http://localhost:3000/admin\n');
 +       return;
 +     }
 +     
-+     const rawData = fs.readFileSync(dataPath, &#39;utf-8&#39;);
++     const rawData = fs.readFileSync(dataPath, 'utf-8');
 +     const feishuData: FeishuItem[] = JSON.parse(rawData);
 +     
 +     if (!Array.isArray(feishuData) || feishuData.length === 0) {
-+       console.log(&#39;❌ Invalid data format or empty array&#39;);
++       console.log('❌ Invalid data format or empty array');
 +       return;
 +     }
 +     
@@ -2594,43 +2594,43 @@ Lines added: 100, lines removed: 1
 +     
 +     // Transform data to our format
 +     const transformedData = feishuData.map(item =&gt; ({
-+       effect: item.效果 || item.effect || &#39;&#39;,
-+       description: item.描述 || item.description || &#39;&#39;,
-+       tags: typeof item.评测对象 === &#39;string&#39; 
++       effect: item.效果 || item.effect || '',
++       description: item.描述 || item.description || '',
++       tags: typeof item.评测对象 === 'string' 
 +         ? item.评测对象.split(/[,，、]/).map(t =&gt; t.trim()).filter(t =&gt; t)
 +         : (item.评测对象 || []),
-+       prompt: item.提示词 || item.prompt || &#39;&#39;,
++       prompt: item.提示词 || item.prompt || '',
 +       source: item.提示词来源 || item.source || FEISHU_URL,
-+       imageUrl: item.图片 || item.imageUrl || &#39;&#39;,
++       imageUrl: item.图片 || item.imageUrl || '',
 +       createdAt: item.更新时间 || item.updatedAt || new Date().toISOString(),
 +     }));
 +     
 +     // Send to import API
-+     const response = await fetch(&#39;http://localhost:3000/api/import&#39;, {
-+       method: &#39;POST&#39;,
++     const response = await fetch('http://localhost:3000/api/import', {
++       method: 'POST',
 +       headers: {
-+         &#39;Content-Type&#39;: &#39;application/json&#39;,
++         'Content-Type': 'application/json',
 +       },
 +       body: JSON.stringify({
 +         items: transformedData,
-+         mode: &#39;merge&#39;, // or &#39;replace&#39;
++         mode: 'merge', // or 'replace'
 +       }),
 +     });
 +     
 +     const result = await response.json();
 +     
 +     if (result.success) {
-+       console.log(&#39;\n✅ Import successful!&#39;);
++       console.log('\n✅ Import successful!');
 +       console.log(&#96;   📊 Imported: ${result.data.imported} items&#96;);
 +       console.log(&#96;   📈 Total: ${result.data.total} items&#96;);
 +     } else {
-+       console.log(&#39;\n❌ Import failed:&#39;, result.error);
++       console.log('\n❌ Import failed:', result.error);
 +       if (result.invalidItems) {
-+         console.log(&#39;   Invalid items:&#39;, result.invalidItems);
++         console.log('   Invalid items:', result.invalidItems);
 +       }
 +     }
 +   } catch (error) {
-+     console.error(&#39;\n❌ Error:&#39;, error);
++     console.error('\n❌ Error:', error);
 +   }
 + }
 + 
@@ -2669,7 +2669,7 @@ Lines added: 100, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: lib/feishu-scraper.ts</summary>
+<details><summary>Tool use: **write** • Edit file: lib/feishu-scraper.ts</summary>
 
 **Chunk 1**
 Lines added: 99, lines removed: 1
@@ -2690,40 +2690,40 @@ Lines added: 99, lines removed: 1
 + export async function scrapeFeishuDocument(options: FeishuScraperOptions) {
 +   try {
 +     const headers: HeadersInit = {
-+       &#39;User-Agent&#39;: &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36&#39;,
-+       &#39;Accept&#39;: &#39;text/html,application/json&#39;,
++       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
++       'Accept': 'text/html,application/json',
 +     };
 +     
 +     if (options.cookie) {
-+       headers[&#39;Cookie&#39;] = options.cookie;
++       headers['Cookie'] = options.cookie;
 +     }
 +     
 +     const response = await fetch(options.url, {
 +       headers,
-+       method: &#39;GET&#39;,
++       method: 'GET',
 +     });
 +     
 +     if (!response.ok) {
 +       throw new Error(&#96;HTTP ${response.status}: ${response.statusText}&#96;);
 +     }
 +     
-+     const contentType = response.headers.get(&#39;content-type&#39;);
++     const contentType = response.headers.get('content-type');
 +     
 +     // Try to parse as JSON first
-+     if (contentType?.includes(&#39;application/json&#39;)) {
++     if (contentType?.includes('application/json')) {
 +       const data = await response.json();
-+       return { success: true, data, contentType: &#39;json&#39; };
++       return { success: true, data, contentType: 'json' };
 +     }
 +     
 +     // Otherwise get HTML
 +     const html = await response.text();
 +     
-+     // Check if it&#39;s a login page or requires authentication
-+     if (html.includes(&#39;登录&#39;) || html.includes(&#39;login&#39;) || html.includes(&#39;auth&#39;)) {
++     // Check if it's a login page or requires authentication
++     if (html.includes('登录') || html.includes('login') || html.includes('auth')) {
 +       return { 
 +         success: false, 
-+         error: &#39;Authentication required&#39;,
-+         message: &#39;文档需要登录访问，请提供 Cookie 或手动导出数据&#39;
++         error: 'Authentication required',
++         message: '文档需要登录访问，请提供 Cookie 或手动导出数据'
 +       };
 +     }
 +     
@@ -2731,20 +2731,20 @@ Lines added: 99, lines removed: 1
 +     const jsonMatch = html.match(/&lt;script[^&gt;]*&gt;window\.__INITIAL_STATE__\s*=\s*({.+?})&lt;\/script&gt;/);
 +     if (jsonMatch) {
 +       const data = JSON.parse(jsonMatch[1]);
-+       return { success: true, data, contentType: &#39;embedded-json&#39; };
++       return { success: true, data, contentType: 'embedded-json' };
 +     }
 +     
 +     return { 
 +       success: false, 
-+       error: &#39;Could not parse document&#39;,
-+       message: &#39;无法自动解析文档，建议手动导出数据&#39;
++       error: 'Could not parse document',
++       message: '无法自动解析文档，建议手动导出数据'
 +     };
 +     
 +   } catch (error) {
 +     return {
 +       success: false,
-+       error: error instanceof Error ? error.message : &#39;Unknown error&#39;,
-+       message: &#39;请求失败，可能是网络问题或需要认证&#39;
++       error: error instanceof Error ? error.message : 'Unknown error',
++       message: '请求失败，可能是网络问题或需要认证'
 +     };
 +   }
 + }
@@ -2771,7 +2771,7 @@ Lines added: 99, lines removed: 1
 +     
 +     return [];
 +   } catch (error) {
-+     console.error(&#39;Error extracting table data:&#39;, error);
++     console.error('Error extracting table data:', error);
 +     return [];
 +   }
 + }
@@ -2786,7 +2786,7 @@ Lines added: 99, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/api/import/feishu/route.ts</summary>
+<details><summary>Tool use: **write** • Edit file: app/api/import/feishu/route.ts</summary>
 
 **Chunk 1**
 Lines added: 68, lines removed: 1
@@ -2794,8 +2794,8 @@ Lines added: 68, lines removed: 1
 ```diff
 @@ -1,1 +1,68 @@
 - 
-+ import { NextRequest, NextResponse } from &#39;next/server&#39;;
-+ import { scrapeFeishuDocument, extractTableData } from &#39;@/lib/feishu-scraper&#39;;
++ import { NextRequest, NextResponse } from 'next/server';
++ import { scrapeFeishuDocument, extractTableData } from '@/lib/feishu-scraper';
 + 
 + // POST scrape Feishu document
 + export async function POST(request: NextRequest) {
@@ -2805,15 +2805,15 @@ Lines added: 68, lines removed: 1
 +     
 +     if (!url) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;URL is required&#39; },
++         { success: false, error: 'URL is required' },
 +         { status: 400 }
 +       );
 +     }
 +     
 +     // Validate URL
-+     if (!url.includes(&#39;feishu.cn&#39;) &amp;&amp; !url.includes(&#39;larksuite.com&#39;)) {
++     if (!url.includes('feishu.cn') &amp;&amp; !url.includes('larksuite.com')) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;Invalid Feishu URL&#39; },
++         { success: false, error: 'Invalid Feishu URL' },
 +         { status: 400 }
 +       );
 +     }
@@ -2826,7 +2826,7 @@ Lines added: 68, lines removed: 1
 +           success: false, 
 +           error: result.error,
 +           message: result.message,
-+           requiresAuth: result.error === &#39;Authentication required&#39;
++           requiresAuth: result.error === 'Authentication required'
 +         },
 +         { status: 400 }
 +       );
@@ -2839,8 +2839,8 @@ Lines added: 68, lines removed: 1
 +       return NextResponse.json(
 +         { 
 +           success: false, 
-+           error: &#39;No data found&#39;,
-+           message: &#39;未找到数据，请检查文档链接或权限&#39;
++           error: 'No data found',
++           message: '未找到数据，请检查文档链接或权限'
 +         },
 +         { status: 404 }
 +       );
@@ -2854,9 +2854,9 @@ Lines added: 68, lines removed: 1
 +       },
 +     });
 +   } catch (error) {
-+     console.error(&#39;Feishu scrape error:&#39;, error);
++     console.error('Feishu scrape error:', error);
 +     return NextResponse.json(
-+       { success: false, error: &#39;Failed to fetch Feishu document&#39; },
++       { success: false, error: 'Failed to fetch Feishu document' },
 +       { status: 500 }
 +     );
 +   }
@@ -2894,7 +2894,7 @@ Lines added: 68, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 327, lines removed: 1
@@ -2902,10 +2902,10 @@ Lines added: 327, lines removed: 1
 ```diff
 @@ -1,1 +1,327 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { useState } from &#39;react&#39;;
-+ import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle } from &#39;lucide-react&#39;;
++ import { useState } from 'react';
++ import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle } from 'lucide-react';
 + 
 + interface ImportModalProps {
 +   isOpen: boolean;
@@ -2913,30 +2913,30 @@ Lines added: 327, lines removed: 1
 +   onImportSuccess: () =&gt; void;
 + }
 + 
-+ type ImportMode = &#39;feishu&#39; | &#39;json&#39; | &#39;manual&#39;;
++ type ImportMode = 'feishu' | 'json' | 'manual';
 + 
 + export default function ImportModal({ isOpen, onClose, onImportSuccess }: ImportModalProps) {
-+   const [mode, setMode] = useState&lt;ImportMode&gt;(&#39;feishu&#39;);
-+   const [feishuUrl, setFeishuUrl] = useState(&#39;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1&#39;);
-+   const [cookie, setCookie] = useState(&#39;&#39;);
-+   const [jsonData, setJsonData] = useState(&#39;&#39;);
-+   const [importMode, setImportMode] = useState&lt;&#39;merge&#39; | &#39;replace&#39;&gt;(&#39;merge&#39;);
++   const [mode, setMode] = useState&lt;ImportMode&gt;('feishu');
++   const [feishuUrl, setFeishuUrl] = useState('https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1');
++   const [cookie, setCookie] = useState('');
++   const [jsonData, setJsonData] = useState('');
++   const [importMode, setImportMode] = useState&lt;'merge' | 'replace'&gt;('merge');
 +   const [loading, setLoading] = useState(false);
-+   const [error, setError] = useState(&#39;&#39;);
-+   const [success, setSuccess] = useState(&#39;&#39;);
++   const [error, setError] = useState('');
++   const [success, setSuccess] = useState('');
 + 
 +   if (!isOpen) return null;
 + 
 +   const handleFeishuImport = async () =&gt; {
 +     setLoading(true);
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
++     setError('');
++     setSuccess('');
 + 
 +     try {
 +       // Step 1: Fetch data from Feishu
-+       const scrapeResponse = await fetch(&#39;/api/import/feishu&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const scrapeResponse = await fetch('/api/import/feishu', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({ url: feishuUrl, cookie: cookie || undefined }),
 +       });
 + 
@@ -2945,16 +2945,16 @@ Lines added: 327, lines removed: 1
 +       if (!scrapeResult.success) {
 +         setError(scrapeResult.message || scrapeResult.error);
 +         if (scrapeResult.requiresAuth) {
-+           setError(&#39;文档需要认证。请提供 Cookie 或使用手动导入方式。&#39;);
++           setError('文档需要认证。请提供 Cookie 或使用手动导入方式。');
 +         }
 +         setLoading(false);
 +         return;
 +       }
 + 
 +       // Step 2: Import the data
-+       const importResponse = await fetch(&#39;/api/import&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const importResponse = await fetch('/api/import', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({
 +           items: scrapeResult.data.items,
 +           mode: importMode,
@@ -2970,10 +2970,10 @@ Lines added: 327, lines removed: 1
 +           handleClose();
 +         }, 1500);
 +       } else {
-+         setError(importResult.error || &#39;导入失败&#39;);
++         setError(importResult.error || '导入失败');
 +       }
 +     } catch (err) {
-+       setError(&#39;请求失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++       setError('请求失败：' + (err instanceof Error ? err.message : '未知错误'));
 +     } finally {
 +       setLoading(false);
 +     }
@@ -2981,21 +2981,21 @@ Lines added: 327, lines removed: 1
 + 
 +   const handleJsonImport = async () =&gt; {
 +     setLoading(true);
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
++     setError('');
++     setSuccess('');
 + 
 +     try {
 +       const items = JSON.parse(jsonData);
 + 
 +       if (!Array.isArray(items)) {
-+         setError(&#39;JSON 格式错误：必须是数组&#39;);
++         setError('JSON 格式错误：必须是数组');
 +         setLoading(false);
 +         return;
 +       }
 + 
-+       const response = await fetch(&#39;/api/import&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const response = await fetch('/api/import', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({ items, mode: importMode }),
 +       });
 + 
@@ -3008,13 +3008,13 @@ Lines added: 327, lines removed: 1
 +           handleClose();
 +         }, 1500);
 +       } else {
-+         setError(result.error || &#39;导入失败&#39;);
++         setError(result.error || '导入失败');
 +       }
 +     } catch (err) {
 +       if (err instanceof SyntaxError) {
-+         setError(&#39;JSON 格式错误：&#39; + err.message);
++         setError('JSON 格式错误：' + err.message);
 +       } else {
-+         setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++         setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
 +       }
 +     } finally {
 +       setLoading(false);
@@ -3022,96 +3022,96 @@ Lines added: 327, lines removed: 1
 +   };
 + 
 +   const handleImport = () =&gt; {
-+     if (mode === &#39;feishu&#39;) {
++     if (mode === 'feishu') {
 +       handleFeishuImport();
-+     } else if (mode === &#39;json&#39;) {
++     } else if (mode === 'json') {
 +       handleJsonImport();
 +     }
 +   };
 + 
 +   const handleClose = () =&gt; {
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
-+     setJsonData(&#39;&#39;);
++     setError('');
++     setSuccess('');
++     setJsonData('');
 +     onClose();
 +   };
 + 
 +   return (
-+     &lt;div className=&quot;fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50&quot;&gt;
-+       &lt;div className=&quot;bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto&quot;&gt;
++     &lt;div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"&gt;
++       &lt;div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"&gt;
 +         {/* Header */}
-+         &lt;div className=&quot;flex items-center justify-between p-6 border-b&quot;&gt;
-+           &lt;h2 className=&quot;text-2xl font-bold text-gray-900&quot;&gt;导入数据&lt;/h2&gt;
++         &lt;div className="flex items-center justify-between p-6 border-b"&gt;
++           &lt;h2 className="text-2xl font-bold text-gray-900"&gt;导入数据&lt;/h2&gt;
 +           &lt;button
 +             onClick={handleClose}
-+             className=&quot;p-2 hover:bg-gray-100 rounded-lg transition-colors&quot;
++             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
 +           &gt;
-+             &lt;X className=&quot;w-5 h-5&quot; /&gt;
++             &lt;X className="w-5 h-5" /&gt;
 +           &lt;/button&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Content */}
-+         &lt;div className=&quot;p-6&quot;&gt;
++         &lt;div className="p-6"&gt;
 +           {/* Import Mode Tabs */}
-+           &lt;div className=&quot;flex gap-2 mb-6&quot;&gt;
++           &lt;div className="flex gap-2 mb-6"&gt;
 +             &lt;button
-+               onClick={() =&gt; setMode(&#39;feishu&#39;)}
++               onClick={() =&gt; setMode('feishu')}
 +               className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-+                 mode === &#39;feishu&#39;
-+                   ? &#39;bg-blue-600 text-white&#39;
-+                   : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
++                 mode === 'feishu'
++                   ? 'bg-blue-600 text-white'
++                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 +               }&#96;}
 +             &gt;
-+               &lt;LinkIcon className=&quot;w-4 h-4&quot; /&gt;
++               &lt;LinkIcon className="w-4 h-4" /&gt;
 +               飞书文档
 +             &lt;/button&gt;
 +             &lt;button
-+               onClick={() =&gt; setMode(&#39;json&#39;)}
++               onClick={() =&gt; setMode('json')}
 +               className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-+                 mode === &#39;json&#39;
-+                   ? &#39;bg-blue-600 text-white&#39;
-+                   : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
++                 mode === 'json'
++                   ? 'bg-blue-600 text-white'
++                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 +               }&#96;}
 +             &gt;
-+               &lt;FileJson className=&quot;w-4 h-4&quot; /&gt;
++               &lt;FileJson className="w-4 h-4" /&gt;
 +               JSON 数据
 +             &lt;/button&gt;
 +           &lt;/div&gt;
 + 
 +           {/* Feishu Import */}
-+           {mode === &#39;feishu&#39; &amp;&amp; (
-+             &lt;div className=&quot;space-y-4&quot;&gt;
++           {mode === 'feishu' &amp;&amp; (
++             &lt;div className="space-y-4"&gt;
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +                   飞书文档链接
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={feishuUrl}
 +                   onChange={(e) =&gt; setFeishuUrl(e.target.value)}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;https://xxx.feishu.cn/wiki/...&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="https://xxx.feishu.cn/wiki/..."
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +                   Cookie（如果文档需要登录）
-+                   &lt;span className=&quot;text-gray-500 text-xs ml-2&quot;&gt;可选&lt;/span&gt;
++                   &lt;span className="text-gray-500 text-xs ml-2"&gt;可选&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;textarea
 +                   value={cookie}
 +                   onChange={(e) =&gt; setCookie(e.target.value)}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono&quot;
-+                   placeholder=&quot;从浏览器开发者工具中复制 Cookie...&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono"
++                   placeholder="从浏览器开发者工具中复制 Cookie..."
 +                 /&gt;
 +               &lt;/div&gt;
 + 
-+               &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
-+                 &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
++               &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
++                 &lt;p className="text-sm text-blue-800"&gt;
 +                   💡 &lt;strong&gt;提示：&lt;/strong&gt;如果文档需要登录，请：
 +                 &lt;/p&gt;
-+                 &lt;ol className=&quot;text-sm text-blue-700 mt-2 ml-4 list-decimal space-y-1&quot;&gt;
++                 &lt;ol className="text-sm text-blue-700 mt-2 ml-4 list-decimal space-y-1"&gt;
 +                   &lt;li&gt;在浏览器中打开飞书文档并登录&lt;/li&gt;
 +                   &lt;li&gt;按 F12 打开开发者工具&lt;/li&gt;
 +                   &lt;li&gt;在 Application/Storage → Cookies 中复制 Cookie&lt;/li&gt;
@@ -3122,25 +3122,25 @@ Lines added: 327, lines removed: 1
 +           )}
 + 
 +           {/* JSON Import */}
-+           {mode === &#39;json&#39; &amp;&amp; (
-+             &lt;div className=&quot;space-y-4&quot;&gt;
++           {mode === 'json' &amp;&amp; (
++             &lt;div className="space-y-4"&gt;
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +                   JSON 数据
 +                 &lt;/label&gt;
 +                 &lt;textarea
 +                   value={jsonData}
 +                   onChange={(e) =&gt; setJsonData(e.target.value)}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono&quot;
-+                   placeholder={&#96;[\n  {\n    &quot;效果&quot;: &quot;示例标题&quot;,\n    &quot;描述&quot;: &quot;示例描述&quot;,\n    &quot;标签&quot;: &quot;标签1,标签2&quot;,\n    &quot;提示词&quot;: &quot;示例提示词&quot;,\n    &quot;来源&quot;: &quot;https://example.com&quot;\n  }\n]&#96;}
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono"
++                   placeholder={&#96;[\n  {\n    "效果": "示例标题",\n    "描述": "示例描述",\n    "标签": "标签1,标签2",\n    "提示词": "示例提示词",\n    "来源": "https://example.com"\n  }\n]&#96;}
 +                 /&gt;
 +               &lt;/div&gt;
 + 
-+               &lt;div className=&quot;bg-gray-50 border border-gray-200 rounded-lg p-4&quot;&gt;
-+                 &lt;p className=&quot;text-sm text-gray-700&quot;&gt;
++               &lt;div className="bg-gray-50 border border-gray-200 rounded-lg p-4"&gt;
++                 &lt;p className="text-sm text-gray-700"&gt;
 +                   &lt;strong&gt;支持的字段：&lt;/strong&gt;
 +                 &lt;/p&gt;
-+                 &lt;ul className=&quot;text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1&quot;&gt;
++                 &lt;ul className="text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1"&gt;
 +                   &lt;li&gt;效果 / effect - 必填&lt;/li&gt;
 +                   &lt;li&gt;描述 / description - 必填&lt;/li&gt;
 +                   &lt;li&gt;提示词 / prompt - 必填&lt;/li&gt;
@@ -3153,72 +3153,72 @@ Lines added: 327, lines removed: 1
 +           )}
 + 
 +           {/* Import Mode Selection */}
-+           &lt;div className=&quot;mt-6&quot;&gt;
-+             &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++           &lt;div className="mt-6"&gt;
++             &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +               导入模式
 +             &lt;/label&gt;
-+             &lt;div className=&quot;flex gap-4&quot;&gt;
-+               &lt;label className=&quot;flex items-center&quot;&gt;
++             &lt;div className="flex gap-4"&gt;
++               &lt;label className="flex items-center"&gt;
 +                 &lt;input
-+                   type=&quot;radio&quot;
-+                   value=&quot;merge&quot;
-+                   checked={importMode === &#39;merge&#39;}
-+                   onChange={(e) =&gt; setImportMode(e.target.value as &#39;merge&#39;)}
-+                   className=&quot;mr-2&quot;
++                   type="radio"
++                   value="merge"
++                   checked={importMode === 'merge'}
++                   onChange={(e) =&gt; setImportMode(e.target.value as 'merge')}
++                   className="mr-2"
 +                 /&gt;
-+                 &lt;span className=&quot;text-sm&quot;&gt;合并（跳过重复）&lt;/span&gt;
++                 &lt;span className="text-sm"&gt;合并（跳过重复）&lt;/span&gt;
 +               &lt;/label&gt;
-+               &lt;label className=&quot;flex items-center&quot;&gt;
++               &lt;label className="flex items-center"&gt;
 +                 &lt;input
-+                   type=&quot;radio&quot;
-+                   value=&quot;replace&quot;
-+                   checked={importMode === &#39;replace&#39;}
-+                   onChange={(e) =&gt; setImportMode(e.target.value as &#39;replace&#39;)}
-+                   className=&quot;mr-2&quot;
++                   type="radio"
++                   value="replace"
++                   checked={importMode === 'replace'}
++                   onChange={(e) =&gt; setImportMode(e.target.value as 'replace')}
++                   className="mr-2"
 +                 /&gt;
-+                 &lt;span className=&quot;text-sm&quot;&gt;替换（清空后导入）&lt;/span&gt;
++                 &lt;span className="text-sm"&gt;替换（清空后导入）&lt;/span&gt;
 +               &lt;/label&gt;
 +             &lt;/div&gt;
 +           &lt;/div&gt;
 + 
 +           {/* Error Message */}
 +           {error &amp;&amp; (
-+             &lt;div className=&quot;mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
-+               &lt;AlertCircle className=&quot;w-5 h-5 text-red-600 flex-shrink-0 mt-0.5&quot; /&gt;
-+               &lt;p className=&quot;text-sm text-red-800&quot;&gt;{error}&lt;/p&gt;
++             &lt;div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"&gt;
++               &lt;AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" /&gt;
++               &lt;p className="text-sm text-red-800"&gt;{error}&lt;/p&gt;
 +             &lt;/div&gt;
 +           )}
 + 
 +           {/* Success Message */}
 +           {success &amp;&amp; (
-+             &lt;div className=&quot;mt-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
-+               &lt;CheckCircle className=&quot;w-5 h-5 text-green-600 flex-shrink-0 mt-0.5&quot; /&gt;
-+               &lt;p className=&quot;text-sm text-green-800&quot;&gt;{success}&lt;/p&gt;
++             &lt;div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3"&gt;
++               &lt;CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" /&gt;
++               &lt;p className="text-sm text-green-800"&gt;{success}&lt;/p&gt;
 +             &lt;/div&gt;
 +           )}
 +         &lt;/div&gt;
 + 
 +         {/* Footer */}
-+         &lt;div className=&quot;flex items-center justify-end gap-3 p-6 border-t bg-gray-50&quot;&gt;
++         &lt;div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50"&gt;
 +           &lt;button
 +             onClick={handleClose}
-+             className=&quot;px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium&quot;
++             className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
 +           &gt;
 +             取消
 +           &lt;/button&gt;
 +           &lt;button
 +             onClick={handleImport}
-+             disabled={loading || (mode === &#39;feishu&#39; &amp;&amp; !feishuUrl) || (mode === &#39;json&#39; &amp;&amp; !jsonData)}
-+             className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed&quot;
++             disabled={loading || (mode === 'feishu' &amp;&amp; !feishuUrl) || (mode === 'json' &amp;&amp; !jsonData)}
++             className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
 +           &gt;
 +             {loading ? (
 +               &lt;&gt;
-+                 &lt;div className=&quot;w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
++                 &lt;div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
 +                 导入中...
 +               &lt;/&gt;
 +             ) : (
 +               &lt;&gt;
-+                 &lt;Upload className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Upload className="w-4 h-4" /&gt;
 +                 开始导入
 +               &lt;/&gt;
 +             )}
@@ -3248,21 +3248,21 @@ Lines added: 327, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 1
 
 ```diff
 @@ -3,8 +3,9 @@
-  import { useEffect, useState } from &#39;react&#39;;
-  import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
-- import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen } from &#39;lucide-react&#39;;
-+ import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from &#39;lucide-react&#39;;
-  import Link from &#39;next/link&#39;;
-  import LoadingSpinner from &#39;@/components/LoadingSpinner&#39;;
-  import EmptyState from &#39;@/components/EmptyState&#39;;
-+ import ImportModal from &#39;@/components/ImportModal&#39;;
+  import { useEffect, useState } from 'react';
+  import { PromptItem, CreatePromptRequest } from '@/types';
+- import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen } from 'lucide-react';
++ import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from 'lucide-react';
+  import Link from 'next/link';
+  import LoadingSpinner from '@/components/LoadingSpinner';
+  import EmptyState from '@/components/EmptyState';
++ import ImportModal from '@/components/ImportModal';
   
   export default function AdminPage() {
 ```
@@ -3275,7 +3275,7 @@ Lines added: 2, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
@@ -3286,7 +3286,7 @@ Lines added: 1, lines removed: undefined
     const [isCreating, setIsCreating] = useState(false);
 +   const [showImportModal, setShowImportModal] = useState(false);
     const [formData, setFormData] = useState&lt;CreatePromptRequest&gt;({
-      effect: &#39;&#39;,
+      effect: '',
 ```
 
 </details>
@@ -3297,7 +3297,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 7, lines removed: undefined
@@ -3308,9 +3308,9 @@ Lines added: 7, lines removed: undefined
                 &lt;/Link&gt;
 +               &lt;button
 +                 onClick={() =&gt; setShowImportModal(true)}
-+                 className=&quot;px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2&quot;
++                 className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2"
 +               &gt;
-+                 &lt;Download className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Download className="w-4 h-4" /&gt;
 +                 导入数据
 +               &lt;/button&gt;
                 &lt;button
@@ -3325,7 +3325,7 @@ Lines added: 7, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 10, lines removed: undefined
@@ -3333,7 +3333,7 @@ Lines added: 10, lines removed: undefined
 ```diff
 @@ -194,4 +194,14 @@
   
-        &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+        &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 +         {/* Import Modal */}
 +         &lt;ImportModal
 +           isOpen={showImportModal}
@@ -3406,17 +3406,17 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: package.json</summary>
+<details><summary>Tool use: **search_replace** • Edit file: package.json</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -22,4 +22,5 @@
-      &quot;postcss&quot;: &quot;^8.4.0&quot;,
-      &quot;tailwindcss&quot;: &quot;^3.4.0&quot;,
-+     &quot;tsx&quot;: &quot;^4.7.0&quot;,
-      &quot;typescript&quot;: &quot;^5.3.0&quot;
+      "postcss": "^8.4.0",
+      "tailwindcss": "^3.4.0",
++     "tsx": "^4.7.0",
+      "typescript": "^5.3.0"
     }
 ```
 
@@ -3428,7 +3428,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: docs/IMPORT_GUIDE.md</summary>
+<details><summary>Tool use: **write** • Edit file: docs/IMPORT_GUIDE.md</summary>
 
 **Chunk 1**
 Lines added: 151, lines removed: 1
@@ -3446,15 +3446,15 @@ Lines added: 151, lines removed: 1
 + 
 + 打开浏览器访问：http://localhost:3000/admin
 + 
-+ ### 2. 点击&quot;导入数据&quot;按钮
++ ### 2. 点击"导入数据"按钮
 + 
-+ 在页面右上角点击绿色的&quot;导入数据&quot;按钮。
++ 在页面右上角点击绿色的"导入数据"按钮。
 + 
 + ### 3. 选择导入方式
 + 
 + #### 方式 A：飞书文档直接导入
 + 
-+ 1. 选择&quot;飞书文档&quot;选项卡
++ 1. 选择"飞书文档"选项卡
 + 2. 输入飞书文档链接：
 +    &#96;&#96;&#96;
 +    https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1
@@ -3465,13 +3465,13 @@ Lines added: 151, lines removed: 1
 +    - 按 F12 打开开发者工具
 +    - 进入 Application (Chrome) 或 Storage (Firefox) 标签
 +    - 在 Cookies 部分找到 &#96;feishu.cn&#96; 的 Cookie
-+    - 复制整个 Cookie 字符串粘贴到&quot;Cookie&quot;输入框
++    - 复制整个 Cookie 字符串粘贴到"Cookie"输入框
 + 
 + 4. 选择导入模式：
-+    - **合并**：只导入不重复的数据（根据&quot;效果&quot;字段判断）
++    - **合并**：只导入不重复的数据（根据"效果"字段判断）
 +    - **替换**：清空现有数据后导入
 + 
-+ 5. 点击&quot;开始导入&quot;
++ 5. 点击"开始导入"
 + 
 + #### 方式 B：JSON 数据导入
 + 
@@ -3483,19 +3483,19 @@ Lines added: 151, lines removed: 1
 + &#96;&#96;&#96;json
 + [
 +   {
-+     &quot;效果&quot;: &quot;生成产品营销文案&quot;,
-+     &quot;描述&quot;: &quot;帮助你快速生成吸引人的产品营销文案&quot;,
-+     &quot;标签&quot;: &quot;营销,文案,电商&quot;,
-+     &quot;提示词&quot;: &quot;请为以下产品生成一段吸引人的营销文案...&quot;,
-+     &quot;来源&quot;: &quot;https://example.com&quot;,
-+     &quot;图片&quot;: &quot;https://example.com/image.jpg&quot;
++     "效果": "生成产品营销文案",
++     "描述": "帮助你快速生成吸引人的产品营销文案",
++     "标签": "营销,文案,电商",
++     "提示词": "请为以下产品生成一段吸引人的营销文案...",
++     "来源": "https://example.com",
++     "图片": "https://example.com/image.jpg"
 +   }
 + ]
 + &#96;&#96;&#96;
 + 
-+ 3. 选择&quot;JSON 数据&quot;选项卡
++ 3. 选择"JSON 数据"选项卡
 + 4. 粘贴 JSON 数据
-+ 5. 选择导入模式并点击&quot;开始导入&quot;
++ 5. 选择导入模式并点击"开始导入"
 + 
 + ## 方式二：使用命令行脚本
 + 
@@ -3532,12 +3532,12 @@ Lines added: 151, lines removed: 1
 + &#96;&#96;&#96;json
 + [
 +   {
-+     &quot;效果&quot;: &quot;代码审查助手&quot;,
-+     &quot;描述&quot;: &quot;帮助开发者进行代码审查，识别潜在问题&quot;,
-+     &quot;标签&quot;: &quot;开发,代码审查,技术&quot;,
-+     &quot;提示词&quot;: &quot;请对以下代码进行详细审查...&quot;,
-+     &quot;来源&quot;: &quot;https://example.com&quot;,
-+     &quot;图片&quot;: &quot;&quot;
++     "效果": "代码审查助手",
++     "描述": "帮助开发者进行代码审查，识别潜在问题",
++     "标签": "开发,代码审查,技术",
++     "提示词": "请对以下代码进行详细审查...",
++     "来源": "https://example.com",
++     "图片": ""
 +   }
 + ]
 + &#96;&#96;&#96;
@@ -3547,12 +3547,12 @@ Lines added: 151, lines removed: 1
 + &#96;&#96;&#96;json
 + [
 +   {
-+     &quot;effect&quot;: &quot;Code Review Assistant&quot;,
-+     &quot;description&quot;: &quot;Help developers review code and identify potential issues&quot;,
-+     &quot;tags&quot;: [&quot;development&quot;, &quot;code-review&quot;, &quot;tech&quot;],
-+     &quot;prompt&quot;: &quot;Please review the following code...&quot;,
-+     &quot;source&quot;: &quot;https://example.com&quot;,
-+     &quot;imageUrl&quot;: &quot;&quot;
++     "effect": "Code Review Assistant",
++     "description": "Help developers review code and identify potential issues",
++     "tags": ["development", "code-review", "tech"],
++     "prompt": "Please review the following code...",
++     "source": "https://example.com",
++     "imageUrl": ""
 +   }
 + ]
 + &#96;&#96;&#96;
@@ -3564,7 +3564,7 @@ Lines added: 151, lines removed: 1
 + A: 检查导入结果提示，可能是因为：
 + - 数据格式不正确
 + - 必填字段缺失
-+ - 选择了&quot;合并&quot;模式但数据已存在（效果字段重复）
++ - 选择了"合并"模式但数据已存在（效果字段重复）
 + 
 + ### Q: 飞书文档需要登录怎么办？
 + 
@@ -3574,7 +3574,7 @@ Lines added: 151, lines removed: 1
 + 
 + ### Q: 导入的数据可以批量修改吗？
 + 
-+ A: 可以。导出现有数据，修改后重新导入（选择&quot;替换&quot;模式）。
++ A: 可以。导出现有数据，修改后重新导入（选择"替换"模式）。
 + 
 + ### Q: 如何导出当前数据？
 + 
@@ -3597,7 +3597,7 @@ Lines added: 151, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: scripts/feishu-data.example.json</summary>
+<details><summary>Tool use: **write** • Edit file: scripts/feishu-data.example.json</summary>
 
 **Chunk 1**
 Lines added: 19, lines removed: 1
@@ -3607,20 +3607,20 @@ Lines added: 19, lines removed: 1
 - 
 + [
 +   {
-+     &quot;效果&quot;: &quot;示例提示词1&quot;,
-+     &quot;描述&quot;: &quot;这是一个示例描述，展示如何从飞书导入数据&quot;,
-+     &quot;评测对象&quot;: &quot;示例,测试,导入&quot;,
-+     &quot;提示词&quot;: &quot;这是示例提示词内容，请根据实际需求替换&quot;,
-+     &quot;提示词来源&quot;: &quot;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh&quot;,
-+     &quot;更新时间&quot;: &quot;2024-01-01T00:00:00.000Z&quot;
++     "效果": "示例提示词1",
++     "描述": "这是一个示例描述，展示如何从飞书导入数据",
++     "评测对象": "示例,测试,导入",
++     "提示词": "这是示例提示词内容，请根据实际需求替换",
++     "提示词来源": "https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh",
++     "更新时间": "2024-01-01T00:00:00.000Z"
 +   },
 +   {
-+     &quot;效果&quot;: &quot;示例提示词2&quot;,
-+     &quot;描述&quot;: &quot;另一个示例，演示多条数据导入&quot;,
-+     &quot;评测对象&quot;: &quot;示例,批量导入&quot;,
-+     &quot;提示词&quot;: &quot;第二条示例提示词内容&quot;,
-+     &quot;提示词来源&quot;: &quot;https://example.com&quot;,
-+     &quot;更新时间&quot;: &quot;2024-01-02T00:00:00.000Z&quot;
++     "效果": "示例提示词2",
++     "描述": "另一个示例，演示多条数据导入",
++     "评测对象": "示例,批量导入",
++     "提示词": "第二条示例提示词内容",
++     "提示词来源": "https://example.com",
++     "更新时间": "2024-01-02T00:00:00.000Z"
 +   }
 + ]
 + 
@@ -3634,7 +3634,7 @@ Lines added: 19, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 6, lines removed: undefined
@@ -3646,7 +3646,7 @@ Lines added: 6, lines removed: undefined
 + 
 + ### 4. 导入飞书数据
 + 
-+ 访问管理后台，点击&quot;导入数据&quot;按钮，按照界面提示导入飞书文档数据。
++ 访问管理后台，点击"导入数据"按钮，按照界面提示导入飞书文档数据。
 + 
 + 详细说明请参考：[数据导入指南](docs/IMPORT_GUIDE.md)
   
@@ -3661,7 +3661,7 @@ Lines added: 6, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: undefined
@@ -3725,7 +3725,7 @@ Lint results
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -3740,7 +3740,7 @@ No results found
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: QUICK_START.md</summary>
+<details><summary>Tool use: **write** • Edit file: QUICK_START.md</summary>
 
 **Chunk 1**
 Lines added: 125, lines removed: 1
@@ -3770,10 +3770,10 @@ Lines added: 125, lines removed: 1
 + 
 + 1. 打开浏览器访问：http://localhost:3000/admin
 + 
-+ 2. 点击右上角绿色的 **&quot;导入数据&quot;** 按钮
++ 2. 点击右上角绿色的 **"导入数据"** 按钮
 + 
 + 3. 在弹出的对话框中：
-+    - 选择 **&quot;飞书文档&quot;** 选项卡
++    - 选择 **"飞书文档"** 选项卡
 +    - 飞书文档链接已经预填好了：
 +      &#96;&#96;&#96;
 +      https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1
@@ -3785,13 +3785,13 @@ Lines added: 125, lines removed: 1
 +    - 进入 &#96;Application&#96; (Chrome) 或 &#96;Storage&#96; (Firefox) 标签
 +    - 在左侧展开 &#96;Cookies&#96; → &#96;https://feishu.cn&#96;
 +    - 复制所有 Cookie（可以使用 &#96;document.cookie&#96; 命令）
-+    - 粘贴到&quot;Cookie&quot;输入框
++    - 粘贴到"Cookie"输入框
 + 
 + 5. 选择导入模式：
 +    - **合并**：保留现有数据，只添加新数据
 +    - **替换**：清空后重新导入
 + 
-+ 6. 点击 **&quot;开始导入&quot;** 按钮
++ 6. 点击 **"开始导入"** 按钮
 + 
 + 7. 等待导入完成，会显示成功导入的数量
 + 
@@ -3801,7 +3801,7 @@ Lines added: 125, lines removed: 1
 + 
 + 1. 在飞书文档中手动复制数据
 + 2. 转换为 JSON 格式（参考 &#96;scripts/feishu-data.example.json&#96;）
-+ 3. 在导入对话框中选择 **&quot;JSON 数据&quot;** 选项卡
++ 3. 在导入对话框中选择 **"JSON 数据"** 选项卡
 + 4. 粘贴 JSON 数据并导入
 + 
 + ## 第四步：查看效果
@@ -4032,7 +4032,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: lib/csv-parser.ts</summary>
+<details><summary>Tool use: **write** • Edit file: lib/csv-parser.ts</summary>
 
 **Chunk 1**
 Lines added: 131, lines removed: 1
@@ -4050,7 +4050,7 @@ Lines added: 131, lines removed: 1
 + 
 + // Parse CSV text into array of objects
 + export function parseCSV(csvText: string): CSVRow[] {
-+   const lines = csvText.split(&#39;\n&#39;).filter(line =&gt; line.trim());
++   const lines = csvText.split('\n').filter(line =&gt; line.trim());
 +   
 +   if (lines.length === 0) {
 +     return [];
@@ -4067,7 +4067,7 @@ Lines added: 131, lines removed: 1
 +     if (values.length &gt; 0) {
 +       const row: CSVRow = {};
 +       headers.forEach((header, index) =&gt; {
-+         row[header] = values[index] || &#39;&#39;;
++         row[header] = values[index] || '';
 +       });
 +       data.push(row);
 +     }
@@ -4079,26 +4079,26 @@ Lines added: 131, lines removed: 1
 + // Parse a single CSV line, handling quoted fields
 + function parseCSVLine(line: string): string[] {
 +   const result: string[] = [];
-+   let current = &#39;&#39;;
++   let current = '';
 +   let inQuotes = false;
 +   
 +   for (let i = 0; i &lt; line.length; i++) {
 +     const char = line[i];
 +     const nextChar = line[i + 1];
 +     
-+     if (char === &#39;&quot;&#39;) {
-+       if (inQuotes &amp;&amp; nextChar === &#39;&quot;&#39;) {
++     if (char === '"') {
++       if (inQuotes &amp;&amp; nextChar === '"') {
 +         // Escaped quote
-+         current += &#39;&quot;&#39;;
++         current += '"';
 +         i++;
 +       } else {
 +         // Toggle quote state
 +         inQuotes = !inQuotes;
 +       }
-+     } else if (char === &#39;,&#39; &amp;&amp; !inQuotes) {
++     } else if (char === ',' &amp;&amp; !inQuotes) {
 +       // Field separator
 +       result.push(current.trim());
-+       current = &#39;&#39;;
++       current = '';
 +     } else {
 +       current += char;
 +     }
@@ -4114,14 +4114,14 @@ Lines added: 131, lines removed: 1
 + export function transformCSVToPrompts(csvData: CSVRow[]) {
 +   return csvData.map(row =&gt; {
 +     // Map CSV fields to our data model
-+     const effect = row[&#39;效果&#39;] || row[&#39;effect&#39;] || &#39;&#39;;
-+     const description = row[&#39;描述&#39;] || row[&#39;description&#39;] || &#39;&#39;;
-+     const prompt = row[&#39;提示词&#39;] || row[&#39;prompt&#39;] || &#39;&#39;;
-+     const source = row[&#39;引用来源&#39;] || row[&#39;来源&#39;] || row[&#39;source&#39;] || &#39;&#39;;
++     const effect = row['效果'] || row['effect'] || '';
++     const description = row['描述'] || row['description'] || '';
++     const prompt = row['提示词'] || row['prompt'] || '';
++     const source = row['引用来源'] || row['来源'] || row['source'] || '';
 +     
 +     // Parse tags from multiple possible fields
 +     let tags: string[] = [];
-+     const tagFields = [&#39;评测对象&#39;, &#39;tags&#39;, &#39;标签&#39;];
++     const tagFields = ['评测对象', 'tags', '标签'];
 +     for (const field of tagFields) {
 +       if (row[field]) {
 +         tags = row[field].split(/[,，、]/).map(t =&gt; t.trim()).filter(t =&gt; t);
@@ -4130,16 +4130,16 @@ Lines added: 131, lines removed: 1
 +     }
 +     
 +     // Get image URL
-+     const imageUrl = row[&#39;参考图&#39;] || row[&#39;imageUrl&#39;] || row[&#39;图片&#39;] || &#39;&#39;;
++     const imageUrl = row['参考图'] || row['imageUrl'] || row['图片'] || '';
 +     
 +     // Parse dates
-+     const updatedAt = row[&#39;最后更新时间&#39;] || row[&#39;修改时间&#39;] || row[&#39;updatedAt&#39;] || row[&#39;日期&#39;] || &#39;&#39;;
-+     const createdAt = row[&#39;创建时间&#39;] || row[&#39;createdAt&#39;] || updatedAt || &#39;&#39;;
++     const updatedAt = row['最后更新时间'] || row['修改时间'] || row['updatedAt'] || row['日期'] || '';
++     const createdAt = row['创建时间'] || row['createdAt'] || updatedAt || '';
 +     
 +     // Combine description with additional notes if available
 +     let fullDescription = description;
-+     if (row[&#39;说明&#39;] &amp;&amp; row[&#39;说明&#39;] !== description) {
-+       fullDescription = description + (description ? &#39;\n&#39; : &#39;&#39;) + row[&#39;说明&#39;];
++     if (row['说明'] &amp;&amp; row['说明'] !== description) {
++       fullDescription = description + (description ? '\n' : '') + row['说明'];
 +     }
 +     
 +     return {
@@ -4167,7 +4167,7 @@ Lines added: 131, lines removed: 1
 +       resolve(text);
 +     };
 +     reader.onerror = (e) =&gt; reject(e);
-+     reader.readAsText(file, &#39;UTF-8&#39;);
++     reader.readAsText(file, 'UTF-8');
 +   });
 + }
 + 
@@ -4181,7 +4181,7 @@ Lines added: 131, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/api/import/csv/route.ts</summary>
+<details><summary>Tool use: **write** • Edit file: app/api/import/csv/route.ts</summary>
 
 **Chunk 1**
 Lines added: 61, lines removed: 1
@@ -4189,8 +4189,8 @@ Lines added: 61, lines removed: 1
 ```diff
 @@ -1,1 +1,61 @@
 - 
-+ import { NextRequest, NextResponse } from &#39;next/server&#39;;
-+ import { parseCSV, transformCSVToPrompts } from &#39;@/lib/csv-parser&#39;;
++ import { NextRequest, NextResponse } from 'next/server';
++ import { parseCSV, transformCSVToPrompts } from '@/lib/csv-parser';
 + 
 + // POST parse CSV data
 + export async function POST(request: NextRequest) {
@@ -4200,7 +4200,7 @@ Lines added: 61, lines removed: 1
 +     
 +     if (!csvText) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;CSV text is required&#39; },
++         { success: false, error: 'CSV text is required' },
 +         { status: 400 }
 +       );
 +     }
@@ -4210,7 +4210,7 @@ Lines added: 61, lines removed: 1
 +     
 +     if (csvData.length === 0) {
 +       return NextResponse.json(
-+         { success: false, error: &#39;No valid data found in CSV&#39; },
++         { success: false, error: 'No valid data found in CSV' },
 +         { status: 400 }
 +       );
 +     }
@@ -4222,8 +4222,8 @@ Lines added: 61, lines removed: 1
 +       return NextResponse.json(
 +         { 
 +           success: false, 
-+           error: &#39;No valid items found&#39;,
-+           message: &#39;未找到有效数据，请检查CSV格式和必填字段&#39;
++           error: 'No valid items found',
++           message: '未找到有效数据，请检查CSV格式和必填字段'
 +         },
 +         { status: 400 }
 +       );
@@ -4238,12 +4238,12 @@ Lines added: 61, lines removed: 1
 +       },
 +     });
 +   } catch (error) {
-+     console.error(&#39;CSV parse error:&#39;, error);
++     console.error('CSV parse error:', error);
 +     return NextResponse.json(
 +       { 
 +         success: false, 
-+         error: &#39;Failed to parse CSV&#39;,
-+         message: error instanceof Error ? error.message : &#39;CSV解析失败&#39;
++         error: 'Failed to parse CSV',
++         message: error instanceof Error ? error.message : 'CSV解析失败'
 +       },
 +       { status: 500 }
 +     );
@@ -4282,20 +4282,20 @@ Lines added: 61, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 2
 
 ```diff
 @@ -1,6 +1,7 @@
-  &#39;use client&#39;;
+  'use client';
   
-- import { useState } from &#39;react&#39;;
-- import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle } from &#39;lucide-react&#39;;
-+ import { useState, useRef } from &#39;react&#39;;
-+ import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle, FileSpreadsheet } from &#39;lucide-react&#39;;
-+ import { readFileAsText } from &#39;@/lib/csv-parser&#39;;
+- import { useState } from 'react';
+- import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle } from 'lucide-react';
++ import { useState, useRef } from 'react';
++ import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle, FileSpreadsheet } from 'lucide-react';
++ import { readFileAsText } from '@/lib/csv-parser';
   
   interface ImportModalProps {
 ```
@@ -4307,8 +4307,8 @@ Lines added: 1, lines removed: 1
 @@ -10,5 +11,5 @@
   }
   
-- type ImportMode = &#39;feishu&#39; | &#39;json&#39; | &#39;manual&#39;;
-+ type ImportMode = &#39;feishu&#39; | &#39;json&#39; | &#39;csv&#39;;
+- type ImportMode = 'feishu' | 'json' | 'manual';
++ type ImportMode = 'feishu' | 'json' | 'csv';
   
   export default function ImportModal({ isOpen, onClose, onImportSuccess }: ImportModalProps) {
 ```
@@ -4321,21 +4321,21 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: undefined
 
 ```diff
 @@ -18,8 +18,11 @@
-    const [cookie, setCookie] = useState(&#39;&#39;);
-    const [jsonData, setJsonData] = useState(&#39;&#39;);
+    const [cookie, setCookie] = useState('');
+    const [jsonData, setJsonData] = useState('');
 +   const [csvFile, setCsvFile] = useState&lt;File | null&gt;(null);
-+   const [csvText, setCsvText] = useState(&#39;&#39;);
-    const [importMode, setImportMode] = useState&lt;&#39;merge&#39; | &#39;replace&#39;&gt;(&#39;merge&#39;);
++   const [csvText, setCsvText] = useState('');
+    const [importMode, setImportMode] = useState&lt;'merge' | 'replace'&gt;('merge');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(&#39;&#39;);
-    const [success, setSuccess] = useState(&#39;&#39;);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 +   const fileInputRef = useRef&lt;HTMLInputElement&gt;(null);
   
     if (!isOpen) return null;
@@ -4349,7 +4349,7 @@ Lines added: 3, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 76, lines removed: undefined
@@ -4361,8 +4361,8 @@ Lines added: 76, lines removed: undefined
 + 
 +   const handleCsvImport = async () =&gt; {
 +     setLoading(true);
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
++     setError('');
++     setSuccess('');
 + 
 +     try {
 +       let text = csvText;
@@ -4373,30 +4373,30 @@ Lines added: 76, lines removed: undefined
 +       }
 + 
 +       if (!text) {
-+         setError(&#39;请选择CSV文件或粘贴CSV内容&#39;);
++         setError('请选择CSV文件或粘贴CSV内容');
 +         setLoading(false);
 +         return;
 +       }
 + 
 +       // Step 1: Parse CSV
-+       const parseResponse = await fetch(&#39;/api/import/csv&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const parseResponse = await fetch('/api/import/csv', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({ csvText: text }),
 +       });
 + 
 +       const parseResult = await parseResponse.json();
 + 
 +       if (!parseResult.success) {
-+         setError(parseResult.message || parseResult.error || &#39;CSV解析失败&#39;);
++         setError(parseResult.message || parseResult.error || 'CSV解析失败');
 +         setLoading(false);
 +         return;
 +       }
 + 
 +       // Step 2: Import the data
-+       const importResponse = await fetch(&#39;/api/import&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const importResponse = await fetch('/api/import', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({
 +           items: parseResult.data.items,
 +           mode: importMode,
@@ -4412,10 +4412,10 @@ Lines added: 76, lines removed: undefined
 +           handleClose();
 +         }, 2000);
 +       } else {
-+         setError(importResult.error || &#39;导入失败&#39;);
++         setError(importResult.error || '导入失败');
 +       }
 +     } catch (err) {
-+       setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++       setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
 +     } finally {
 +       setLoading(false);
 +     }
@@ -4428,9 +4428,9 @@ Lines added: 76, lines removed: undefined
 +       // Automatically read and preview
 +       try {
 +         const text = await readFileAsText(file);
-+         setCsvText(text.substring(0, 1000) + (text.length &gt; 1000 ? &#39;\n...(已截取前1000字符)&#39; : &#39;&#39;));
++         setCsvText(text.substring(0, 1000) + (text.length &gt; 1000 ? '\n...(已截取前1000字符)' : ''));
 +       } catch (err) {
-+         setError(&#39;文件读取失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++         setError('文件读取失败：' + (err instanceof Error ? err.message : '未知错误'));
 +       }
 +     }
 +   };
@@ -4446,16 +4446,16 @@ Lines added: 76, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: undefined
 
 ```diff
 @@ -203,4 +203,6 @@
-      } else if (mode === &#39;json&#39;) {
+      } else if (mode === 'json') {
         handleJsonImport();
-+     } else if (mode === &#39;csv&#39;) {
++     } else if (mode === 'csv') {
 +       handleCsvImport();
       }
     };
@@ -4469,16 +4469,16 @@ Lines added: 2, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: undefined
 
 ```diff
 @@ -212,4 +212,6 @@
-      setSuccess(&#39;&#39;);
-      setJsonData(&#39;&#39;);
-+     setCsvText(&#39;&#39;);
+      setSuccess('');
+      setJsonData('');
++     setCsvText('');
 +     setCsvFile(null);
       onClose();
     };
@@ -4492,7 +4492,7 @@ Lines added: 2, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 11, lines removed: undefined
@@ -4500,20 +4500,20 @@ Lines added: 11, lines removed: undefined
 ```diff
 @@ -235,4 +235,15 @@
             {/* Import Mode Tabs */}
-            &lt;div className=&quot;flex gap-2 mb-6&quot;&gt;
+            &lt;div className="flex gap-2 mb-6"&gt;
 +             &lt;button
-+               onClick={() =&gt; setMode(&#39;csv&#39;)}
++               onClick={() =&gt; setMode('csv')}
 +               className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-+                 mode === &#39;csv&#39;
-+                   ? &#39;bg-blue-600 text-white&#39;
-+                   : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
++                 mode === 'csv'
++                   ? 'bg-blue-600 text-white'
++                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 +               }&#96;}
 +             &gt;
-+               &lt;FileSpreadsheet className=&quot;w-4 h-4&quot; /&gt;
++               &lt;FileSpreadsheet className="w-4 h-4" /&gt;
 +               CSV 文件
 +             &lt;/button&gt;
               &lt;button
-                onClick={() =&gt; setMode(&#39;feishu&#39;)}
+                onClick={() =&gt; setMode('feishu')}
 ```
 
 </details>
@@ -4524,7 +4524,7 @@ Lines added: 11, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 56, lines removed: undefined
@@ -4535,28 +4535,28 @@ Lines added: 56, lines removed: undefined
             &lt;/div&gt;
 + 
 +           {/* CSV Import */}
-+           {mode === &#39;csv&#39; &amp;&amp; (
-+             &lt;div className=&quot;space-y-4&quot;&gt;
++           {mode === 'csv' &amp;&amp; (
++             &lt;div className="space-y-4"&gt;
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +                   上传 CSV 文件
 +                 &lt;/label&gt;
 +                 &lt;input
 +                   ref={fileInputRef}
-+                   type=&quot;file&quot;
-+                   accept=&quot;.csv,.txt&quot;
++                   type="file"
++                   accept=".csv,.txt"
 +                   onChange={handleFileChange}
-+                   className=&quot;hidden&quot;
++                   className="hidden"
 +                 /&gt;
 +                 &lt;button
 +                   onClick={() =&gt; fileInputRef.current?.click()}
-+                   className=&quot;w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center gap-2&quot;
++                   className="w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center gap-2"
 +                 &gt;
-+                   &lt;FileSpreadsheet className=&quot;w-12 h-12 text-gray-400&quot; /&gt;
-+                   &lt;span className=&quot;text-gray-600&quot;&gt;
-+                     {csvFile ? csvFile.name : &#39;点击选择 CSV 文件&#39;}
++                   &lt;FileSpreadsheet className="w-12 h-12 text-gray-400" /&gt;
++                   &lt;span className="text-gray-600"&gt;
++                     {csvFile ? csvFile.name : '点击选择 CSV 文件'}
 +                   &lt;/span&gt;
-+                   &lt;span className=&quot;text-xs text-gray-500&quot;&gt;
++                   &lt;span className="text-xs text-gray-500"&gt;
 +                     支持 .csv 和 .txt 格式
 +                   &lt;/span&gt;
 +                 &lt;/button&gt;
@@ -4564,23 +4564,23 @@ Lines added: 56, lines removed: undefined
 + 
 +               {csvText &amp;&amp; (
 +                 &lt;div&gt;
-+                   &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++                   &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +                     文件预览
 +                   &lt;/label&gt;
 +                   &lt;textarea
 +                     value={csvText}
 +                     onChange={(e) =&gt; setCsvText(e.target.value)}
-+                     className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono&quot;
-+                     placeholder=&quot;CSV 内容将在此显示...&quot;
++                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono"
++                     placeholder="CSV 内容将在此显示..."
 +                   /&gt;
 +                 &lt;/div&gt;
 +               )}
 + 
-+               &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
-+                 &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
++               &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
++                 &lt;p className="text-sm text-blue-800"&gt;
 +                   💡 &lt;strong&gt;CSV 格式要求：&lt;/strong&gt;
 +                 &lt;/p&gt;
-+                 &lt;ul className=&quot;text-sm text-blue-700 mt-2 ml-4 list-disc space-y-1&quot;&gt;
++                 &lt;ul className="text-sm text-blue-700 mt-2 ml-4 list-disc space-y-1"&gt;
 +                   &lt;li&gt;第一行必须是标题行（字段名）&lt;/li&gt;
 +                   &lt;li&gt;必填字段：效果、描述、提示词、来源&lt;/li&gt;
 +                   &lt;li&gt;支持字段：评测对象（标签）、参考图、创建时间、更新时间&lt;/li&gt;
@@ -4601,7 +4601,7 @@ Lines added: 56, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 6, lines removed: 1
@@ -4610,14 +4610,14 @@ Lines added: 6, lines removed: 1
 @@ -456,5 +456,10 @@
             &lt;button
               onClick={handleImport}
--             disabled={loading || (mode === &#39;feishu&#39; &amp;&amp; !feishuUrl) || (mode === &#39;json&#39; &amp;&amp; !jsonData)}
+-             disabled={loading || (mode === 'feishu' &amp;&amp; !feishuUrl) || (mode === 'json' &amp;&amp; !jsonData)}
 +             disabled={
 +               loading || 
-+               (mode === &#39;feishu&#39; &amp;&amp; !feishuUrl) || 
-+               (mode === &#39;json&#39; &amp;&amp; !jsonData) ||
-+               (mode === &#39;csv&#39; &amp;&amp; !csvFile &amp;&amp; !csvText)
++               (mode === 'feishu' &amp;&amp; !feishuUrl) || 
++               (mode === 'json' &amp;&amp; !jsonData) ||
++               (mode === 'csv' &amp;&amp; !csvFile &amp;&amp; !csvText)
 +             }
-              className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed&quot;
+              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
             &gt;
 ```
 
@@ -4679,7 +4679,7 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: docs/IMPORT_GUIDE.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: docs/IMPORT_GUIDE.md</summary>
 
 **Chunk 1**
 Lines added: 21, lines removed: 1
@@ -4691,11 +4691,11 @@ Lines added: 21, lines removed: 1
 - #### 方式 A：飞书文档直接导入
 + #### 方式 A：CSV 文件导入（推荐）
 + 
-+ 1. 选择&quot;CSV 文件&quot;选项卡
++ 1. 选择"CSV 文件"选项卡
 + 2. 点击上传区域选择您的 CSV 文件
 + 3. 系统会自动预览文件内容
 + 4. 选择导入模式（合并/替换）
-+ 5. 点击&quot;开始导入&quot;
++ 5. 点击"开始导入"
 + 
 + **CSV 格式要求：**
 + - 第一行必须是标题行（字段名）
@@ -4711,7 +4711,7 @@ Lines added: 21, lines removed: 1
 + 
 + ### 方式 B：飞书文档直接导入
   
-  1. 选择&quot;飞书文档&quot;选项卡
+  1. 选择"飞书文档"选项卡
 ```
 
 </details>
@@ -4722,14 +4722,14 @@ Lines added: 21, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: docs/IMPORT_GUIDE.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: docs/IMPORT_GUIDE.md</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
 
 ```diff
 @@ -56,5 +56,5 @@
-  5. 点击&quot;开始导入&quot;
+  5. 点击"开始导入"
   
 - #### 方式 B：JSON 数据导入
 + #### 方式 C：JSON 数据导入
@@ -4745,7 +4745,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: docs/CSV_FORMAT_GUIDE.md</summary>
+<details><summary>Tool use: **write** • Edit file: docs/CSV_FORMAT_GUIDE.md</summary>
 
 **Chunk 1**
 Lines added: 154, lines removed: 1
@@ -4791,8 +4791,8 @@ Lines added: 154, lines removed: 1
 + ### 方法 1：直接导出
 + 
 + 1. 打开飞书文档表格
-+ 2. 点击右上角的&quot;...&quot;菜单
-+ 3. 选择&quot;导出&quot; → &quot;CSV&quot;
++ 2. 点击右上角的"..."菜单
++ 3. 选择"导出" → "CSV"
 + 4. 下载文件
 + 
 + ### 方法 2：复制粘贴
@@ -4807,14 +4807,14 @@ Lines added: 154, lines removed: 1
 + ### 在管理后台导入
 + 
 + 1. 访问 http://localhost:3000/admin
-+ 2. 点击&quot;导入数据&quot;按钮
-+ 3. 选择&quot;CSV 文件&quot;选项卡
++ 2. 点击"导入数据"按钮
++ 3. 选择"CSV 文件"选项卡
 + 4. 上传您的 CSV 文件
 + 5. 预览文件内容
 + 6. 选择导入模式：
-+    - **合并**：保留现有数据，只添加新数据（根据&quot;效果&quot;字段判断重复）
++    - **合并**：保留现有数据，只添加新数据（根据"效果"字段判断重复）
 +    - **替换**：清空现有数据后导入
-+ 7. 点击&quot;开始导入&quot;
++ 7. 点击"开始导入"
 + 
 + ## 字段映射规则
 + 
@@ -4822,33 +4822,33 @@ Lines added: 154, lines removed: 1
 + 
 + ### 效果/标题
 + - 字段名：&#96;效果&#96;, &#96;effect&#96;, &#96;title&#96;
-+ - 示例：&#96;&quot;生成产品营销文案&quot;&#96;
++ - 示例：&#96;"生成产品营销文案"&#96;
 + 
 + ### 描述
 + - 字段名：&#96;描述&#96;, &#96;description&#96;, &#96;desc&#96;
-+ - 如果有&quot;说明&quot;字段，会自动合并
-+ - 示例：&#96;&quot;帮助你快速生成吸引人的产品营销文案&quot;&#96;
++ - 如果有"说明"字段，会自动合并
++ - 示例：&#96;"帮助你快速生成吸引人的产品营销文案"&#96;
 + 
 + ### 提示词
 + - 字段名：&#96;提示词&#96;, &#96;prompt&#96;, &#96;content&#96;
-+ - 示例：&#96;&quot;请为以下产品生成一段吸引人的营销文案...&quot;&#96;
++ - 示例：&#96;"请为以下产品生成一段吸引人的营销文案..."&#96;
 + 
 + ### 来源
 + - 字段名：&#96;引用来源&#96;, &#96;来源&#96;, &#96;source&#96;, &#96;提示词来源&#96;
-+ - 示例：&#96;&quot;https://mp.weixin.qq.com/s/xxx&quot;&#96;
++ - 示例：&#96;"https://mp.weixin.qq.com/s/xxx"&#96;
 + 
 + ### 标签
 + - 字段名：&#96;评测对象&#96;, &#96;tags&#96;, &#96;标签&#96;
 + - 支持格式：
-+   - 逗号分隔：&#96;&quot;营销,文案,电商&quot;&#96;
-+   - 中文逗号：&#96;&quot;营销，文案，电商&quot;&#96;
-+   - 顿号：&#96;&quot;营销、文案、电商&quot;&#96;
-+ - 示例：&#96;&quot;营销,文案,创意&quot;&#96;
++   - 逗号分隔：&#96;"营销,文案,电商"&#96;
++   - 中文逗号：&#96;"营销，文案，电商"&#96;
++   - 顿号：&#96;"营销、文案、电商"&#96;
++ - 示例：&#96;"营销,文案,创意"&#96;
 + 
 + ### 图片
 + - 字段名：&#96;参考图&#96;, &#96;imageUrl&#96;, &#96;图片&#96;, &#96;image&#96;
 + - 支持多个图片URL（用逗号分隔，系统会使用第一个）
-+ - 示例：&#96;&quot;https://example.com/image.png&quot;&#96;
++ - 示例：&#96;"https://example.com/image.png"&#96;
 + 
 + ### 时间
 + - 创建时间：&#96;创建时间&#96;, &#96;createdAt&#96;
@@ -4862,7 +4862,7 @@ Lines added: 154, lines removed: 1
 + **A:** 检查以下几点：
 + 1. 确保 CSV 文件包含标题行
 + 2. 检查必填字段（效果、描述、提示词、来源）是否完整
-+ 3. 如果选择&quot;合并&quot;模式，检查是否因&quot;效果&quot;字段重复而被跳过
++ 3. 如果选择"合并"模式，检查是否因"效果"字段重复而被跳过
 + 4. 查看导入结果提示，了解实际导入数量
 + 
 + ### Q: 中文乱码怎么办？
@@ -4891,7 +4891,7 @@ Lines added: 154, lines removed: 1
 + 1. 先导出现有数据（访问 http://localhost:3000/api/prompts）
 + 2. 在 Excel 中修改
 + 3. 导出为 CSV
-+ 4. 使用&quot;替换&quot;模式重新导入
++ 4. 使用"替换"模式重新导入
 + 
 + ### Q: 某些字段是空的可以导入吗？
 + 
@@ -4939,7 +4939,7 @@ Lines added: 154, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 4, lines removed: 1
@@ -4965,7 +4965,7 @@ Lines added: 4, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 9, lines removed: 3
@@ -4977,9 +4977,9 @@ Lines added: 9, lines removed: 3
 - ### 4. 导入飞书数据
 + ### 4. 导入数据
 + 
-+ 访问管理后台，点击&quot;导入数据&quot;按钮，支持三种导入方式：
++ 访问管理后台，点击"导入数据"按钮，支持三种导入方式：
   
-- 访问管理后台，点击&quot;导入数据&quot;按钮，按照界面提示导入飞书文档数据。
+- 访问管理后台，点击"导入数据"按钮，按照界面提示导入飞书文档数据。
 + - **CSV 文件**：直接上传从飞书导出的 CSV 文件（推荐）
 + - **飞书文档**：自动爬取飞书在线文档
 + - **JSON 数据**：手动粘贴 JSON 格式数据
@@ -5000,7 +5000,7 @@ Lines added: 9, lines removed: 3
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: QUICK_START.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: QUICK_START.md</summary>
 
 **Chunk 1**
 Lines added: 18, lines removed: 2
@@ -5018,10 +5018,10 @@ Lines added: 18, lines removed: 2
 + 1. 打开飞书文档表格
 + 2. 导出为 CSV 格式（编码选择 UTF-8）
 + 3. 访问管理后台：http://localhost:3000/admin
-+ 4. 点击&quot;导入数据&quot;按钮
-+ 5. 选择&quot;CSV 文件&quot;选项卡
++ 4. 点击"导入数据"按钮
++ 5. 选择"CSV 文件"选项卡
 + 6. 上传 CSV 文件
-+ 7. 点击&quot;开始导入&quot;
++ 7. 点击"开始导入"
 + 
 + **优点：**
 + - ✅ 无需登录认证
@@ -5042,7 +5042,7 @@ Lines added: 18, lines removed: 2
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: QUICK_START.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: QUICK_START.md</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -5065,7 +5065,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: CSV_IMPORT_TUTORIAL.md</summary>
+<details><summary>Tool use: **write** • Edit file: CSV_IMPORT_TUTORIAL.md</summary>
 
 **Chunk 1**
 Lines added: 154, lines removed: 1
@@ -5090,7 +5090,7 @@ Lines added: 154, lines removed: 1
 + 
 + 2. 点击右上角的 &#96;...&#96; 菜单
 + 
-+ 3. 选择 **&quot;导出&quot;** → **&quot;CSV&quot;**
++ 3. 选择 **"导出"** → **"CSV"**
 + 
 + 4. 下载文件到本地
 + 
@@ -5114,9 +5114,9 @@ Lines added: 154, lines removed: 1
 +    http://localhost:3000/admin
 +    &#96;&#96;&#96;
 + 
-+ 3. 点击右上角绿色的 **&quot;导入数据&quot;** 按钮
++ 3. 点击右上角绿色的 **"导入数据"** 按钮
 + 
-+ 4. 在弹窗中选择 **&quot;CSV 文件&quot;** 选项卡（第一个）
++ 4. 在弹窗中选择 **"CSV 文件"** 选项卡（第一个）
 + 
 + 5. 点击上传区域，选择您的 CSV 文件
 + 
@@ -5126,7 +5126,7 @@ Lines added: 154, lines removed: 1
 +    - **合并**（推荐）：保留现有数据，只添加新的
 +    - **替换**：清空后重新导入
 + 
-+ 8. 点击 **&quot;开始导入&quot;** 按钮
++ 8. 点击 **"开始导入"** 按钮
 + 
 + ## ✅ 第三步：查看结果
 + 
@@ -5162,24 +5162,24 @@ Lines added: 154, lines removed: 1
 + ### Q1: 中文显示乱码
 + 
 + **解决方案：**
-+ - 在 Excel 中：**另存为** → 选择 **&quot;CSV UTF-8（逗号分隔）&quot;**
-+ - 在记事本中：**另存为** → 编码选择 **&quot;UTF-8&quot;**
++ - 在 Excel 中：**另存为** → 选择 **"CSV UTF-8（逗号分隔）"**
++ - 在记事本中：**另存为** → 编码选择 **"UTF-8"**
 + 
 + ### Q2: 导入后数量不对
 + 
 + **可能原因：**
 + 1. 某些行缺少必填字段（效果、描述、提示词、来源）
-+ 2. 选择了&quot;合并&quot;模式，重复的数据被跳过（根据&quot;效果&quot;字段判断）
++ 2. 选择了"合并"模式，重复的数据被跳过（根据"效果"字段判断）
 + 
 + **解决方案：**
 + - 查看导入结果提示，了解实际导入数量
 + - 检查 CSV 文件中的数据完整性
-+ - 如果想全部导入，选择&quot;替换&quot;模式
++ - 如果想全部导入，选择"替换"模式
 + 
 + ### Q3: 图片没有显示
 + 
 + **原因：**
-+ - &quot;参考图&quot;字段中的图片链接无效
++ - "参考图"字段中的图片链接无效
 + - 图片链接需要公开可访问
 + 
 + **解决方案：**
@@ -5193,7 +5193,7 @@ Lines added: 154, lines removed: 1
 + - 中文逗号：&#96;，&#96;
 + - 顿号：&#96;、&#96;
 + 
-+ 例如：&#96;&quot;Nano Banana2,趣味性,实用性&quot;&#96; 会被解析为 3 个标签
++ 例如：&#96;"Nano Banana2,趣味性,实用性"&#96; 会被解析为 3 个标签
 + 
 + ## 💡 高级技巧
 + 
@@ -5202,13 +5202,13 @@ Lines added: 154, lines removed: 1
 + 1. 导出现有数据：访问 &#96;http://localhost:3000/api/prompts&#96;
 + 2. 复制 JSON 数据，转换为 CSV
 + 3. 在 Excel 中批量修改
-+ 4. 使用&quot;替换&quot;模式重新导入
++ 4. 使用"替换"模式重新导入
 + 
 + ### 增量更新
 + 
 + - 只导入新增的数据行
-+ - 使用&quot;合并&quot;模式
-+ - 系统会根据&quot;效果&quot;字段去重
++ - 使用"合并"模式
++ - 系统会根据"效果"字段去重
 + 
 + ### 定期备份
 + 
@@ -5242,7 +5242,7 @@ Lines added: 154, lines removed: 1
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -5425,7 +5425,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -5435,7 +5435,7 @@ No results found
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -5445,7 +5445,7 @@ No results found
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -5455,7 +5455,7 @@ No results found
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -5789,14 +5789,14 @@ app/
 ---
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
-<details><summary>Tool use: **command** • Run command: cd /d/code/cursor/topai && mkdir -p "app/(frontend)/components" "app/(admin)/components" "components/shared"</summary>
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cd /d/code/cursor/topai && mkdir -p "app/(frontend)/components" "app/(admin)/components" "components/shared"</summary>
 
 ```bash
 cd /d/code/cursor/topai && mkdir -p "app/(frontend)/components" "app/(admin)/components" "components/shared"
 ```
 
 ```
-omponents&quot; &quot;components/shared&quot;
+omponents" "components/shared"
 ```
 </details>
 </tool-use>
@@ -5810,7 +5810,7 @@ omponents&quot; &quot;components/shared&quot;
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(frontend)/layout.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(frontend)/layout.tsx</summary>
 
 **Chunk 1**
 Lines added: 7, lines removed: 1
@@ -5818,7 +5818,7 @@ Lines added: 7, lines removed: 1
 ```diff
 @@ -1,1 +1,7 @@
 - 
-+ import { ReactNode } from &#39;react&#39;;
++ import { ReactNode } from 'react';
 + 
 + // Frontend layout - keeps the root layout
 + export default function FrontendLayout({ children }: { children: ReactNode }) {
@@ -5835,7 +5835,7 @@ Lines added: 7, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/layout.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/layout.tsx</summary>
 
 **Chunk 1**
 Lines added: 7, lines removed: 1
@@ -5843,7 +5843,7 @@ Lines added: 7, lines removed: 1
 ```diff
 @@ -1,1 +1,7 @@
 - 
-+ import { ReactNode } from &#39;react&#39;;
++ import { ReactNode } from 'react';
 + 
 + // Admin layout - keeps the root layout
 + export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -5860,7 +5860,7 @@ Lines added: 7, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/shared/.gitkeep</summary>
+<details><summary>Tool use: **write** • Edit file: components/shared/.gitkeep</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 1
@@ -5881,7 +5881,7 @@ Lines added: 3, lines removed: 1
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -6056,7 +6056,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(frontend)/page.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(frontend)/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 138, lines removed: 1
@@ -6064,20 +6064,20 @@ Lines added: 138, lines removed: 1
 ```diff
 @@ -1,1 +1,138 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { useEffect, useState } from &#39;react&#39;;
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import { Search, FileQuestion } from &#39;lucide-react&#39;;
-+ import Link from &#39;next/link&#39;;
-+ import PromptCard from &#39;./components/PromptCard&#39;;
-+ import LoadingSpinner from &#39;@/components/LoadingSpinner&#39;;
-+ import EmptyState from &#39;@/components/EmptyState&#39;;
++ import { useEffect, useState } from 'react';
++ import { PromptItem } from '@/types';
++ import { Search, FileQuestion } from 'lucide-react';
++ import Link from 'next/link';
++ import PromptCard from './components/PromptCard';
++ import LoadingSpinner from '@/components/LoadingSpinner';
++ import EmptyState from '@/components/EmptyState';
 + 
 + export default function Home() {
 +   const [prompts, setPrompts] = useState&lt;PromptItem[]&gt;([]);
-+   const [searchTerm, setSearchTerm] = useState(&#39;&#39;);
-+   const [selectedTag, setSelectedTag] = useState&lt;string&gt;(&#39;&#39;);
++   const [searchTerm, setSearchTerm] = useState('');
++   const [selectedTag, setSelectedTag] = useState&lt;string&gt;('');
 +   const [loading, setLoading] = useState(true);
 + 
 +   useEffect(() =&gt; {
@@ -6086,13 +6086,13 @@ Lines added: 138, lines removed: 1
 + 
 +   const fetchPrompts = async () =&gt; {
 +     try {
-+       const response = await fetch(&#39;/api/prompts&#39;);
++       const response = await fetch('/api/prompts');
 +       const result = await response.json();
 +       if (result.success) {
 +         setPrompts(result.data);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to fetch prompts:&#39;, error);
++       console.error('Failed to fetch prompts:', error);
 +     } finally {
 +       setLoading(false);
 +     }
@@ -6116,18 +6116,18 @@ Lines added: 138, lines removed: 1
 +   });
 + 
 +   return (
-+     &lt;div className=&quot;min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50&quot;&gt;
++     &lt;div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50"&gt;
 +       {/* Header */}
-+       &lt;header className=&quot;bg-white shadow-sm border-b sticky top-0 z-10&quot;&gt;
-+         &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
-+           &lt;div className=&quot;flex justify-between items-center&quot;&gt;
++       &lt;header className="bg-white shadow-sm border-b sticky top-0 z-10"&gt;
++         &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"&gt;
++           &lt;div className="flex justify-between items-center"&gt;
 +             &lt;div&gt;
-+               &lt;h1 className=&quot;text-3xl font-bold text-gray-900&quot;&gt;AI 提示词库&lt;/h1&gt;
-+               &lt;p className=&quot;text-gray-600 mt-1&quot;&gt;优质 AI 提示词收集与管理&lt;/p&gt;
++               &lt;h1 className="text-3xl font-bold text-gray-900"&gt;AI 提示词库&lt;/h1&gt;
++               &lt;p className="text-gray-600 mt-1"&gt;优质 AI 提示词收集与管理&lt;/p&gt;
 +             &lt;/div&gt;
 +             &lt;Link 
-+               href=&quot;/admin&quot;
-+               className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm&quot;
++               href="/admin"
++               className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
 +             &gt;
 +               管理后台
 +             &lt;/Link&gt;
@@ -6135,29 +6135,29 @@ Lines added: 138, lines removed: 1
 +         &lt;/div&gt;
 +       &lt;/header&gt;
 + 
-+       &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
++       &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 +         {/* Search and Filter */}
-+         &lt;div className=&quot;mb-8 space-y-4&quot;&gt;
-+           &lt;div className=&quot;relative&quot;&gt;
-+             &lt;Search className=&quot;absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5&quot; /&gt;
++         &lt;div className="mb-8 space-y-4"&gt;
++           &lt;div className="relative"&gt;
++             &lt;Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /&gt;
 +             &lt;input
-+               type=&quot;text&quot;
-+               placeholder=&quot;搜索提示词、效果或描述...&quot;
++               type="text"
++               placeholder="搜索提示词、效果或描述..."
 +               value={searchTerm}
 +               onChange={(e) =&gt; setSearchTerm(e.target.value)}
-+               className=&quot;w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm&quot;
++               className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
 +             /&gt;
 +           &lt;/div&gt;
 + 
 +           {/* Tags Filter */}
 +           {allTags.length &gt; 0 &amp;&amp; (
-+             &lt;div className=&quot;flex flex-wrap gap-2&quot;&gt;
++             &lt;div className="flex flex-wrap gap-2"&gt;
 +               &lt;button
-+                 onClick={() =&gt; setSelectedTag(&#39;&#39;)}
++                 onClick={() =&gt; setSelectedTag('')}
 +                 className={&#96;px-4 py-2 rounded-lg font-medium transition-colors ${
 +                   !selectedTag
-+                     ? &#39;bg-blue-600 text-white&#39;
-+                     : &#39;bg-white text-gray-700 border border-gray-300 hover:bg-gray-50&#39;
++                     ? 'bg-blue-600 text-white'
++                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 +                 }&#96;}
 +               &gt;
 +                 全部
@@ -6168,8 +6168,8 @@ Lines added: 138, lines removed: 1
 +                   onClick={() =&gt; setSelectedTag(tag)}
 +                   className={&#96;px-4 py-2 rounded-lg font-medium transition-colors ${
 +                     selectedTag === tag
-+                       ? &#39;bg-blue-600 text-white&#39;
-+                       : &#39;bg-white text-gray-700 border border-gray-300 hover:bg-gray-50&#39;
++                       ? 'bg-blue-600 text-white'
++                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 +                   }&#96;}
 +                 &gt;
 +                   {tag}
@@ -6185,14 +6185,14 @@ Lines added: 138, lines removed: 1
 +         {/* Empty State */}
 +         {!loading &amp;&amp; filteredPrompts.length === 0 &amp;&amp; (
 +           &lt;EmptyState
-+             icon={&lt;FileQuestion className=&quot;w-16 h-16 text-gray-400&quot; /&gt;}
-+             title=&quot;暂无提示词数据&quot;
-+             description=&quot;前往管理后台添加第一条提示词&quot;
++             icon={&lt;FileQuestion className="w-16 h-16 text-gray-400" /&gt;}
++             title="暂无提示词数据"
++             description="前往管理后台添加第一条提示词"
 +           /&gt;
 +         )}
 + 
 +         {/* Prompts Grid */}
-+         &lt;div className=&quot;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6&quot;&gt;
++         &lt;div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"&gt;
 +           {filteredPrompts.map(prompt =&gt; (
 +             &lt;PromptCard key={prompt.id} prompt={prompt} /&gt;
 +           ))}
@@ -6212,7 +6212,7 @@ Lines added: 138, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(frontend)/components/PromptCard.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(frontend)/components/PromptCard.tsx</summary>
 
 **Chunk 1**
 Lines added: 101, lines removed: 1
@@ -6220,9 +6220,9 @@ Lines added: 101, lines removed: 1
 ```diff
 @@ -1,1 +1,101 @@
 - 
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import { Tag, Calendar, ExternalLink, Copy, Check } from &#39;lucide-react&#39;;
-+ import { useState } from &#39;react&#39;;
++ import { PromptItem } from '@/types';
++ import { Tag, Calendar, ExternalLink, Copy, Check } from 'lucide-react';
++ import { useState } from 'react';
 + 
 + interface PromptCardProps {
 +   prompt: PromptItem;
@@ -6237,43 +6237,43 @@ Lines added: 101, lines removed: 1
 +       setCopied(true);
 +       setTimeout(() =&gt; setCopied(false), 2000);
 +     } catch (error) {
-+       console.error(&#39;Failed to copy:&#39;, error);
++       console.error('Failed to copy:', error);
 +     }
 +   };
 + 
 +   return (
-+     &lt;div className=&quot;bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100&quot;&gt;
++     &lt;div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"&gt;
 +       {/* Image */}
 +       {prompt.imageUrl &amp;&amp; (
-+         &lt;div className=&quot;aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden&quot;&gt;
++         &lt;div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 relative overflow-hidden"&gt;
 +           &lt;img
 +             src={prompt.imageUrl}
 +             alt={prompt.effect}
-+             className=&quot;w-full h-full object-cover&quot;
++             className="w-full h-full object-cover"
 +           /&gt;
 +         &lt;/div&gt;
 +       )}
 + 
-+       &lt;div className=&quot;p-6&quot;&gt;
++       &lt;div className="p-6"&gt;
 +         {/* Effect Title */}
-+         &lt;h3 className=&quot;text-xl font-bold text-gray-900 mb-2&quot;&gt;
++         &lt;h3 className="text-xl font-bold text-gray-900 mb-2"&gt;
 +           {prompt.effect}
 +         &lt;/h3&gt;
 + 
 +         {/* Description */}
-+         &lt;p className=&quot;text-gray-600 mb-4 line-clamp-2&quot;&gt;
++         &lt;p className="text-gray-600 mb-4 line-clamp-2"&gt;
 +           {prompt.description}
 +         &lt;/p&gt;
 + 
 +         {/* Tags */}
 +         {prompt.tags.length &gt; 0 &amp;&amp; (
-+           &lt;div className=&quot;flex flex-wrap gap-2 mb-4&quot;&gt;
++           &lt;div className="flex flex-wrap gap-2 mb-4"&gt;
 +             {prompt.tags.map(tag =&gt; (
 +               &lt;span
 +                 key={tag}
-+                 className=&quot;inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium&quot;
++                 className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
 +               &gt;
-+                 &lt;Tag className=&quot;w-3 h-3 mr-1&quot; /&gt;
++                 &lt;Tag className="w-3 h-3 mr-1" /&gt;
 +                 {tag}
 +               &lt;/span&gt;
 +             ))}
@@ -6281,37 +6281,37 @@ Lines added: 101, lines removed: 1
 +         )}
 + 
 +         {/* Prompt */}
-+         &lt;div className=&quot;bg-gray-50 rounded-lg p-4 mb-4 relative group&quot;&gt;
-+           &lt;p className=&quot;text-sm text-gray-700 font-mono line-clamp-3 pr-8&quot;&gt;
++         &lt;div className="bg-gray-50 rounded-lg p-4 mb-4 relative group"&gt;
++           &lt;p className="text-sm text-gray-700 font-mono line-clamp-3 pr-8"&gt;
 +             {prompt.prompt}
 +           &lt;/p&gt;
 +           &lt;button
 +             onClick={copyPrompt}
-+             className=&quot;absolute top-2 right-2 p-2 bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100&quot;
-+             title={copied ? &#39;已复制&#39; : &#39;复制提示词&#39;}
++             className="absolute top-2 right-2 p-2 bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100"
++             title={copied ? '已复制' : '复制提示词'}
 +           &gt;
 +             {copied ? (
-+               &lt;Check className=&quot;w-4 h-4 text-green-600&quot; /&gt;
++               &lt;Check className="w-4 h-4 text-green-600" /&gt;
 +             ) : (
-+               &lt;Copy className=&quot;w-4 h-4 text-gray-600&quot; /&gt;
++               &lt;Copy className="w-4 h-4 text-gray-600" /&gt;
 +             )}
 +           &lt;/button&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Footer */}
-+         &lt;div className=&quot;flex items-center justify-between text-sm text-gray-500 pt-4 border-t&quot;&gt;
-+           &lt;div className=&quot;flex items-center&quot;&gt;
-+             &lt;Calendar className=&quot;w-4 h-4 mr-1&quot; /&gt;
-+             {new Date(prompt.updatedAt).toLocaleDateString(&#39;zh-CN&#39;)}
++         &lt;div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t"&gt;
++           &lt;div className="flex items-center"&gt;
++             &lt;Calendar className="w-4 h-4 mr-1" /&gt;
++             {new Date(prompt.updatedAt).toLocaleDateString('zh-CN')}
 +           &lt;/div&gt;
 +           {prompt.source &amp;&amp; (
 +             &lt;a
 +               href={prompt.source}
-+               target=&quot;_blank&quot;
-+               rel=&quot;noopener noreferrer&quot;
-+               className=&quot;flex items-center text-blue-600 hover:text-blue-700&quot;
++               target="_blank"
++               rel="noopener noreferrer"
++               className="flex items-center text-blue-600 hover:text-blue-700"
 +             &gt;
-+               &lt;ExternalLink className=&quot;w-4 h-4 mr-1&quot; /&gt;
++               &lt;ExternalLink className="w-4 h-4 mr-1" /&gt;
 +               来源
 +             &lt;/a&gt;
 +           )}
@@ -6356,7 +6356,7 @@ Lines added: 101, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/shared/LoadingSpinner.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/shared/LoadingSpinner.tsx</summary>
 
 **Chunk 1**
 Lines added: 9, lines removed: 1
@@ -6366,9 +6366,9 @@ Lines added: 9, lines removed: 1
 - 
 + export default function LoadingSpinner() {
 +   return (
-+     &lt;div className=&quot;text-center py-12&quot;&gt;
-+       &lt;div className=&quot;inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin&quot;&gt;&lt;/div&gt;
-+       &lt;p className=&quot;mt-4 text-gray-600&quot;&gt;加载中...&lt;/p&gt;
++     &lt;div className="text-center py-12"&gt;
++       &lt;div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"&gt;&lt;/div&gt;
++       &lt;p className="mt-4 text-gray-600"&gt;加载中...&lt;/p&gt;
 +     &lt;/div&gt;
 +   );
 + }
@@ -6383,7 +6383,7 @@ Lines added: 9, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/shared/EmptyState.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/shared/EmptyState.tsx</summary>
 
 **Chunk 1**
 Lines added: 18, lines removed: 1
@@ -6391,7 +6391,7 @@ Lines added: 18, lines removed: 1
 ```diff
 @@ -1,1 +1,18 @@
 - 
-+ import { ReactNode } from &#39;react&#39;;
++ import { ReactNode } from 'react';
 + 
 + interface EmptyStateProps {
 +   title: string;
@@ -6401,10 +6401,10 @@ Lines added: 18, lines removed: 1
 + 
 + export default function EmptyState({ title, description, icon }: EmptyStateProps) {
 +   return (
-+     &lt;div className=&quot;text-center py-12 bg-white rounded-xl shadow-sm&quot;&gt;
-+       {icon &amp;&amp; &lt;div className=&quot;flex justify-center mb-4&quot;&gt;{icon}&lt;/div&gt;}
-+       &lt;p className=&quot;text-gray-600 text-lg&quot;&gt;{title}&lt;/p&gt;
-+       {description &amp;&amp; &lt;p className=&quot;text-gray-500 mt-2&quot;&gt;{description}&lt;/p&gt;}
++     &lt;div className="text-center py-12 bg-white rounded-xl shadow-sm"&gt;
++       {icon &amp;&amp; &lt;div className="flex justify-center mb-4"&gt;{icon}&lt;/div&gt;}
++       &lt;p className="text-gray-600 text-lg"&gt;{title}&lt;/p&gt;
++       {description &amp;&amp; &lt;p className="text-gray-500 mt-2"&gt;{description}&lt;/p&gt;}
 +     &lt;/div&gt;
 +   );
 + }
@@ -6430,19 +6430,19 @@ Lines added: 18, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(frontend)/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(frontend)/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
 
 ```diff
 @@ -6,6 +6,6 @@
-  import Link from &#39;next/link&#39;;
-  import PromptCard from &#39;./components/PromptCard&#39;;
-- import LoadingSpinner from &#39;@/components/LoadingSpinner&#39;;
-- import EmptyState from &#39;@/components/EmptyState&#39;;
-+ import LoadingSpinner from &#39;@/components/shared/LoadingSpinner&#39;;
-+ import EmptyState from &#39;@/components/shared/EmptyState&#39;;
+  import Link from 'next/link';
+  import PromptCard from './components/PromptCard';
+- import LoadingSpinner from '@/components/LoadingSpinner';
+- import EmptyState from '@/components/EmptyState';
++ import LoadingSpinner from '@/components/shared/LoadingSpinner';
++ import EmptyState from '@/components/shared/EmptyState';
   
   export default function Home() {
 ```
@@ -6526,7 +6526,7 @@ Explanation: 删除旧的 EmptyState 组件，已迁移到 components/shared/Emp
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -6536,7 +6536,7 @@ No results found
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -6692,7 +6692,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 398, lines removed: 1
@@ -6700,15 +6700,15 @@ Lines added: 398, lines removed: 1
 ```diff
 @@ -1,1 +1,398 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { useEffect, useState } from &#39;react&#39;;
-+ import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
-+ import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from &#39;lucide-react&#39;;
-+ import Link from &#39;next/link&#39;;
-+ import LoadingSpinner from &#39;@/components/shared/LoadingSpinner&#39;;
-+ import EmptyState from &#39;@/components/shared/EmptyState&#39;;
-+ import ImportModal from &#39;../components/ImportModal&#39;;
++ import { useEffect, useState } from 'react';
++ import { PromptItem, CreatePromptRequest } from '@/types';
++ import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from 'lucide-react';
++ import Link from 'next/link';
++ import LoadingSpinner from '@/components/shared/LoadingSpinner';
++ import EmptyState from '@/components/shared/EmptyState';
++ import ImportModal from '../components/ImportModal';
 + 
 + export default function AdminPage() {
 +   const [prompts, setPrompts] = useState&lt;PromptItem[]&gt;([]);
@@ -6717,12 +6717,12 @@ Lines added: 398, lines removed: 1
 +   const [isCreating, setIsCreating] = useState(false);
 +   const [showImportModal, setShowImportModal] = useState(false);
 +   const [formData, setFormData] = useState&lt;CreatePromptRequest&gt;({
-+     effect: &#39;&#39;,
-+     description: &#39;&#39;,
++     effect: '',
++     description: '',
 +     tags: [],
-+     prompt: &#39;&#39;,
-+     source: &#39;&#39;,
-+     imageUrl: &#39;&#39;,
++     prompt: '',
++     source: '',
++     imageUrl: '',
 +   });
 + 
 +   useEffect(() =&gt; {
@@ -6731,14 +6731,14 @@ Lines added: 398, lines removed: 1
 + 
 +   const fetchPrompts = async () =&gt; {
 +     try {
-+       const response = await fetch(&#39;/api/prompts&#39;);
++       const response = await fetch('/api/prompts');
 +       const result = await response.json();
 +       if (result.success) {
 +         setPrompts(result.data);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to fetch prompts:&#39;, error);
-+       alert(&#39;获取数据失败&#39;);
++       console.error('Failed to fetch prompts:', error);
++       alert('获取数据失败');
 +     } finally {
 +       setLoading(false);
 +     }
@@ -6746,14 +6746,14 @@ Lines added: 398, lines removed: 1
 + 
 +   const handleCreate = async () =&gt; {
 +     if (!formData.effect || !formData.description || !formData.prompt || !formData.source) {
-+       alert(&#39;请填写所有必填字段&#39;);
++       alert('请填写所有必填字段');
 +       return;
 +     }
 + 
 +     try {
-+       const response = await fetch(&#39;/api/prompts&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const response = await fetch('/api/prompts', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify(formData),
 +       });
 +       
@@ -6764,19 +6764,19 @@ Lines added: 398, lines removed: 1
 +         resetForm();
 +         setIsCreating(false);
 +       } else {
-+         alert(&#39;创建失败：&#39; + result.error);
++         alert('创建失败：' + result.error);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to create prompt:&#39;, error);
-+       alert(&#39;创建失败&#39;);
++       console.error('Failed to create prompt:', error);
++       alert('创建失败');
 +     }
 +   };
 + 
 +   const handleUpdate = async (id: string) =&gt; {
 +     try {
 +       const response = await fetch(&#96;/api/prompts/${id}&#96;, {
-+         method: &#39;PUT&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++         method: 'PUT',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify(formData),
 +       });
 +       
@@ -6787,22 +6787,22 @@ Lines added: 398, lines removed: 1
 +         resetForm();
 +         setEditingId(null);
 +       } else {
-+         alert(&#39;更新失败：&#39; + result.error);
++         alert('更新失败：' + result.error);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to update prompt:&#39;, error);
-+       alert(&#39;更新失败&#39;);
++       console.error('Failed to update prompt:', error);
++       alert('更新失败');
 +     }
 +   };
 + 
 +   const handleDelete = async (id: string) =&gt; {
-+     if (!confirm(&#39;确定要删除这条提示词吗？&#39;)) {
++     if (!confirm('确定要删除这条提示词吗？')) {
 +       return;
 +     }
 + 
 +     try {
 +       const response = await fetch(&#96;/api/prompts/${id}&#96;, {
-+         method: &#39;DELETE&#39;,
++         method: 'DELETE',
 +       });
 +       
 +       const result = await response.json();
@@ -6810,11 +6810,11 @@ Lines added: 398, lines removed: 1
 +       if (result.success) {
 +         setPrompts(prompts.filter(p =&gt; p.id !== id));
 +       } else {
-+         alert(&#39;删除失败：&#39; + result.error);
++         alert('删除失败：' + result.error);
 +       }
 +     } catch (error) {
-+       console.error(&#39;Failed to delete prompt:&#39;, error);
-+       alert(&#39;删除失败&#39;);
++       console.error('Failed to delete prompt:', error);
++       alert('删除失败');
 +     }
 +   };
 + 
@@ -6826,19 +6826,19 @@ Lines added: 398, lines removed: 1
 +       tags: prompt.tags,
 +       prompt: prompt.prompt,
 +       source: prompt.source,
-+       imageUrl: prompt.imageUrl || &#39;&#39;,
++       imageUrl: prompt.imageUrl || '',
 +     });
 +     setIsCreating(false);
 +   };
 + 
 +   const resetForm = () =&gt; {
 +     setFormData({
-+       effect: &#39;&#39;,
-+       description: &#39;&#39;,
++       effect: '',
++       description: '',
 +       tags: [],
-+       prompt: &#39;&#39;,
-+       source: &#39;&#39;,
-+       imageUrl: &#39;&#39;,
++       prompt: '',
++       source: '',
++       imageUrl: '',
 +     });
 +   };
 + 
@@ -6849,33 +6849,33 @@ Lines added: 398, lines removed: 1
 +   };
 + 
 +   const handleTagsChange = (tagsString: string) =&gt; {
-+     const tags = tagsString.split(&#39;,&#39;).map(t =&gt; t.trim()).filter(t =&gt; t);
++     const tags = tagsString.split(',').map(t =&gt; t.trim()).filter(t =&gt; t);
 +     setFormData({ ...formData, tags });
 +   };
 + 
 +   return (
-+     &lt;div className=&quot;min-h-screen bg-gray-50&quot;&gt;
++     &lt;div className="min-h-screen bg-gray-50"&gt;
 +       {/* Header */}
-+       &lt;header className=&quot;bg-white shadow-sm border-b sticky top-0 z-10&quot;&gt;
-+         &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
-+           &lt;div className=&quot;flex justify-between items-center&quot;&gt;
++       &lt;header className="bg-white shadow-sm border-b sticky top-0 z-10"&gt;
++         &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"&gt;
++           &lt;div className="flex justify-between items-center"&gt;
 +             &lt;div&gt;
-+               &lt;h1 className=&quot;text-3xl font-bold text-gray-900&quot;&gt;管理后台&lt;/h1&gt;
-+               &lt;p className=&quot;text-gray-600 mt-1&quot;&gt;提示词库管理系统&lt;/p&gt;
++               &lt;h1 className="text-3xl font-bold text-gray-900"&gt;管理后台&lt;/h1&gt;
++               &lt;p className="text-gray-600 mt-1"&gt;提示词库管理系统&lt;/p&gt;
 +             &lt;/div&gt;
-+             &lt;div className=&quot;flex gap-3&quot;&gt;
++             &lt;div className="flex gap-3"&gt;
 +               &lt;Link
-+                 href=&quot;/&quot;
-+                 className=&quot;px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2&quot;
++                 href="/"
++                 className="px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2"
 +               &gt;
-+                 &lt;Home className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Home className="w-4 h-4" /&gt;
 +                 返回首页
 +               &lt;/Link&gt;
 +               &lt;button
 +                 onClick={() =&gt; setShowImportModal(true)}
-+                 className=&quot;px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2&quot;
++                 className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2"
 +               &gt;
-+                 &lt;Download className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Download className="w-4 h-4" /&gt;
 +                 导入数据
 +               &lt;/button&gt;
 +               &lt;button
@@ -6884,9 +6884,9 @@ Lines added: 398, lines removed: 1
 +                   setEditingId(null);
 +                   resetForm();
 +                 }}
-+                 className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
++                 className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 +               &gt;
-+                 &lt;Plus className=&quot;w-4 h-4&quot; /&gt;
++                 &lt;Plus className="w-4 h-4" /&gt;
 +                 新建提示词
 +               &lt;/button&gt;
 +             &lt;/div&gt;
@@ -6894,7 +6894,7 @@ Lines added: 398, lines removed: 1
 +         &lt;/div&gt;
 +       &lt;/header&gt;
 + 
-+       &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
++       &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 +         {/* Import Modal */}
 +         &lt;ImportModal
 +           isOpen={showImportModal}
@@ -6907,101 +6907,101 @@ Lines added: 398, lines removed: 1
 + 
 +         {/* Create/Edit Form */}
 +         {(isCreating || editingId) &amp;&amp; (
-+           &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6&quot;&gt;
-+             &lt;h2 className=&quot;text-xl font-bold mb-4&quot;&gt;
-+               {isCreating ? &#39;新建提示词&#39; : &#39;编辑提示词&#39;}
++           &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"&gt;
++             &lt;h2 className="text-xl font-bold mb-4"&gt;
++               {isCreating ? '新建提示词' : '编辑提示词'}
 +             &lt;/h2&gt;
 +             
-+             &lt;div className=&quot;space-y-4&quot;&gt;
++             &lt;div className="space-y-4"&gt;
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   效果 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   效果 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={formData.effect}
 +                   onChange={(e) =&gt; setFormData({ ...formData, effect: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;例如：生成产品介绍文案&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="例如：生成产品介绍文案"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   描述 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   描述 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;textarea
 +                   value={formData.description}
 +                   onChange={(e) =&gt; setFormData({ ...formData, description: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24&quot;
-+                   placeholder=&quot;详细描述该提示词的用途和特点&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
++                   placeholder="详细描述该提示词的用途和特点"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 +                   标签（用逗号分隔）
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
-+                   value={formData.tags.join(&#39;, &#39;)}
++                   type="text"
++                   value={formData.tags.join(', ')}
 +                   onChange={(e) =&gt; handleTagsChange(e.target.value)}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;例如：营销, 文案, 创意&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="例如：营销, 文案, 创意"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   提示词 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   提示词 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;textarea
 +                   value={formData.prompt}
 +                   onChange={(e) =&gt; setFormData({ ...formData, prompt: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm&quot;
-+                   placeholder=&quot;输入完整的提示词内容&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm"
++                   placeholder="输入完整的提示词内容"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+                   来源 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++                   来源 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={formData.source}
 +                   onChange={(e) =&gt; setFormData({ ...formData, source: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;例如：https://example.com&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="例如：https://example.com"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
 +               &lt;div&gt;
-+                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
++                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 +                   图片 URL（可选）
 +                 &lt;/label&gt;
 +                 &lt;input
-+                   type=&quot;text&quot;
++                   type="text"
 +                   value={formData.imageUrl}
 +                   onChange={(e) =&gt; setFormData({ ...formData, imageUrl: e.target.value })}
-+                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+                   placeholder=&quot;https://example.com/image.jpg&quot;
++                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++                   placeholder="https://example.com/image.jpg"
 +                 /&gt;
 +               &lt;/div&gt;
 + 
-+               &lt;div className=&quot;flex gap-3 pt-4&quot;&gt;
++               &lt;div className="flex gap-3 pt-4"&gt;
 +                 &lt;button
 +                   onClick={() =&gt; isCreating ? handleCreate() : handleUpdate(editingId!)}
-+                   className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
++                   className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 +                 &gt;
-+                   &lt;Save className=&quot;w-4 h-4&quot; /&gt;
++                   &lt;Save className="w-4 h-4" /&gt;
 +                   保存
 +                 &lt;/button&gt;
 +                 &lt;button
 +                   onClick={cancelEdit}
-+                   className=&quot;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2&quot;
++                   className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2"
 +                 &gt;
-+                   &lt;X className=&quot;w-4 h-4&quot; /&gt;
++                   &lt;X className="w-4 h-4" /&gt;
 +                   取消
 +                 &lt;/button&gt;
 +               &lt;/div&gt;
@@ -7015,67 +7015,67 @@ Lines added: 398, lines removed: 1
 +         {/* Empty State */}
 +         {!loading &amp;&amp; prompts.length === 0 &amp;&amp; (
 +           &lt;EmptyState
-+             icon={&lt;FolderOpen className=&quot;w-16 h-16 text-gray-400&quot; /&gt;}
-+             title=&quot;暂无数据&quot;
-+             description=&#39;点击&quot;新建提示词&quot;开始添加&#39;
++             icon={&lt;FolderOpen className="w-16 h-16 text-gray-400" /&gt;}
++             title="暂无数据"
++             description='点击"新建提示词"开始添加'
 +           /&gt;
 +         )}
 + 
 +         {/* Prompts Table */}
 +         {!loading &amp;&amp; prompts.length &gt; 0 &amp;&amp; (
-+           &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden&quot;&gt;
-+             &lt;div className=&quot;overflow-x-auto&quot;&gt;
-+               &lt;table className=&quot;w-full&quot;&gt;
-+                 &lt;thead className=&quot;bg-gray-50 border-b border-gray-200&quot;&gt;
++           &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"&gt;
++             &lt;div className="overflow-x-auto"&gt;
++               &lt;table className="w-full"&gt;
++                 &lt;thead className="bg-gray-50 border-b border-gray-200"&gt;
 +                   &lt;tr&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;效果&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;描述&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;标签&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;更新时间&lt;/th&gt;
-+                     &lt;th className=&quot;px-6 py-4 text-right text-sm font-semibold text-gray-900&quot;&gt;操作&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;效果&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;描述&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;标签&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;更新时间&lt;/th&gt;
++                     &lt;th className="px-6 py-4 text-right text-sm font-semibold text-gray-900"&gt;操作&lt;/th&gt;
 +                   &lt;/tr&gt;
 +                 &lt;/thead&gt;
-+                 &lt;tbody className=&quot;divide-y divide-gray-200&quot;&gt;
++                 &lt;tbody className="divide-y divide-gray-200"&gt;
 +                   {prompts.map(prompt =&gt; (
-+                     &lt;tr key={prompt.id} className=&quot;hover:bg-gray-50 transition-colors&quot;&gt;
-+                       &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                         &lt;div className=&quot;font-medium text-gray-900&quot;&gt;{prompt.effect}&lt;/div&gt;
++                     &lt;tr key={prompt.id} className="hover:bg-gray-50 transition-colors"&gt;
++                       &lt;td className="px-6 py-4"&gt;
++                         &lt;div className="font-medium text-gray-900"&gt;{prompt.effect}&lt;/div&gt;
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                         &lt;div className=&quot;text-sm text-gray-600 line-clamp-2 max-w-md&quot;&gt;
++                       &lt;td className="px-6 py-4"&gt;
++                         &lt;div className="text-sm text-gray-600 line-clamp-2 max-w-md"&gt;
 +                           {prompt.description}
 +                         &lt;/div&gt;
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                         &lt;div className=&quot;flex flex-wrap gap-1&quot;&gt;
++                       &lt;td className="px-6 py-4"&gt;
++                         &lt;div className="flex flex-wrap gap-1"&gt;
 +                           {prompt.tags.map(tag =&gt; (
 +                             &lt;span
 +                               key={tag}
-+                               className=&quot;px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs&quot;
++                               className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
 +                             &gt;
 +                               {tag}
 +                             &lt;/span&gt;
 +                           ))}
 +                         &lt;/div&gt;
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4 text-sm text-gray-600&quot;&gt;
-+                         {new Date(prompt.updatedAt).toLocaleString(&#39;zh-CN&#39;)}
++                       &lt;td className="px-6 py-4 text-sm text-gray-600"&gt;
++                         {new Date(prompt.updatedAt).toLocaleString('zh-CN')}
 +                       &lt;/td&gt;
-+                       &lt;td className=&quot;px-6 py-4 text-right&quot;&gt;
-+                         &lt;div className=&quot;flex justify-end gap-2&quot;&gt;
++                       &lt;td className="px-6 py-4 text-right"&gt;
++                         &lt;div className="flex justify-end gap-2"&gt;
 +                           &lt;button
 +                             onClick={() =&gt; startEdit(prompt)}
-+                             className=&quot;p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors&quot;
-+                             title=&quot;编辑&quot;
++                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
++                             title="编辑"
 +                           &gt;
-+                             &lt;Edit2 className=&quot;w-4 h-4&quot; /&gt;
++                             &lt;Edit2 className="w-4 h-4" /&gt;
 +                           &lt;/button&gt;
 +                           &lt;button
 +                             onClick={() =&gt; handleDelete(prompt.id)}
-+                             className=&quot;p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors&quot;
-+                             title=&quot;删除&quot;
++                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
++                             title="删除"
 +                           &gt;
-+                             &lt;Trash2 className=&quot;w-4 h-4&quot; /&gt;
++                             &lt;Trash2 className="w-4 h-4" /&gt;
 +                           &lt;/button&gt;
 +                         &lt;/div&gt;
 +                       &lt;/td&gt;
@@ -7089,7 +7089,7 @@ Lines added: 398, lines removed: 1
 + 
 +         {/* Stats */}
 +         {!loading &amp;&amp; prompts.length &gt; 0 &amp;&amp; (
-+           &lt;div className=&quot;mt-6 text-center text-sm text-gray-600&quot;&gt;
++           &lt;div className="mt-6 text-center text-sm text-gray-600"&gt;
 +             共 {prompts.length} 条提示词
 +           &lt;/div&gt;
 +         )}
@@ -7116,14 +7116,14 @@ Lines added: 398, lines removed: 1
 ---
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
-<details><summary>Tool use: **command** • Run command: cp components/ImportModal.tsx "app/(admin)/components/ImportModal.tsx"</summary>
+<details><summary>Tool use: **run_terminal_cmd** • Run command: cp components/ImportModal.tsx "app/(admin)/components/ImportModal.tsx"</summary>
 
 ```bash
 cp components/ImportModal.tsx "app/(admin)/components/ImportModal.tsx"
 ```
 
 ```
-$ cp components/ImportModal.tsx &quot;app/(admin)/components/ImportModal.tsx&quot;
+$ cp components/ImportModal.tsx "app/(admin)/components/ImportModal.tsx"
 ```
 </details>
 </tool-use>
@@ -7175,7 +7175,7 @@ Explanation: 删除旧的 ImportModal 组件，已迁移到 app/(admin)/componen
 ---
 
 <tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
-<details><summary>Tool use: **command** • Run command: rmdir app/admin</summary>
+<details><summary>Tool use: **run_terminal_cmd** • Run command: rmdir app/admin</summary>
 
 ```bash
 rmdir app/admin
@@ -7191,7 +7191,7 @@ $ rmdir app/admin
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -7201,7 +7201,7 @@ No results found
 
 <tool-use data-tool-type="generic" data-tool-name="list_dir">
 <details>
-            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+            <summary>Tool use: **list_dir** • Listed directory undefined • **0** results</summary>
         
 No results found
 </details>
@@ -7376,7 +7376,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/prompt.service.ts</summary>
+<details><summary>Tool use: **write** • Edit file: services/prompt.service.ts</summary>
 
 **Chunk 1**
 Lines added: 107, lines removed: 1
@@ -7389,10 +7389,10 @@ Lines added: 107, lines removed: 1
 +  * Handles all prompt-related API calls
 +  */
 + 
-+ import { PromptItem, CreatePromptRequest, ApiResponse } from &#39;@/types&#39;;
++ import { PromptItem, CreatePromptRequest, ApiResponse } from '@/types';
 + 
 + class PromptService {
-+   private baseUrl = &#39;/api/prompts&#39;;
++   private baseUrl = '/api/prompts';
 + 
 +   /**
 +    * Fetch all prompts
@@ -7402,7 +7402,7 @@ Lines added: 107, lines removed: 1
 +     const result: ApiResponse&lt;PromptItem[]&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to fetch prompts&#39;);
++       throw new Error(result.error || 'Failed to fetch prompts');
 +     }
 +     
 +     return result.data || [];
@@ -7416,11 +7416,11 @@ Lines added: 107, lines removed: 1
 +     const result: ApiResponse&lt;PromptItem&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to fetch prompt&#39;);
++       throw new Error(result.error || 'Failed to fetch prompt');
 +     }
 +     
 +     if (!result.data) {
-+       throw new Error(&#39;Prompt not found&#39;);
++       throw new Error('Prompt not found');
 +     }
 +     
 +     return result.data;
@@ -7431,19 +7431,19 @@ Lines added: 107, lines removed: 1
 +    */
 +   async create(data: CreatePromptRequest): Promise&lt;PromptItem&gt; {
 +     const response = await fetch(this.baseUrl, {
-+       method: &#39;POST&#39;,
-+       headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       method: 'POST',
++       headers: { 'Content-Type': 'application/json' },
 +       body: JSON.stringify(data),
 +     });
 +     
 +     const result: ApiResponse&lt;PromptItem&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to create prompt&#39;);
++       throw new Error(result.error || 'Failed to create prompt');
 +     }
 +     
 +     if (!result.data) {
-+       throw new Error(&#39;No data returned&#39;);
++       throw new Error('No data returned');
 +     }
 +     
 +     return result.data;
@@ -7454,19 +7454,19 @@ Lines added: 107, lines removed: 1
 +    */
 +   async update(id: string, data: Partial&lt;CreatePromptRequest&gt;): Promise&lt;PromptItem&gt; {
 +     const response = await fetch(&#96;${this.baseUrl}/${id}&#96;, {
-+       method: &#39;PUT&#39;,
-+       headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       method: 'PUT',
++       headers: { 'Content-Type': 'application/json' },
 +       body: JSON.stringify(data),
 +     });
 +     
 +     const result: ApiResponse&lt;PromptItem&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to update prompt&#39;);
++       throw new Error(result.error || 'Failed to update prompt');
 +     }
 +     
 +     if (!result.data) {
-+       throw new Error(&#39;No data returned&#39;);
++       throw new Error('No data returned');
 +     }
 +     
 +     return result.data;
@@ -7477,13 +7477,13 @@ Lines added: 107, lines removed: 1
 +    */
 +   async delete(id: string): Promise&lt;void&gt; {
 +     const response = await fetch(&#96;${this.baseUrl}/${id}&#96;, {
-+       method: &#39;DELETE&#39;,
++       method: 'DELETE',
 +     });
 +     
 +     const result: ApiResponse&lt;{ id: string }&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to delete prompt&#39;);
++       throw new Error(result.error || 'Failed to delete prompt');
 +     }
 +   }
 + }
@@ -7501,7 +7501,7 @@ Lines added: 107, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/import.service.ts</summary>
+<details><summary>Tool use: **write** • Edit file: services/import.service.ts</summary>
 
 **Chunk 1**
 Lines added: 150, lines removed: 1
@@ -7514,11 +7514,11 @@ Lines added: 150, lines removed: 1
 +  * Handles data import operations
 +  */
 + 
-+ import { ApiResponse } from &#39;@/types&#39;;
++ import { ApiResponse } from '@/types';
 + 
 + interface ImportOptions {
 +   items: any[];
-+   mode: &#39;merge&#39; | &#39;replace&#39;;
++   mode: 'merge' | 'replace';
 + }
 + 
 + interface ImportResult {
@@ -7539,28 +7539,28 @@ Lines added: 150, lines removed: 1
 + }
 + 
 + class ImportService {
-+   private importUrl = &#39;/api/import&#39;;
-+   private csvUrl = &#39;/api/import/csv&#39;;
-+   private feishuUrl = &#39;/api/import/feishu&#39;;
++   private importUrl = '/api/import';
++   private csvUrl = '/api/import/csv';
++   private feishuUrl = '/api/import/feishu';
 + 
 +   /**
 +    * Import data (generic)
 +    */
 +   async importData(options: ImportOptions): Promise&lt;ImportResult&gt; {
 +     const response = await fetch(this.importUrl, {
-+       method: &#39;POST&#39;,
-+       headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       method: 'POST',
++       headers: { 'Content-Type': 'application/json' },
 +       body: JSON.stringify(options),
 +     });
 +     
 +     const result: ApiResponse&lt;ImportResult&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to import data&#39;);
++       throw new Error(result.error || 'Failed to import data');
 +     }
 +     
 +     if (!result.data) {
-+       throw new Error(&#39;No data returned&#39;);
++       throw new Error('No data returned');
 +     }
 +     
 +     return result.data;
@@ -7571,19 +7571,19 @@ Lines added: 150, lines removed: 1
 +    */
 +   async parseCSV(csvText: string): Promise&lt;ParseCSVResult&gt; {
 +     const response = await fetch(this.csvUrl, {
-+       method: &#39;POST&#39;,
-+       headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       method: 'POST',
++       headers: { 'Content-Type': 'application/json' },
 +       body: JSON.stringify({ csvText }),
 +     });
 +     
 +     const result: ApiResponse&lt;ParseCSVResult&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to parse CSV&#39;);
++       throw new Error(result.error || 'Failed to parse CSV');
 +     }
 +     
 +     if (!result.data) {
-+       throw new Error(&#39;No data returned&#39;);
++       throw new Error('No data returned');
 +     }
 +     
 +     return result.data;
@@ -7594,19 +7594,19 @@ Lines added: 150, lines removed: 1
 +    */
 +   async scrapeFeishu(url: string, cookie?: string): Promise&lt;ScrapeFeishuResult&gt; {
 +     const response = await fetch(this.feishuUrl, {
-+       method: &#39;POST&#39;,
-+       headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       method: 'POST',
++       headers: { 'Content-Type': 'application/json' },
 +       body: JSON.stringify({ url, cookie }),
 +     });
 +     
 +     const result: ApiResponse&lt;ScrapeFeishuResult&gt; = await response.json();
 +     
 +     if (!result.success) {
-+       throw new Error(result.error || &#39;Failed to scrape Feishu document&#39;);
++       throw new Error(result.error || 'Failed to scrape Feishu document');
 +     }
 +     
 +     if (!result.data) {
-+       throw new Error(&#39;No data returned&#39;);
++       throw new Error('No data returned');
 +     }
 +     
 +     return result.data;
@@ -7615,7 +7615,7 @@ Lines added: 150, lines removed: 1
 +   /**
 +    * Import from CSV text
 +    */
-+   async importFromCSV(csvText: string, mode: &#39;merge&#39; | &#39;replace&#39; = &#39;merge&#39;): Promise&lt;ImportResult&gt; {
++   async importFromCSV(csvText: string, mode: 'merge' | 'replace' = 'merge'): Promise&lt;ImportResult&gt; {
 +     // Step 1: Parse CSV
 +     const parseResult = await this.parseCSV(csvText);
 +     
@@ -7633,7 +7633,7 @@ Lines added: 150, lines removed: 1
 +    */
 +   async importFromFeishu(
 +     url: string,
-+     mode: &#39;merge&#39; | &#39;replace&#39; = &#39;merge&#39;,
++     mode: 'merge' | 'replace' = 'merge',
 +     cookie?: string
 +   ): Promise&lt;ImportResult&gt; {
 +     // Step 1: Scrape Feishu
@@ -7651,7 +7651,7 @@ Lines added: 150, lines removed: 1
 +   /**
 +    * Import from JSON data
 +    */
-+   async importFromJSON(items: any[], mode: &#39;merge&#39; | &#39;replace&#39; = &#39;merge&#39;): Promise&lt;ImportResult&gt; {
++   async importFromJSON(items: any[], mode: 'merge' | 'replace' = 'merge'): Promise&lt;ImportResult&gt; {
 +     return await this.importData({ items, mode });
 +   }
 + }
@@ -7700,16 +7700,16 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(frontend)/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(frontend)/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -8,4 +8,5 @@
-  import LoadingSpinner from &#39;@/components/shared/LoadingSpinner&#39;;
-  import EmptyState from &#39;@/components/shared/EmptyState&#39;;
-+ import { promptService } from &#39;@/services/prompt.service&#39;;
+  import LoadingSpinner from '@/components/shared/LoadingSpinner';
+  import EmptyState from '@/components/shared/EmptyState';
++ import { promptService } from '@/services/prompt.service';
   
   export default function Home() {
 ```
@@ -7721,7 +7721,7 @@ Lines added: 2, lines removed: 5
 @@ -21,9 +22,6 @@
     const fetchPrompts = async () =&gt; {
       try {
--       const response = await fetch(&#39;/api/prompts&#39;);
+-       const response = await fetch('/api/prompts');
 -       const result = await response.json();
 -       if (result.success) {
 -         setPrompts(result.data);
@@ -7729,7 +7729,7 @@ Lines added: 2, lines removed: 5
 +       const data = await promptService.getAll();
 +       setPrompts(data);
       } catch (error) {
-        console.error(&#39;Failed to fetch prompts:&#39;, error);
+        console.error('Failed to fetch prompts:', error);
 ```
 
 </details>
@@ -7749,16 +7749,16 @@ Lines added: 2, lines removed: 5
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -8,4 +8,5 @@
-  import EmptyState from &#39;@/components/shared/EmptyState&#39;;
-  import ImportModal from &#39;../components/ImportModal&#39;;
-+ import { promptService } from &#39;@/services/prompt.service&#39;;
+  import EmptyState from '@/components/shared/EmptyState';
+  import ImportModal from '../components/ImportModal';
++ import { promptService } from '@/services/prompt.service';
   
   export default function AdminPage() {
 ```
@@ -7771,7 +7771,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 5
@@ -7780,7 +7780,7 @@ Lines added: 2, lines removed: 5
 @@ -31,9 +31,6 @@
     const fetchPrompts = async () =&gt; {
       try {
--       const response = await fetch(&#39;/api/prompts&#39;);
+-       const response = await fetch('/api/prompts');
 -       const result = await response.json();
 -       if (result.success) {
 -         setPrompts(result.data);
@@ -7788,7 +7788,7 @@ Lines added: 2, lines removed: 5
 +       const data = await promptService.getAll();
 +       setPrompts(data);
       } catch (error) {
-        console.error(&#39;Failed to fetch prompts:&#39;, error);
+        console.error('Failed to fetch prompts:', error);
 ```
 
 </details>
@@ -7799,7 +7799,7 @@ Lines added: 2, lines removed: 5
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 5, lines removed: 16
@@ -7808,9 +7808,9 @@ Lines added: 5, lines removed: 16
 @@ -48,22 +48,11 @@
   
       try {
--       const response = await fetch(&#39;/api/prompts&#39;, {
--         method: &#39;POST&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-       const response = await fetch('/api/prompts', {
+-         method: 'POST',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify(formData),
 -       });
 -       
@@ -7821,16 +7821,16 @@ Lines added: 5, lines removed: 16
 -         resetForm();
 -         setIsCreating(false);
 -       } else {
--         alert(&#39;创建失败：&#39; + result.error);
+-         alert('创建失败：' + result.error);
 -       }
 +       const newPrompt = await promptService.create(formData);
 +       setPrompts([newPrompt, ...prompts]);
 +       resetForm();
 +       setIsCreating(false);
       } catch (error) {
-        console.error(&#39;Failed to create prompt:&#39;, error);
--       alert(&#39;创建失败&#39;);
-+       alert(&#39;创建失败：&#39; + (error instanceof Error ? error.message : &#39;未知错误&#39;));
+        console.error('Failed to create prompt:', error);
+-       alert('创建失败');
++       alert('创建失败：' + (error instanceof Error ? error.message : '未知错误'));
       }
     };
 ```
@@ -7843,7 +7843,7 @@ Lines added: 5, lines removed: 16
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 5, lines removed: 16
@@ -7853,8 +7853,8 @@ Lines added: 5, lines removed: 16
     const handleUpdate = async (id: string) =&gt; {
       try {
 -       const response = await fetch(&#96;/api/prompts/${id}&#96;, {
--         method: &#39;PUT&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-         method: 'PUT',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify(formData),
 -       });
 -       
@@ -7865,16 +7865,16 @@ Lines added: 5, lines removed: 16
 -         resetForm();
 -         setEditingId(null);
 -       } else {
--         alert(&#39;更新失败：&#39; + result.error);
+-         alert('更新失败：' + result.error);
 -       }
 +       const updatedPrompt = await promptService.update(id, formData);
 +       setPrompts(prompts.map(p =&gt; p.id === id ? updatedPrompt : p));
 +       resetForm();
 +       setEditingId(null);
       } catch (error) {
-        console.error(&#39;Failed to update prompt:&#39;, error);
--       alert(&#39;更新失败&#39;);
-+       alert(&#39;更新失败：&#39; + (error instanceof Error ? error.message : &#39;未知错误&#39;));
+        console.error('Failed to update prompt:', error);
+-       alert('更新失败');
++       alert('更新失败：' + (error instanceof Error ? error.message : '未知错误'));
       }
     };
 ```
@@ -7887,7 +7887,7 @@ Lines added: 5, lines removed: 16
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 12
@@ -7897,7 +7897,7 @@ Lines added: 3, lines removed: 12
   
       try {
 -       const response = await fetch(&#96;/api/prompts/${id}&#96;, {
--         method: &#39;DELETE&#39;,
+-         method: 'DELETE',
 -       });
 -       
 -       const result = await response.json();
@@ -7905,14 +7905,14 @@ Lines added: 3, lines removed: 12
 -       if (result.success) {
 -         setPrompts(prompts.filter(p =&gt; p.id !== id));
 -       } else {
--         alert(&#39;删除失败：&#39; + result.error);
+-         alert('删除失败：' + result.error);
 -       }
 +       await promptService.delete(id);
 +       setPrompts(prompts.filter(p =&gt; p.id !== id));
       } catch (error) {
-        console.error(&#39;Failed to delete prompt:&#39;, error);
--       alert(&#39;删除失败&#39;);
-+       alert(&#39;删除失败：&#39; + (error instanceof Error ? error.message : &#39;未知错误&#39;));
+        console.error('Failed to delete prompt:', error);
+-       alert('删除失败');
++       alert('删除失败：' + (error instanceof Error ? error.message : '未知错误'));
       }
     };
 ```
@@ -8057,7 +8057,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/shared/Toast.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/shared/Toast.tsx</summary>
 
 **Chunk 1**
 Lines added: 65, lines removed: 1
@@ -8065,12 +8065,12 @@ Lines added: 65, lines removed: 1
 ```diff
 @@ -1,1 +1,65 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { useEffect } from &#39;react&#39;;
-+ import { CheckCircle, XCircle, AlertCircle, X } from &#39;lucide-react&#39;;
++ import { useEffect } from 'react';
++ import { CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 + 
-+ export type ToastType = &#39;success&#39; | &#39;error&#39; | &#39;warning&#39; | &#39;info&#39;;
++ export type ToastType = 'success' | 'error' | 'warning' | 'info';
 + 
 + interface ToastProps {
 +   message: string;
@@ -8079,7 +8079,7 @@ Lines added: 65, lines removed: 1
 +   onClose: () =&gt; void;
 + }
 + 
-+ export default function Toast({ message, type = &#39;info&#39;, duration = 3000, onClose }: ToastProps) {
++ export default function Toast({ message, type = 'info', duration = 3000, onClose }: ToastProps) {
 +   useEffect(() =&gt; {
 +     if (duration &gt; 0) {
 +       const timer = setTimeout(onClose, duration);
@@ -8089,27 +8089,27 @@ Lines added: 65, lines removed: 1
 + 
 +   const getIcon = () =&gt; {
 +     switch (type) {
-+       case &#39;success&#39;:
-+         return &lt;CheckCircle className=&quot;w-5 h-5 text-green-600&quot; /&gt;;
-+       case &#39;error&#39;:
-+         return &lt;XCircle className=&quot;w-5 h-5 text-red-600&quot; /&gt;;
-+       case &#39;warning&#39;:
-+         return &lt;AlertCircle className=&quot;w-5 h-5 text-yellow-600&quot; /&gt;;
++       case 'success':
++         return &lt;CheckCircle className="w-5 h-5 text-green-600" /&gt;;
++       case 'error':
++         return &lt;XCircle className="w-5 h-5 text-red-600" /&gt;;
++       case 'warning':
++         return &lt;AlertCircle className="w-5 h-5 text-yellow-600" /&gt;;
 +       default:
-+         return &lt;AlertCircle className=&quot;w-5 h-5 text-blue-600&quot; /&gt;;
++         return &lt;AlertCircle className="w-5 h-5 text-blue-600" /&gt;;
 +     }
 +   };
 + 
 +   const getStyles = () =&gt; {
 +     switch (type) {
-+       case &#39;success&#39;:
-+         return &#39;bg-green-50 border-green-200 text-green-800&#39;;
-+       case &#39;error&#39;:
-+         return &#39;bg-red-50 border-red-200 text-red-800&#39;;
-+       case &#39;warning&#39;:
-+         return &#39;bg-yellow-50 border-yellow-200 text-yellow-800&#39;;
++       case 'success':
++         return 'bg-green-50 border-green-200 text-green-800';
++       case 'error':
++         return 'bg-red-50 border-red-200 text-red-800';
++       case 'warning':
++         return 'bg-yellow-50 border-yellow-200 text-yellow-800';
 +       default:
-+         return &#39;bg-blue-50 border-blue-200 text-blue-800&#39;;
++         return 'bg-blue-50 border-blue-200 text-blue-800';
 +     }
 +   };
 + 
@@ -8117,14 +8117,14 @@ Lines added: 65, lines removed: 1
 +     &lt;div
 +       className={&#96;fixed top-4 right-4 z-50 max-w-md w-full shadow-lg rounded-lg border p-4 flex items-start gap-3 animate-in slide-in-from-top-5 ${getStyles()}&#96;}
 +     &gt;
-+       &lt;div className=&quot;flex-shrink-0&quot;&gt;{getIcon()}&lt;/div&gt;
-+       &lt;div className=&quot;flex-1 text-sm font-medium&quot;&gt;{message}&lt;/div&gt;
++       &lt;div className="flex-shrink-0"&gt;{getIcon()}&lt;/div&gt;
++       &lt;div className="flex-1 text-sm font-medium"&gt;{message}&lt;/div&gt;
 +       &lt;button
 +         onClick={onClose}
-+         className=&quot;flex-shrink-0 hover:opacity-70 transition-opacity&quot;
-+         aria-label=&quot;Close&quot;
++         className="flex-shrink-0 hover:opacity-70 transition-opacity"
++         aria-label="Close"
 +       &gt;
-+         &lt;X className=&quot;w-4 h-4&quot; /&gt;
++         &lt;X className="w-4 h-4" /&gt;
 +       &lt;/button&gt;
 +     &lt;/div&gt;
 +   );
@@ -8140,7 +8140,7 @@ Lines added: 65, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: components/shared/ToastContainer.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: components/shared/ToastContainer.tsx</summary>
 
 **Chunk 1**
 Lines added: 63, lines removed: 1
@@ -8148,10 +8148,10 @@ Lines added: 63, lines removed: 1
 ```diff
 @@ -1,1 +1,63 @@
 - 
-+ &#39;use client&#39;;
++ 'use client';
 + 
-+ import { createContext, useContext, useState, ReactNode } from &#39;react&#39;;
-+ import Toast, { ToastType } from &#39;./Toast&#39;;
++ import { createContext, useContext, useState, ReactNode } from 'react';
++ import Toast, { ToastType } from './Toast';
 + 
 + interface ToastMessage {
 +   id: string;
@@ -8173,15 +8173,15 @@ Lines added: 63, lines removed: 1
 + export function ToastProvider({ children }: { children: ReactNode }) {
 +   const [toasts, setToasts] = useState&lt;ToastMessage[]&gt;([]);
 + 
-+   const showToast = (message: string, type: ToastType = &#39;info&#39;, duration: number = 3000) =&gt; {
++   const showToast = (message: string, type: ToastType = 'info', duration: number = 3000) =&gt; {
 +     const id = &#96;toast-${Date.now()}-${Math.random()}&#96;;
 +     setToasts(prev =&gt; [...prev, { id, message, type, duration }]);
 +   };
 + 
-+   const showSuccess = (message: string) =&gt; showToast(message, &#39;success&#39;);
-+   const showError = (message: string) =&gt; showToast(message, &#39;error&#39;, 5000);
-+   const showWarning = (message: string) =&gt; showToast(message, &#39;warning&#39;, 4000);
-+   const showInfo = (message: string) =&gt; showToast(message, &#39;info&#39;);
++   const showSuccess = (message: string) =&gt; showToast(message, 'success');
++   const showError = (message: string) =&gt; showToast(message, 'error', 5000);
++   const showWarning = (message: string) =&gt; showToast(message, 'warning', 4000);
++   const showInfo = (message: string) =&gt; showToast(message, 'info');
 + 
 +   const removeToast = (id: string) =&gt; {
 +     setToasts(prev =&gt; prev.filter(toast =&gt; toast.id !== id));
@@ -8206,7 +8206,7 @@ Lines added: 63, lines removed: 1
 + export function useToast() {
 +   const context = useContext(ToastContext);
 +   if (!context) {
-+     throw new Error(&#39;useToast must be used within ToastProvider&#39;);
++     throw new Error('useToast must be used within ToastProvider');
 +   }
 +   return context;
 + }
@@ -8221,7 +8221,7 @@ Lines added: 63, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: lib/error-handler.ts</summary>
+<details><summary>Tool use: **write** • Edit file: lib/error-handler.ts</summary>
 
 **Chunk 1**
 Lines added: 68, lines removed: 1
@@ -8241,7 +8241,7 @@ Lines added: 68, lines removed: 1
 +     public statusCode?: number
 +   ) {
 +     super(message);
-+     this.name = &#39;AppError&#39;;
++     this.name = 'AppError';
 +   }
 + }
 + 
@@ -8257,11 +8257,11 @@ Lines added: 68, lines removed: 1
 +     return error.message;
 +   }
 +   
-+   if (typeof error === &#39;string&#39;) {
++   if (typeof error === 'string') {
 +     return error;
 +   }
 +   
-+   return &#39;操作失败，请稍后重试&#39;;
++   return '操作失败，请稍后重试';
 + }
 + 
 + /**
@@ -8271,10 +8271,10 @@ Lines added: 68, lines removed: 1
 +   const errorMessage = formatErrorMessage(error);
 +   const timestamp = new Date().toISOString();
 +   
-+   console.error(&#96;[${timestamp}]${context ? &#96; [${context}]&#96; : &#39;&#39;} Error:&#96;, errorMessage);
++   console.error(&#96;[${timestamp}]${context ? &#96; [${context}]&#96; : ''} Error:&#96;, errorMessage);
 +   
 +   if (error instanceof Error &amp;&amp; error.stack) {
-+     console.error(&#39;Stack trace:&#39;, error.stack);
++     console.error('Stack trace:', error.stack);
 +   }
 +   
 +   // TODO: Send to error tracking service (Sentry, etc.)
@@ -8324,18 +8324,18 @@ Lines added: 68, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/layout.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/layout.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -2,4 +2,5 @@
-  import { Inter } from &#39;next/font/google&#39;
-  import &#39;./globals.css&#39;
-+ import { ToastProvider } from &#39;@/components/shared/ToastContainer&#39;
+  import { Inter } from 'next/font/google'
+  import './globals.css'
++ import { ToastProvider } from '@/components/shared/ToastContainer'
   
-  const inter = Inter({ subsets: [&#39;latin&#39;] })
+  const inter = Inter({ subsets: ['latin'] })
 ```
 
 **Chunk 2**
@@ -8344,7 +8344,7 @@ Lines added: 3, lines removed: 1
 ```diff
 @@ -17,5 +18,7 @@
     return (
-      &lt;html lang=&quot;zh-CN&quot;&gt;
+      &lt;html lang="zh-CN"&gt;
 -       &lt;body className={inter.className}&gt;{children}&lt;/body&gt;
 +       &lt;body className={inter.className}&gt;
 +         &lt;ToastProvider&gt;{children}&lt;/ToastProvider&gt;
@@ -8370,17 +8370,17 @@ Lines added: 3, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: undefined
 
 ```diff
 @@ -9,4 +9,6 @@
-  import ImportModal from &#39;../components/ImportModal&#39;;
-  import { promptService } from &#39;@/services/prompt.service&#39;;
-+ import { useToast } from &#39;@/components/shared/ToastContainer&#39;;
-+ import { formatErrorMessage } from &#39;@/lib/error-handler&#39;;
+  import ImportModal from '../components/ImportModal';
+  import { promptService } from '@/services/prompt.service';
++ import { useToast } from '@/components/shared/ToastContainer';
++ import { formatErrorMessage } from '@/lib/error-handler';
   
   export default function AdminPage() {
 ```
@@ -8393,7 +8393,7 @@ Lines added: 2, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
@@ -8415,7 +8415,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -8423,9 +8423,9 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -38,5 +38,5 @@
       } catch (error) {
-        console.error(&#39;Failed to fetch prompts:&#39;, error);
--       alert(&#39;获取数据失败&#39;);
-+       toast.showError(&#39;获取数据失败：&#39; + formatErrorMessage(error));
+        console.error('Failed to fetch prompts:', error);
+-       alert('获取数据失败');
++       toast.showError('获取数据失败：' + formatErrorMessage(error));
       } finally {
         setLoading(false);
 ```
@@ -8438,7 +8438,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -8447,8 +8447,8 @@ Lines added: 1, lines removed: 1
 @@ -46,5 +46,5 @@
     const handleCreate = async () =&gt; {
       if (!formData.effect || !formData.description || !formData.prompt || !formData.source) {
--       alert(&#39;请填写所有必填字段&#39;);
-+       toast.showWarning(&#39;请填写所有必填字段&#39;);
+-       alert('请填写所有必填字段');
++       toast.showWarning('请填写所有必填字段');
         return;
       }
 ```
@@ -8460,11 +8460,11 @@ Lines added: 2, lines removed: 1
 @@ -55,7 +55,8 @@
         resetForm();
         setIsCreating(false);
-+       toast.showSuccess(&#39;创建成功&#39;);
++       toast.showSuccess('创建成功');
       } catch (error) {
-        console.error(&#39;Failed to create prompt:&#39;, error);
--       alert(&#39;创建失败：&#39; + (error instanceof Error ? error.message : &#39;未知错误&#39;));
-+       toast.showError(&#39;创建失败：&#39; + formatErrorMessage(error));
+        console.error('Failed to create prompt:', error);
+-       alert('创建失败：' + (error instanceof Error ? error.message : '未知错误'));
++       toast.showError('创建失败：' + formatErrorMessage(error));
       }
     };
 ```
@@ -8477,7 +8477,7 @@ Lines added: 2, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 1
@@ -8486,11 +8486,11 @@ Lines added: 2, lines removed: 1
 @@ -68,7 +68,8 @@
         resetForm();
         setEditingId(null);
-+       toast.showSuccess(&#39;更新成功&#39;);
++       toast.showSuccess('更新成功');
       } catch (error) {
-        console.error(&#39;Failed to update prompt:&#39;, error);
--       alert(&#39;更新失败：&#39; + (error instanceof Error ? error.message : &#39;未知错误&#39;));
-+       toast.showError(&#39;更新失败：&#39; + formatErrorMessage(error));
+        console.error('Failed to update prompt:', error);
+-       alert('更新失败：' + (error instanceof Error ? error.message : '未知错误'));
++       toast.showError('更新失败：' + formatErrorMessage(error));
       }
     };
 ```
@@ -8503,7 +8503,7 @@ Lines added: 2, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 1
@@ -8512,11 +8512,11 @@ Lines added: 2, lines removed: 1
 @@ -83,7 +83,8 @@
         await promptService.delete(id);
         setPrompts(prompts.filter(p =&gt; p.id !== id));
-+       toast.showSuccess(&#39;删除成功&#39;);
++       toast.showSuccess('删除成功');
       } catch (error) {
-        console.error(&#39;Failed to delete prompt:&#39;, error);
--       alert(&#39;删除失败：&#39; + (error instanceof Error ? error.message : &#39;未知错误&#39;));
-+       toast.showError(&#39;删除失败：&#39; + formatErrorMessage(error));
+        console.error('Failed to delete prompt:', error);
+-       alert('删除失败：' + (error instanceof Error ? error.message : '未知错误'));
++       toast.showError('删除失败：' + formatErrorMessage(error));
       }
     };
 ```
@@ -8699,7 +8699,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/usePrompts.ts</summary>
+<details><summary>Tool use: **write** • Edit file: hooks/usePrompts.ts</summary>
 
 **Chunk 1**
 Lines added: 41, lines removed: 1
@@ -8712,11 +8712,11 @@ Lines added: 41, lines removed: 1
 +  * Manages prompt data fetching and state
 +  */
 + 
-+ import { useState, useEffect } from &#39;react&#39;;
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import { promptService } from &#39;@/services/prompt.service&#39;;
-+ import { useToast } from &#39;@/components/shared/ToastContainer&#39;;
-+ import { formatErrorMessage } from &#39;@/lib/error-handler&#39;;
++ import { useState, useEffect } from 'react';
++ import { PromptItem } from '@/types';
++ import { promptService } from '@/services/prompt.service';
++ import { useToast } from '@/components/shared/ToastContainer';
++ import { formatErrorMessage } from '@/lib/error-handler';
 + 
 + export function usePrompts() {
 +   const toast = useToast();
@@ -8729,8 +8729,8 @@ Lines added: 41, lines removed: 1
 +       const data = await promptService.getAll();
 +       setPrompts(data);
 +     } catch (error) {
-+       console.error(&#39;Failed to fetch prompts:&#39;, error);
-+       toast.showError(&#39;获取数据失败：&#39; + formatErrorMessage(error));
++       console.error('Failed to fetch prompts:', error);
++       toast.showError('获取数据失败：' + formatErrorMessage(error));
 +     } finally {
 +       setLoading(false);
 +     }
@@ -8758,7 +8758,7 @@ Lines added: 41, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/usePromptForm.ts</summary>
+<details><summary>Tool use: **write** • Edit file: hooks/usePromptForm.ts</summary>
 
 **Chunk 1**
 Lines added: 139, lines removed: 1
@@ -8771,19 +8771,19 @@ Lines added: 139, lines removed: 1
 +  * Manages prompt form state and CRUD operations
 +  */
 + 
-+ import { useState } from &#39;react&#39;;
-+ import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
-+ import { promptService } from &#39;@/services/prompt.service&#39;;
-+ import { useToast } from &#39;@/components/shared/ToastContainer&#39;;
-+ import { formatErrorMessage } from &#39;@/lib/error-handler&#39;;
++ import { useState } from 'react';
++ import { PromptItem, CreatePromptRequest } from '@/types';
++ import { promptService } from '@/services/prompt.service';
++ import { useToast } from '@/components/shared/ToastContainer';
++ import { formatErrorMessage } from '@/lib/error-handler';
 + 
 + const initialFormData: CreatePromptRequest = {
-+   effect: &#39;&#39;,
-+   description: &#39;&#39;,
++   effect: '',
++   description: '',
 +   tags: [],
-+   prompt: &#39;&#39;,
-+   source: &#39;&#39;,
-+   imageUrl: &#39;&#39;,
++   prompt: '',
++   source: '',
++   imageUrl: '',
 + };
 + 
 + export function usePromptForm(onSuccess?: () =&gt; void) {
@@ -8812,7 +8812,7 @@ Lines added: 139, lines removed: 1
 +       tags: prompt.tags,
 +       prompt: prompt.prompt,
 +       source: prompt.source,
-+       imageUrl: prompt.imageUrl || &#39;&#39;,
++       imageUrl: prompt.imageUrl || '',
 +     });
 +     setIsCreating(false);
 +   };
@@ -8823,20 +8823,20 @@ Lines added: 139, lines removed: 1
 + 
 +   const handleCreate = async (): Promise&lt;PromptItem | null&gt; =&gt; {
 +     if (!formData.effect || !formData.description || !formData.prompt || !formData.source) {
-+       toast.showWarning(&#39;请填写所有必填字段&#39;);
++       toast.showWarning('请填写所有必填字段');
 +       return null;
 +     }
 + 
 +     try {
 +       setSubmitting(true);
 +       const newPrompt = await promptService.create(formData);
-+       toast.showSuccess(&#39;创建成功&#39;);
++       toast.showSuccess('创建成功');
 +       resetForm();
 +       onSuccess?.();
 +       return newPrompt;
 +     } catch (error) {
-+       console.error(&#39;Failed to create prompt:&#39;, error);
-+       toast.showError(&#39;创建失败：&#39; + formatErrorMessage(error));
++       console.error('Failed to create prompt:', error);
++       toast.showError('创建失败：' + formatErrorMessage(error));
 +       return null;
 +     } finally {
 +       setSubmitting(false);
@@ -8849,13 +8849,13 @@ Lines added: 139, lines removed: 1
 +     try {
 +       setSubmitting(true);
 +       const updatedPrompt = await promptService.update(editingId, formData);
-+       toast.showSuccess(&#39;更新成功&#39;);
++       toast.showSuccess('更新成功');
 +       resetForm();
 +       onSuccess?.();
 +       return updatedPrompt;
 +     } catch (error) {
-+       console.error(&#39;Failed to update prompt:&#39;, error);
-+       toast.showError(&#39;更新失败：&#39; + formatErrorMessage(error));
++       console.error('Failed to update prompt:', error);
++       toast.showError('更新失败：' + formatErrorMessage(error));
 +       return null;
 +     } finally {
 +       setSubmitting(false);
@@ -8863,24 +8863,24 @@ Lines added: 139, lines removed: 1
 +   };
 + 
 +   const handleDelete = async (id: string): Promise&lt;boolean&gt; =&gt; {
-+     if (!confirm(&#39;确定要删除这条提示词吗？&#39;)) {
++     if (!confirm('确定要删除这条提示词吗？')) {
 +       return false;
 +     }
 + 
 +     try {
 +       await promptService.delete(id);
-+       toast.showSuccess(&#39;删除成功&#39;);
++       toast.showSuccess('删除成功');
 +       onSuccess?.();
 +       return true;
 +     } catch (error) {
-+       console.error(&#39;Failed to delete prompt:&#39;, error);
-+       toast.showError(&#39;删除失败：&#39; + formatErrorMessage(error));
++       console.error('Failed to delete prompt:', error);
++       toast.showError('删除失败：' + formatErrorMessage(error));
 +       return false;
 +     }
 +   };
 + 
 +   const handleTagsChange = (tagsString: string) =&gt; {
-+     const tags = tagsString.split(&#39;,&#39;).map(t =&gt; t.trim()).filter(t =&gt; t);
++     const tags = tagsString.split(',').map(t =&gt; t.trim()).filter(t =&gt; t);
 +     setFormData({ ...formData, tags });
 +   };
 + 
@@ -8915,7 +8915,7 @@ Lines added: 139, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useSearch.ts</summary>
+<details><summary>Tool use: **write** • Edit file: hooks/useSearch.ts</summary>
 
 **Chunk 1**
 Lines added: 50, lines removed: 1
@@ -8928,12 +8928,12 @@ Lines added: 50, lines removed: 1
 +  * Manages search and filter logic
 +  */
 + 
-+ import { useState, useMemo } from &#39;react&#39;;
-+ import { PromptItem } from &#39;@/types&#39;;
++ import { useState, useMemo } from 'react';
++ import { PromptItem } from '@/types';
 + 
 + export function useSearch(prompts: PromptItem[]) {
-+   const [searchTerm, setSearchTerm] = useState(&#39;&#39;);
-+   const [selectedTag, setSelectedTag] = useState&lt;string&gt;(&#39;&#39;);
++   const [searchTerm, setSearchTerm] = useState('');
++   const [selectedTag, setSelectedTag] = useState&lt;string&gt;('');
 + 
 +   // Get all unique tags
 +   const allTags = useMemo(() =&gt; {
@@ -8957,8 +8957,8 @@ Lines added: 50, lines removed: 1
 +   }, [prompts, searchTerm, selectedTag]);
 + 
 +   const clearFilters = () =&gt; {
-+     setSearchTerm(&#39;&#39;);
-+     setSelectedTag(&#39;&#39;);
++     setSearchTerm('');
++     setSelectedTag('');
 +   };
 + 
 +   return {
@@ -8969,7 +8969,7 @@ Lines added: 50, lines removed: 1
 +     allTags,
 +     filteredPrompts,
 +     clearFilters,
-+     hasFilters: searchTerm !== &#39;&#39; || selectedTag !== &#39;&#39;,
++     hasFilters: searchTerm !== '' || selectedTag !== '',
 +   };
 + }
 + 
@@ -8983,7 +8983,7 @@ Lines added: 50, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **write** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 76, lines removed: 1
@@ -8996,18 +8996,18 @@ Lines added: 76, lines removed: 1
 +  * Manages data import logic
 +  */
 + 
-+ import { useState } from &#39;react&#39;;
-+ import { importService } from &#39;@/services/import.service&#39;;
-+ import { useToast } from &#39;@/components/shared/ToastContainer&#39;;
-+ import { formatErrorMessage } from &#39;@/lib/error-handler&#39;;
++ import { useState } from 'react';
++ import { importService } from '@/services/import.service';
++ import { useToast } from '@/components/shared/ToastContainer';
++ import { formatErrorMessage } from '@/lib/error-handler';
 + 
-+ export type ImportMode = &#39;merge&#39; | &#39;replace&#39;;
++ export type ImportMode = 'merge' | 'replace';
 + 
 + export function useImport(onSuccess?: () =&gt; void) {
 +   const toast = useToast();
 +   const [loading, setLoading] = useState(false);
 + 
-+   const importFromCSV = async (csvText: string, mode: ImportMode = &#39;merge&#39;) =&gt; {
++   const importFromCSV = async (csvText: string, mode: ImportMode = 'merge') =&gt; {
 +     try {
 +       setLoading(true);
 +       const result = await importService.importFromCSV(csvText, mode);
@@ -9015,8 +9015,8 @@ Lines added: 76, lines removed: 1
 +       onSuccess?.();
 +       return result;
 +     } catch (error) {
-+       console.error(&#39;CSV import failed:&#39;, error);
-+       toast.showError(&#39;导入失败：&#39; + formatErrorMessage(error));
++       console.error('CSV import failed:', error);
++       toast.showError('导入失败：' + formatErrorMessage(error));
 +       throw error;
 +     } finally {
 +       setLoading(false);
@@ -9025,7 +9025,7 @@ Lines added: 76, lines removed: 1
 + 
 +   const importFromFeishu = async (
 +     url: string,
-+     mode: ImportMode = &#39;merge&#39;,
++     mode: ImportMode = 'merge',
 +     cookie?: string
 +   ) =&gt; {
 +     try {
@@ -9035,15 +9035,15 @@ Lines added: 76, lines removed: 1
 +       onSuccess?.();
 +       return result;
 +     } catch (error) {
-+       console.error(&#39;Feishu import failed:&#39;, error);
-+       toast.showError(&#39;导入失败：&#39; + formatErrorMessage(error));
++       console.error('Feishu import failed:', error);
++       toast.showError('导入失败：' + formatErrorMessage(error));
 +       throw error;
 +     } finally {
 +       setLoading(false);
 +     }
 +   };
 + 
-+   const importFromJSON = async (items: any[], mode: ImportMode = &#39;merge&#39;) =&gt; {
++   const importFromJSON = async (items: any[], mode: ImportMode = 'merge') =&gt; {
 +     try {
 +       setLoading(true);
 +       const result = await importService.importFromJSON(items, mode);
@@ -9051,8 +9051,8 @@ Lines added: 76, lines removed: 1
 +       onSuccess?.();
 +       return result;
 +     } catch (error) {
-+       console.error(&#39;JSON import failed:&#39;, error);
-+       toast.showError(&#39;导入失败：&#39; + formatErrorMessage(error));
++       console.error('JSON import failed:', error);
++       toast.showError('导入失败：' + formatErrorMessage(error));
 +       throw error;
 +     } finally {
 +       setLoading(false);
@@ -9103,30 +9103,30 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(frontend)/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(frontend)/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 4, lines removed: 39
 
 ```diff
 @@ -1,50 +1,15 @@
-  &#39;use client&#39;;
+  'use client';
   
-- import { useEffect, useState } from &#39;react&#39;;
-- import { PromptItem } from &#39;@/types&#39;;
-  import { Search, FileQuestion } from &#39;lucide-react&#39;;
-  import Link from &#39;next/link&#39;;
-  import PromptCard from &#39;./components/PromptCard&#39;;
-  import LoadingSpinner from &#39;@/components/shared/LoadingSpinner&#39;;
-  import EmptyState from &#39;@/components/shared/EmptyState&#39;;
-- import { promptService } from &#39;@/services/prompt.service&#39;;
-+ import { usePrompts } from &#39;@/hooks/usePrompts&#39;;
-+ import { useSearch } from &#39;@/hooks/useSearch&#39;;
+- import { useEffect, useState } from 'react';
+- import { PromptItem } from '@/types';
+  import { Search, FileQuestion } from 'lucide-react';
+  import Link from 'next/link';
+  import PromptCard from './components/PromptCard';
+  import LoadingSpinner from '@/components/shared/LoadingSpinner';
+  import EmptyState from '@/components/shared/EmptyState';
+- import { promptService } from '@/services/prompt.service';
++ import { usePrompts } from '@/hooks/usePrompts';
++ import { useSearch } from '@/hooks/useSearch';
   
   export default function Home() {
 -   const [prompts, setPrompts] = useState&lt;PromptItem[]&gt;([]);
--   const [searchTerm, setSearchTerm] = useState(&#39;&#39;);
--   const [selectedTag, setSelectedTag] = useState&lt;string&gt;(&#39;&#39;);
+-   const [searchTerm, setSearchTerm] = useState('');
+-   const [selectedTag, setSelectedTag] = useState&lt;string&gt;('');
 -   const [loading, setLoading] = useState(true);
 - 
 -   useEffect(() =&gt; {
@@ -9138,7 +9138,7 @@ Lines added: 4, lines removed: 39
 -       const data = await promptService.getAll();
 -       setPrompts(data);
 -     } catch (error) {
--       console.error(&#39;Failed to fetch prompts:&#39;, error);
+-       console.error('Failed to fetch prompts:', error);
 -     } finally {
 -       setLoading(false);
 -     }
@@ -9183,28 +9183,28 @@ Lines added: 4, lines removed: 39
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 40, lines removed: 113
 
 ```diff
 @@ -1,127 +1,54 @@
-  &#39;use client&#39;;
+  'use client';
   
-- import { useEffect, useState } from &#39;react&#39;;
-- import { PromptItem, CreatePromptRequest } from &#39;@/types&#39;;
-+ import { useState } from &#39;react&#39;;
-  import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from &#39;lucide-react&#39;;
-  import Link from &#39;next/link&#39;;
-  import LoadingSpinner from &#39;@/components/shared/LoadingSpinner&#39;;
-  import EmptyState from &#39;@/components/shared/EmptyState&#39;;
-  import ImportModal from &#39;../components/ImportModal&#39;;
-- import { promptService } from &#39;@/services/prompt.service&#39;;
-- import { useToast } from &#39;@/components/shared/ToastContainer&#39;;
-- import { formatErrorMessage } from &#39;@/lib/error-handler&#39;;
-+ import { usePrompts } from &#39;@/hooks/usePrompts&#39;;
-+ import { usePromptForm } from &#39;@/hooks/usePromptForm&#39;;
+- import { useEffect, useState } from 'react';
+- import { PromptItem, CreatePromptRequest } from '@/types';
++ import { useState } from 'react';
+  import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from 'lucide-react';
+  import Link from 'next/link';
+  import LoadingSpinner from '@/components/shared/LoadingSpinner';
+  import EmptyState from '@/components/shared/EmptyState';
+  import ImportModal from '../components/ImportModal';
+- import { promptService } from '@/services/prompt.service';
+- import { useToast } from '@/components/shared/ToastContainer';
+- import { formatErrorMessage } from '@/lib/error-handler';
++ import { usePrompts } from '@/hooks/usePrompts';
++ import { usePromptForm } from '@/hooks/usePromptForm';
   
   export default function AdminPage() {
 -   const toast = useToast();
@@ -9231,12 +9231,12 @@ Lines added: 40, lines removed: 113
 + 
     const [showImportModal, setShowImportModal] = useState(false);
 -   const [formData, setFormData] = useState&lt;CreatePromptRequest&gt;({
--     effect: &#39;&#39;,
--     description: &#39;&#39;,
+-     effect: '',
+-     description: '',
 -     tags: [],
--     prompt: &#39;&#39;,
--     source: &#39;&#39;,
--     imageUrl: &#39;&#39;,
+-     prompt: '',
+-     source: '',
+-     imageUrl: '',
 -   });
 - 
 -   useEffect(() =&gt; {
@@ -9248,8 +9248,8 @@ Lines added: 40, lines removed: 113
 -       const data = await promptService.getAll();
 -       setPrompts(data);
 -     } catch (error) {
--       console.error(&#39;Failed to fetch prompts:&#39;, error);
--       toast.showError(&#39;获取数据失败：&#39; + formatErrorMessage(error));
+-       console.error('Failed to fetch prompts:', error);
+-       toast.showError('获取数据失败：' + formatErrorMessage(error));
 -     } finally {
 -       setLoading(false);
 -     }
@@ -9257,7 +9257,7 @@ Lines added: 40, lines removed: 113
 - 
 -   const handleCreate = async () =&gt; {
 -     if (!formData.effect || !formData.description || !formData.prompt || !formData.source) {
--       toast.showWarning(&#39;请填写所有必填字段&#39;);
+-       toast.showWarning('请填写所有必填字段');
 -       return;
 -     }
 - 
@@ -9270,10 +9270,10 @@ Lines added: 40, lines removed: 113
         setPrompts([newPrompt, ...prompts]);
 -       resetForm();
 -       setIsCreating(false);
--       toast.showSuccess(&#39;创建成功&#39;);
+-       toast.showSuccess('创建成功');
 -     } catch (error) {
--       console.error(&#39;Failed to create prompt:&#39;, error);
--       toast.showError(&#39;创建失败：&#39; + formatErrorMessage(error));
+-       console.error('Failed to create prompt:', error);
+-       toast.showError('创建失败：' + formatErrorMessage(error));
 -     }
 -   };
 - 
@@ -9283,15 +9283,15 @@ Lines added: 40, lines removed: 113
 -       setPrompts(prompts.map(p =&gt; p.id === id ? updatedPrompt : p));
 -       resetForm();
 -       setEditingId(null);
--       toast.showSuccess(&#39;更新成功&#39;);
+-       toast.showSuccess('更新成功');
 -     } catch (error) {
--       console.error(&#39;Failed to update prompt:&#39;, error);
--       toast.showError(&#39;更新失败：&#39; + formatErrorMessage(error));
+-       console.error('Failed to update prompt:', error);
+-       toast.showError('更新失败：' + formatErrorMessage(error));
 -     }
 -   };
 - 
 -   const handleDelete = async (id: string) =&gt; {
--     if (!confirm(&#39;确定要删除这条提示词吗？&#39;)) {
+-     if (!confirm('确定要删除这条提示词吗？')) {
 -       return;
 -     }
 - 
@@ -9312,10 +9312,10 @@ Lines added: 40, lines removed: 113
 +     const deleted = await handleDelete(id);
 +     if (deleted) {
         setPrompts(prompts.filter(p =&gt; p.id !== id));
--       toast.showSuccess(&#39;删除成功&#39;);
+-       toast.showSuccess('删除成功');
 -     } catch (error) {
--       console.error(&#39;Failed to delete prompt:&#39;, error);
--       toast.showError(&#39;删除失败：&#39; + formatErrorMessage(error));
+-       console.error('Failed to delete prompt:', error);
+-       toast.showError('删除失败：' + formatErrorMessage(error));
 -     }
 -   };
 - 
@@ -9327,19 +9327,19 @@ Lines added: 40, lines removed: 113
 -       tags: prompt.tags,
 -       prompt: prompt.prompt,
 -       source: prompt.source,
--       imageUrl: prompt.imageUrl || &#39;&#39;,
+-       imageUrl: prompt.imageUrl || '',
 -     });
 -     setIsCreating(false);
 -   };
 - 
 -   const resetForm = () =&gt; {
 -     setFormData({
--       effect: &#39;&#39;,
--       description: &#39;&#39;,
+-       effect: '',
+-       description: '',
 -       tags: [],
--       prompt: &#39;&#39;,
--       source: &#39;&#39;,
--       imageUrl: &#39;&#39;,
+-       prompt: '',
+-       source: '',
+-       imageUrl: '',
 -     });
 -   };
 - 
@@ -9350,7 +9350,7 @@ Lines added: 40, lines removed: 113
 -   };
 - 
 -   const handleTagsChange = (tagsString: string) =&gt; {
--     const tags = tagsString.split(&#39;,&#39;).map(t =&gt; t.trim()).filter(t =&gt; t);
+-     const tags = tagsString.split(',').map(t =&gt; t.trim()).filter(t =&gt; t);
 -     setFormData({ ...formData, tags });
 -   };
 +     }
@@ -9367,7 +9367,7 @@ Lines added: 40, lines removed: 113
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 5
@@ -9382,7 +9382,7 @@ Lines added: 1, lines removed: 5
 -                   resetForm();
 -                 }}
 +                 onClick={startCreate}
-                  className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
+                  className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
                 &gt;
 ```
 
@@ -9394,7 +9394,7 @@ Lines added: 1, lines removed: 5
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
@@ -9412,8 +9412,8 @@ Lines added: 2, lines removed: 2
           {/* Create/Edit Form */}
 -         {(isCreating || editingId) &amp;&amp; (
 +         {isEditing &amp;&amp; (
-            &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6&quot;&gt;
-              &lt;h2 className=&quot;text-xl font-bold mb-4&quot;&gt;
+            &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"&gt;
+              &lt;h2 className="text-xl font-bold mb-4"&gt;
 ```
 
 </details>
@@ -9424,32 +9424,32 @@ Lines added: 2, lines removed: 2
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 6, lines removed: 4
 
 ```diff
 @@ -186,13 +186,15 @@
-                &lt;div className=&quot;flex gap-3 pt-4&quot;&gt;
+                &lt;div className="flex gap-3 pt-4"&gt;
                   &lt;button
 -                   onClick={() =&gt; isCreating ? handleCreate() : handleUpdate(editingId!)}
--                   className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
+-                   className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 +                   onClick={isCreating ? onCreateSuccess : onUpdateSuccess}
 +                   disabled={submitting}
-+                   className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed&quot;
++                   className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   &gt;
-                    &lt;Save className=&quot;w-4 h-4&quot; /&gt;
+                    &lt;Save className="w-4 h-4" /&gt;
 -                   保存
-+                   {submitting ? &#39;保存中...&#39; : &#39;保存&#39;}
++                   {submitting ? '保存中...' : '保存'}
                   &lt;/button&gt;
                   &lt;button
                     onClick={cancelEdit}
--                   className=&quot;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2&quot;
+-                   className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2"
 +                   disabled={submitting}
-+                   className=&quot;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2 disabled:cursor-not-allowed&quot;
++                   className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2 disabled:cursor-not-allowed"
                   &gt;
-                    &lt;X className=&quot;w-4 h-4&quot; /&gt;
+                    &lt;X className="w-4 h-4" /&gt;
 ```
 
 </details>
@@ -9460,7 +9460,7 @@ Lines added: 6, lines removed: 4
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -9471,8 +9471,8 @@ Lines added: 1, lines removed: 1
                             &lt;button
 -                             onClick={() =&gt; handleDelete(prompt.id)}
 +                             onClick={() =&gt; onDeleteSuccess(prompt.id)}
-                              className=&quot;p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors&quot;
-                              title=&quot;删除&quot;
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="删除"
 ```
 
 </details>
@@ -9627,7 +9627,7 @@ _**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 146, lines removed: 1
@@ -9640,8 +9640,8 @@ Lines added: 146, lines removed: 1
 +  * Form for creating and editing prompts
 +  */
 + 
-+ import { CreatePromptRequest } from &#39;@/types&#39;;
-+ import { Save, X } from &#39;lucide-react&#39;;
++ import { CreatePromptRequest } from '@/types';
++ import { Save, X } from 'lucide-react';
 + 
 + interface PromptFormProps {
 +   formData: CreatePromptRequest;
@@ -9663,116 +9663,116 @@ Lines added: 146, lines removed: 1
 +   onTagsChange,
 + }: PromptFormProps) {
 +   return (
-+     &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6&quot;&gt;
-+       &lt;h2 className=&quot;text-xl font-bold mb-4&quot;&gt;
-+         {isCreating ? &#39;新建提示词&#39; : &#39;编辑提示词&#39;}
++     &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"&gt;
++       &lt;h2 className="text-xl font-bold mb-4"&gt;
++         {isCreating ? '新建提示词' : '编辑提示词'}
 +       &lt;/h2&gt;
 +       
-+       &lt;div className=&quot;space-y-4&quot;&gt;
++       &lt;div className="space-y-4"&gt;
 +         {/* Effect Field */}
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+             效果 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++             效果 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +           &lt;/label&gt;
 +           &lt;input
-+             type=&quot;text&quot;
++             type="text"
 +             value={formData.effect}
 +             onChange={(e) =&gt; onChange({ ...formData, effect: e.target.value })}
 +             disabled={submitting}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
-+             placeholder=&quot;例如：生成产品介绍文案&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
++             placeholder="例如：生成产品介绍文案"
 +           /&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Description Field */}
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+             描述 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++             描述 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +           &lt;/label&gt;
 +           &lt;textarea
 +             value={formData.description}
 +             onChange={(e) =&gt; onChange({ ...formData, description: e.target.value })}
 +             disabled={submitting}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24 disabled:bg-gray-100&quot;
-+             placeholder=&quot;详细描述该提示词的用途和特点&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24 disabled:bg-gray-100"
++             placeholder="详细描述该提示词的用途和特点"
 +           /&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Tags Field */}
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 +             标签（用逗号分隔）
 +           &lt;/label&gt;
 +           &lt;input
-+             type=&quot;text&quot;
-+             value={formData.tags.join(&#39;, &#39;)}
++             type="text"
++             value={formData.tags.join(', ')}
 +             onChange={(e) =&gt; onTagsChange(e.target.value)}
 +             disabled={submitting}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
-+             placeholder=&quot;例如：营销, 文案, 创意&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
++             placeholder="例如：营销, 文案, 创意"
 +           /&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Prompt Field */}
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+             提示词 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++             提示词 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +           &lt;/label&gt;
 +           &lt;textarea
 +             value={formData.prompt}
 +             onChange={(e) =&gt; onChange({ ...formData, prompt: e.target.value })}
 +             disabled={submitting}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm disabled:bg-gray-100&quot;
-+             placeholder=&quot;输入完整的提示词内容&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm disabled:bg-gray-100"
++             placeholder="输入完整的提示词内容"
 +           /&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Source Field */}
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
-+             来源 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
++             来源 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 +           &lt;/label&gt;
 +           &lt;input
-+             type=&quot;text&quot;
++             type="text"
 +             value={formData.source}
 +             onChange={(e) =&gt; onChange({ ...formData, source: e.target.value })}
 +             disabled={submitting}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
-+             placeholder=&quot;例如：https://example.com&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
++             placeholder="例如：https://example.com"
 +           /&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Image URL Field */}
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 +             图片 URL（可选）
 +           &lt;/label&gt;
 +           &lt;input
-+             type=&quot;text&quot;
++             type="text"
 +             value={formData.imageUrl}
 +             onChange={(e) =&gt; onChange({ ...formData, imageUrl: e.target.value })}
 +             disabled={submitting}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
-+             placeholder=&quot;https://example.com/image.jpg&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
++             placeholder="https://example.com/image.jpg"
 +           /&gt;
 +         &lt;/div&gt;
 + 
 +         {/* Action Buttons */}
-+         &lt;div className=&quot;flex gap-3 pt-4&quot;&gt;
++         &lt;div className="flex gap-3 pt-4"&gt;
 +           &lt;button
 +             onClick={onSubmit}
 +             disabled={submitting}
-+             className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed&quot;
++             className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
 +           &gt;
-+             &lt;Save className=&quot;w-4 h-4&quot; /&gt;
-+             {submitting ? &#39;保存中...&#39; : &#39;保存&#39;}
++             &lt;Save className="w-4 h-4" /&gt;
++             {submitting ? '保存中...' : '保存'}
 +           &lt;/button&gt;
 +           &lt;button
 +             onClick={onCancel}
 +             disabled={submitting}
-+             className=&quot;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2 disabled:cursor-not-allowed&quot;
++             className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2 disabled:cursor-not-allowed"
 +           &gt;
-+             &lt;X className=&quot;w-4 h-4&quot; /&gt;
++             &lt;X className="w-4 h-4" /&gt;
 +             取消
 +           &lt;/button&gt;
 +         &lt;/div&gt;
@@ -9791,7 +9791,7 @@ Lines added: 146, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptTable.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/PromptTable.tsx</summary>
 
 **Chunk 1**
 Lines added: 91, lines removed: 1
@@ -9804,8 +9804,8 @@ Lines added: 91, lines removed: 1
 +  * Table for displaying and managing prompts
 +  */
 + 
-+ import { PromptItem } from &#39;@/types&#39;;
-+ import { Edit2, Trash2 } from &#39;lucide-react&#39;;
++ import { PromptItem } from '@/types';
++ import { Edit2, Trash2 } from 'lucide-react';
 + 
 + interface PromptTableProps {
 +   prompts: PromptItem[];
@@ -9815,69 +9815,69 @@ Lines added: 91, lines removed: 1
 + 
 + export default function PromptTable({ prompts, onEdit, onDelete }: PromptTableProps) {
 +   return (
-+     &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden&quot;&gt;
-+       &lt;div className=&quot;overflow-x-auto&quot;&gt;
-+         &lt;table className=&quot;w-full&quot;&gt;
-+           &lt;thead className=&quot;bg-gray-50 border-b border-gray-200&quot;&gt;
++     &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"&gt;
++       &lt;div className="overflow-x-auto"&gt;
++         &lt;table className="w-full"&gt;
++           &lt;thead className="bg-gray-50 border-b border-gray-200"&gt;
 +             &lt;tr&gt;
-+               &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;
++               &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;
 +                 效果
 +               &lt;/th&gt;
-+               &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;
++               &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;
 +                 描述
 +               &lt;/th&gt;
-+               &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;
++               &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;
 +                 标签
 +               &lt;/th&gt;
-+               &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;
++               &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;
 +                 更新时间
 +               &lt;/th&gt;
-+               &lt;th className=&quot;px-6 py-4 text-right text-sm font-semibold text-gray-900&quot;&gt;
++               &lt;th className="px-6 py-4 text-right text-sm font-semibold text-gray-900"&gt;
 +                 操作
 +               &lt;/th&gt;
 +             &lt;/tr&gt;
 +           &lt;/thead&gt;
-+           &lt;tbody className=&quot;divide-y divide-gray-200&quot;&gt;
++           &lt;tbody className="divide-y divide-gray-200"&gt;
 +             {prompts.map(prompt =&gt; (
-+               &lt;tr key={prompt.id} className=&quot;hover:bg-gray-50 transition-colors&quot;&gt;
-+                 &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                   &lt;div className=&quot;font-medium text-gray-900&quot;&gt;{prompt.effect}&lt;/div&gt;
++               &lt;tr key={prompt.id} className="hover:bg-gray-50 transition-colors"&gt;
++                 &lt;td className="px-6 py-4"&gt;
++                   &lt;div className="font-medium text-gray-900"&gt;{prompt.effect}&lt;/div&gt;
 +                 &lt;/td&gt;
-+                 &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                   &lt;div className=&quot;text-sm text-gray-600 line-clamp-2 max-w-md&quot;&gt;
++                 &lt;td className="px-6 py-4"&gt;
++                   &lt;div className="text-sm text-gray-600 line-clamp-2 max-w-md"&gt;
 +                     {prompt.description}
 +                   &lt;/div&gt;
 +                 &lt;/td&gt;
-+                 &lt;td className=&quot;px-6 py-4&quot;&gt;
-+                   &lt;div className=&quot;flex flex-wrap gap-1&quot;&gt;
++                 &lt;td className="px-6 py-4"&gt;
++                   &lt;div className="flex flex-wrap gap-1"&gt;
 +                     {prompt.tags.map(tag =&gt; (
 +                       &lt;span
 +                         key={tag}
-+                         className=&quot;px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs&quot;
++                         className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
 +                       &gt;
 +                         {tag}
 +                       &lt;/span&gt;
 +                     ))}
 +                   &lt;/div&gt;
 +                 &lt;/td&gt;
-+                 &lt;td className=&quot;px-6 py-4 text-sm text-gray-600&quot;&gt;
-+                   {new Date(prompt.updatedAt).toLocaleString(&#39;zh-CN&#39;)}
++                 &lt;td className="px-6 py-4 text-sm text-gray-600"&gt;
++                   {new Date(prompt.updatedAt).toLocaleString('zh-CN')}
 +                 &lt;/td&gt;
-+                 &lt;td className=&quot;px-6 py-4 text-right&quot;&gt;
-+                   &lt;div className=&quot;flex justify-end gap-2&quot;&gt;
++                 &lt;td className="px-6 py-4 text-right"&gt;
++                   &lt;div className="flex justify-end gap-2"&gt;
 +                     &lt;button
 +                       onClick={() =&gt; onEdit(prompt)}
-+                       className=&quot;p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors&quot;
-+                       title=&quot;编辑&quot;
++                       className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
++                       title="编辑"
 +                     &gt;
-+                       &lt;Edit2 className=&quot;w-4 h-4&quot; /&gt;
++                       &lt;Edit2 className="w-4 h-4" /&gt;
 +                     &lt;/button&gt;
 +                     &lt;button
 +                       onClick={() =&gt; onDelete(prompt.id)}
-+                       className=&quot;p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors&quot;
-+                       title=&quot;删除&quot;
++                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
++                       title="删除"
 +                     &gt;
-+                       &lt;Trash2 className=&quot;w-4 h-4&quot; /&gt;
++                       &lt;Trash2 className="w-4 h-4" /&gt;
 +                     &lt;/button&gt;
 +                   &lt;/div&gt;
 +                 &lt;/td&gt;
@@ -9932,7 +9932,7 @@ Lines added: 91, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/AdminHeader.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/AdminHeader.tsx</summary>
 
 **Chunk 1**
 Lines added: 51, lines removed: 1
@@ -9945,8 +9945,8 @@ Lines added: 51, lines removed: 1
 +  * Header for admin page with navigation and actions
 +  */
 + 
-+ import { Plus, Home, Download } from &#39;lucide-react&#39;;
-+ import Link from &#39;next/link&#39;;
++ import { Plus, Home, Download } from 'lucide-react';
++ import Link from 'next/link';
 + 
 + interface AdminHeaderProps {
 +   onImport: () =&gt; void;
@@ -9955,33 +9955,33 @@ Lines added: 51, lines removed: 1
 + 
 + export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
 +   return (
-+     &lt;header className=&quot;bg-white shadow-sm border-b sticky top-0 z-10&quot;&gt;
-+       &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
-+         &lt;div className=&quot;flex justify-between items-center&quot;&gt;
++     &lt;header className="bg-white shadow-sm border-b sticky top-0 z-10"&gt;
++       &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"&gt;
++         &lt;div className="flex justify-between items-center"&gt;
 +           &lt;div&gt;
-+             &lt;h1 className=&quot;text-3xl font-bold text-gray-900&quot;&gt;管理后台&lt;/h1&gt;
-+             &lt;p className=&quot;text-gray-600 mt-1&quot;&gt;提示词库管理系统&lt;/p&gt;
++             &lt;h1 className="text-3xl font-bold text-gray-900"&gt;管理后台&lt;/h1&gt;
++             &lt;p className="text-gray-600 mt-1"&gt;提示词库管理系统&lt;/p&gt;
 +           &lt;/div&gt;
-+           &lt;div className=&quot;flex gap-3&quot;&gt;
++           &lt;div className="flex gap-3"&gt;
 +             &lt;Link
-+               href=&quot;/&quot;
-+               className=&quot;px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2&quot;
++               href="/"
++               className="px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2"
 +             &gt;
-+               &lt;Home className=&quot;w-4 h-4&quot; /&gt;
++               &lt;Home className="w-4 h-4" /&gt;
 +               返回首页
 +             &lt;/Link&gt;
 +             &lt;button
 +               onClick={onImport}
-+               className=&quot;px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2&quot;
++               className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2"
 +             &gt;
-+               &lt;Download className=&quot;w-4 h-4&quot; /&gt;
++               &lt;Download className="w-4 h-4" /&gt;
 +               导入数据
 +             &lt;/button&gt;
 +             &lt;button
 +               onClick={onCreate}
-+               className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
++               className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 +             &gt;
-+               &lt;Plus className=&quot;w-4 h-4&quot; /&gt;
++               &lt;Plus className="w-4 h-4" /&gt;
 +               新建提示词
 +             &lt;/button&gt;
 +           &lt;/div&gt;
@@ -10001,7 +10001,7 @@ Lines added: 51, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 4, lines removed: 2
@@ -10009,18 +10009,18 @@ Lines added: 4, lines removed: 2
 ```diff
 @@ -2,9 +2,11 @@
   
-  import { useState } from &#39;react&#39;;
-- import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from &#39;lucide-react&#39;;
-- import Link from &#39;next/link&#39;;
-+ import { FolderOpen } from &#39;lucide-react&#39;;
-  import LoadingSpinner from &#39;@/components/shared/LoadingSpinner&#39;;
-  import EmptyState from &#39;@/components/shared/EmptyState&#39;;
-  import ImportModal from &#39;../components/ImportModal&#39;;
-+ import AdminHeader from &#39;../components/AdminHeader&#39;;
-+ import PromptForm from &#39;../components/PromptForm&#39;;
-+ import PromptTable from &#39;../components/PromptTable&#39;;
-  import { usePrompts } from &#39;@/hooks/usePrompts&#39;;
-  import { usePromptForm } from &#39;@/hooks/usePromptForm&#39;;
+  import { useState } from 'react';
+- import { Plus, Edit2, Trash2, Save, X, Home, FolderOpen, Download } from 'lucide-react';
+- import Link from 'next/link';
++ import { FolderOpen } from 'lucide-react';
+  import LoadingSpinner from '@/components/shared/LoadingSpinner';
+  import EmptyState from '@/components/shared/EmptyState';
+  import ImportModal from '../components/ImportModal';
++ import AdminHeader from '../components/AdminHeader';
++ import PromptForm from '../components/PromptForm';
++ import PromptTable from '../components/PromptTable';
+  import { usePrompts } from '@/hooks/usePrompts';
+  import { usePromptForm } from '@/hooks/usePromptForm';
 ```
 
 **Chunk 2**
@@ -10070,35 +10070,35 @@ Lines added: 4, lines removed: 35
 ```diff
 @@ -54,41 +56,10 @@
     return (
-      &lt;div className=&quot;min-h-screen bg-gray-50&quot;&gt;
+      &lt;div className="min-h-screen bg-gray-50"&gt;
 -       {/* Header */}
--       &lt;header className=&quot;bg-white shadow-sm border-b sticky top-0 z-10&quot;&gt;
--         &lt;div className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
--           &lt;div className=&quot;flex justify-between items-center&quot;&gt;
+-       &lt;header className="bg-white shadow-sm border-b sticky top-0 z-10"&gt;
+-         &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"&gt;
+-           &lt;div className="flex justify-between items-center"&gt;
 -             &lt;div&gt;
--               &lt;h1 className=&quot;text-3xl font-bold text-gray-900&quot;&gt;管理后台&lt;/h1&gt;
--               &lt;p className=&quot;text-gray-600 mt-1&quot;&gt;提示词库管理系统&lt;/p&gt;
+-               &lt;h1 className="text-3xl font-bold text-gray-900"&gt;管理后台&lt;/h1&gt;
+-               &lt;p className="text-gray-600 mt-1"&gt;提示词库管理系统&lt;/p&gt;
 -             &lt;/div&gt;
--             &lt;div className=&quot;flex gap-3&quot;&gt;
+-             &lt;div className="flex gap-3"&gt;
 -               &lt;Link
--                 href=&quot;/&quot;
--                 className=&quot;px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2&quot;
+-                 href="/"
+-                 className="px-6 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium flex items-center gap-2"
 -               &gt;
--                 &lt;Home className=&quot;w-4 h-4&quot; /&gt;
+-                 &lt;Home className="w-4 h-4" /&gt;
 -                 返回首页
 -               &lt;/Link&gt;
 -               &lt;button
 -                 onClick={() =&gt; setShowImportModal(true)}
--                 className=&quot;px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2&quot;
+-                 className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center gap-2"
 -               &gt;
--                 &lt;Download className=&quot;w-4 h-4&quot; /&gt;
+-                 &lt;Download className="w-4 h-4" /&gt;
 -                 导入数据
 -               &lt;/button&gt;
 -               &lt;button
 -                 onClick={startCreate}
--                 className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2&quot;
+-                 className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
 -               &gt;
--                 &lt;Plus className=&quot;w-4 h-4&quot; /&gt;
+-                 &lt;Plus className="w-4 h-4" /&gt;
 -                 新建提示词
 -               &lt;/button&gt;
 -             &lt;/div&gt;
@@ -10110,7 +10110,7 @@ Lines added: 4, lines removed: 35
 +         onCreate={startCreate}
 +       /&gt;
   
-        &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+        &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 -         {/* Import Modal */}
           &lt;ImportModal
             isOpen={showImportModal}
@@ -10125,103 +10125,103 @@ Lines added: 11, lines removed: 107
   
 -         {/* Create/Edit Form */}
           {isEditing &amp;&amp; (
--           &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6&quot;&gt;
--             &lt;h2 className=&quot;text-xl font-bold mb-4&quot;&gt;
--               {isCreating ? &#39;新建提示词&#39; : &#39;编辑提示词&#39;}
+-           &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"&gt;
+-             &lt;h2 className="text-xl font-bold mb-4"&gt;
+-               {isCreating ? '新建提示词' : '编辑提示词'}
 -             &lt;/h2&gt;
 -             
--             &lt;div className=&quot;space-y-4&quot;&gt;
+-             &lt;div className="space-y-4"&gt;
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
--                   效果 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
+-                   效果 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 -                 &lt;/label&gt;
 -                 &lt;input
--                   type=&quot;text&quot;
+-                   type="text"
 -                   value={formData.effect}
 -                   onChange={(e) =&gt; setFormData({ ...formData, effect: e.target.value })}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
--                   placeholder=&quot;例如：生成产品介绍文案&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+-                   placeholder="例如：生成产品介绍文案"
 -                 /&gt;
 -               &lt;/div&gt;
 - 
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
--                   描述 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
+-                   描述 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 -                 &lt;/label&gt;
 -                 &lt;textarea
 -                   value={formData.description}
 -                   onChange={(e) =&gt; setFormData({ ...formData, description: e.target.value })}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24&quot;
--                   placeholder=&quot;详细描述该提示词的用途和特点&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24"
+-                   placeholder="详细描述该提示词的用途和特点"
 -                 /&gt;
 -               &lt;/div&gt;
 - 
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 -                   标签（用逗号分隔）
 -                 &lt;/label&gt;
 -                 &lt;input
--                   type=&quot;text&quot;
--                   value={formData.tags.join(&#39;, &#39;)}
+-                   type="text"
+-                   value={formData.tags.join(', ')}
 -                   onChange={(e) =&gt; handleTagsChange(e.target.value)}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
--                   placeholder=&quot;例如：营销, 文案, 创意&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+-                   placeholder="例如：营销, 文案, 创意"
 -                 /&gt;
 -               &lt;/div&gt;
 - 
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
--                   提示词 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
+-                   提示词 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 -                 &lt;/label&gt;
 -                 &lt;textarea
 -                   value={formData.prompt}
 -                   onChange={(e) =&gt; setFormData({ ...formData, prompt: e.target.value })}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm&quot;
--                   placeholder=&quot;输入完整的提示词内容&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm"
+-                   placeholder="输入完整的提示词内容"
 -                 /&gt;
 -               &lt;/div&gt;
 - 
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
--                   来源 &lt;span className=&quot;text-red-500&quot;&gt;*&lt;/span&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
+-                   来源 &lt;span className="text-red-500"&gt;*&lt;/span&gt;
 -                 &lt;/label&gt;
 -                 &lt;input
--                   type=&quot;text&quot;
+-                   type="text"
 -                   value={formData.source}
 -                   onChange={(e) =&gt; setFormData({ ...formData, source: e.target.value })}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
--                   placeholder=&quot;例如：https://example.com&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+-                   placeholder="例如：https://example.com"
 -                 /&gt;
 -               &lt;/div&gt;
 - 
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-1&quot;&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-1"&gt;
 -                   图片 URL（可选）
 -                 &lt;/label&gt;
 -                 &lt;input
--                   type=&quot;text&quot;
+-                   type="text"
 -                   value={formData.imageUrl}
 -                   onChange={(e) =&gt; setFormData({ ...formData, imageUrl: e.target.value })}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
--                   placeholder=&quot;https://example.com/image.jpg&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+-                   placeholder="https://example.com/image.jpg"
 -                 /&gt;
 -               &lt;/div&gt;
 - 
--               &lt;div className=&quot;flex gap-3 pt-4&quot;&gt;
+-               &lt;div className="flex gap-3 pt-4"&gt;
 -                 &lt;button
 -                   onClick={isCreating ? onCreateSuccess : onUpdateSuccess}
 -                   disabled={submitting}
--                   className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed&quot;
+-                   className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
 -                 &gt;
--                   &lt;Save className=&quot;w-4 h-4&quot; /&gt;
--                   {submitting ? &#39;保存中...&#39; : &#39;保存&#39;}
+-                   &lt;Save className="w-4 h-4" /&gt;
+-                   {submitting ? '保存中...' : '保存'}
 -                 &lt;/button&gt;
 -                 &lt;button
 -                   onClick={cancelEdit}
 -                   disabled={submitting}
--                   className=&quot;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2 disabled:cursor-not-allowed&quot;
+-                   className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2 disabled:cursor-not-allowed"
 -                 &gt;
--                   &lt;X className=&quot;w-4 h-4&quot; /&gt;
+-                   &lt;X className="w-4 h-4" /&gt;
 -                   取消
 -                 &lt;/button&gt;
 -               &lt;/div&gt;
@@ -10257,59 +10257,59 @@ Lines added: 10, lines removed: 70
   
 -         {/* Prompts Table */}
           {!loading &amp;&amp; prompts.length &gt; 0 &amp;&amp; (
--           &lt;div className=&quot;bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden&quot;&gt;
--             &lt;div className=&quot;overflow-x-auto&quot;&gt;
--               &lt;table className=&quot;w-full&quot;&gt;
--                 &lt;thead className=&quot;bg-gray-50 border-b border-gray-200&quot;&gt;
+-           &lt;div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"&gt;
+-             &lt;div className="overflow-x-auto"&gt;
+-               &lt;table className="w-full"&gt;
+-                 &lt;thead className="bg-gray-50 border-b border-gray-200"&gt;
 -                   &lt;tr&gt;
--                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;效果&lt;/th&gt;
--                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;描述&lt;/th&gt;
--                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;标签&lt;/th&gt;
--                     &lt;th className=&quot;px-6 py-4 text-left text-sm font-semibold text-gray-900&quot;&gt;更新时间&lt;/th&gt;
--                     &lt;th className=&quot;px-6 py-4 text-right text-sm font-semibold text-gray-900&quot;&gt;操作&lt;/th&gt;
+-                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;效果&lt;/th&gt;
+-                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;描述&lt;/th&gt;
+-                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;标签&lt;/th&gt;
+-                     &lt;th className="px-6 py-4 text-left text-sm font-semibold text-gray-900"&gt;更新时间&lt;/th&gt;
+-                     &lt;th className="px-6 py-4 text-right text-sm font-semibold text-gray-900"&gt;操作&lt;/th&gt;
 -                   &lt;/tr&gt;
 -                 &lt;/thead&gt;
--                 &lt;tbody className=&quot;divide-y divide-gray-200&quot;&gt;
+-                 &lt;tbody className="divide-y divide-gray-200"&gt;
 -                   {prompts.map(prompt =&gt; (
--                     &lt;tr key={prompt.id} className=&quot;hover:bg-gray-50 transition-colors&quot;&gt;
--                       &lt;td className=&quot;px-6 py-4&quot;&gt;
--                         &lt;div className=&quot;font-medium text-gray-900&quot;&gt;{prompt.effect}&lt;/div&gt;
+-                     &lt;tr key={prompt.id} className="hover:bg-gray-50 transition-colors"&gt;
+-                       &lt;td className="px-6 py-4"&gt;
+-                         &lt;div className="font-medium text-gray-900"&gt;{prompt.effect}&lt;/div&gt;
 -                       &lt;/td&gt;
--                       &lt;td className=&quot;px-6 py-4&quot;&gt;
--                         &lt;div className=&quot;text-sm text-gray-600 line-clamp-2 max-w-md&quot;&gt;
+-                       &lt;td className="px-6 py-4"&gt;
+-                         &lt;div className="text-sm text-gray-600 line-clamp-2 max-w-md"&gt;
 -                           {prompt.description}
 -                         &lt;/div&gt;
 -                       &lt;/td&gt;
--                       &lt;td className=&quot;px-6 py-4&quot;&gt;
--                         &lt;div className=&quot;flex flex-wrap gap-1&quot;&gt;
+-                       &lt;td className="px-6 py-4"&gt;
+-                         &lt;div className="flex flex-wrap gap-1"&gt;
 -                           {prompt.tags.map(tag =&gt; (
 -                             &lt;span
 -                               key={tag}
--                               className=&quot;px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs&quot;
+-                               className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs"
 -                             &gt;
 -                               {tag}
 -                             &lt;/span&gt;
 -                           ))}
 -                         &lt;/div&gt;
 -                       &lt;/td&gt;
--                       &lt;td className=&quot;px-6 py-4 text-sm text-gray-600&quot;&gt;
--                         {new Date(prompt.updatedAt).toLocaleString(&#39;zh-CN&#39;)}
+-                       &lt;td className="px-6 py-4 text-sm text-gray-600"&gt;
+-                         {new Date(prompt.updatedAt).toLocaleString('zh-CN')}
 -                       &lt;/td&gt;
--                       &lt;td className=&quot;px-6 py-4 text-right&quot;&gt;
--                         &lt;div className=&quot;flex justify-end gap-2&quot;&gt;
+-                       &lt;td className="px-6 py-4 text-right"&gt;
+-                         &lt;div className="flex justify-end gap-2"&gt;
 -                           &lt;button
 -                             onClick={() =&gt; startEdit(prompt)}
--                             className=&quot;p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors&quot;
--                             title=&quot;编辑&quot;
+-                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+-                             title="编辑"
 -                           &gt;
--                             &lt;Edit2 className=&quot;w-4 h-4&quot; /&gt;
+-                             &lt;Edit2 className="w-4 h-4" /&gt;
 -                           &lt;/button&gt;
 -                           &lt;button
 -                             onClick={() =&gt; onDeleteSuccess(prompt.id)}
--                             className=&quot;p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors&quot;
--                             title=&quot;删除&quot;
+-                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+-                             title="删除"
 -                           &gt;
--                             &lt;Trash2 className=&quot;w-4 h-4&quot; /&gt;
+-                             &lt;Trash2 className="w-4 h-4" /&gt;
 -                           &lt;/button&gt;
 -                         &lt;/div&gt;
 -                       &lt;/td&gt;
@@ -10323,7 +10323,7 @@ Lines added: 10, lines removed: 70
 - 
 -         {/* Stats */}
 -         {!loading &amp;&amp; prompts.length &gt; 0 &amp;&amp; (
--           &lt;div className=&quot;mt-6 text-center text-sm text-gray-600&quot;&gt;
+-           &lt;div className="mt-6 text-center text-sm text-gray-600"&gt;
 -             共 {prompts.length} 条提示词
 -           &lt;/div&gt;
 +           &lt;&gt;
@@ -10332,7 +10332,7 @@ Lines added: 10, lines removed: 70
 +               onEdit={startEdit}
 +               onDelete={onDelete}
 +             /&gt;
-+             &lt;div className=&quot;mt-6 text-center text-sm text-gray-600&quot;&gt;
++             &lt;div className="mt-6 text-center text-sm text-gray-600"&gt;
 +               共 {prompts.length} 条提示词
 +             &lt;/div&gt;
 +           &lt;/&gt;
@@ -10403,7 +10403,7 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/ImportTabs.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/import/ImportTabs.tsx</summary>
 
 **Chunk 1**
 Lines added: 54, lines removed: 1
@@ -10416,9 +10416,9 @@ Lines added: 54, lines removed: 1
 +  * Tabs for selecting import mode
 +  */
 + 
-+ import { LinkIcon, FileJson, FileSpreadsheet } from &#39;lucide-react&#39;;
++ import { LinkIcon, FileJson, FileSpreadsheet } from 'lucide-react';
 + 
-+ type ImportMode = &#39;feishu&#39; | &#39;json&#39; | &#39;csv&#39;;
++ type ImportMode = 'feishu' | 'json' | 'csv';
 + 
 + interface ImportTabsProps {
 +   mode: ImportMode;
@@ -10427,38 +10427,38 @@ Lines added: 54, lines removed: 1
 + 
 + export default function ImportTabs({ mode, onChange }: ImportTabsProps) {
 +   return (
-+     &lt;div className=&quot;flex gap-2&quot;&gt;
++     &lt;div className="flex gap-2"&gt;
 +       &lt;button
-+         onClick={() =&gt; onChange(&#39;csv&#39;)}
++         onClick={() =&gt; onChange('csv')}
 +         className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-+           mode === &#39;csv&#39;
-+             ? &#39;bg-blue-600 text-white&#39;
-+             : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
++           mode === 'csv'
++             ? 'bg-blue-600 text-white'
++             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 +         }&#96;}
 +       &gt;
-+         &lt;FileSpreadsheet className=&quot;w-4 h-4&quot; /&gt;
++         &lt;FileSpreadsheet className="w-4 h-4" /&gt;
 +         CSV 文件
 +       &lt;/button&gt;
 +       &lt;button
-+         onClick={() =&gt; onChange(&#39;feishu&#39;)}
++         onClick={() =&gt; onChange('feishu')}
 +         className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-+           mode === &#39;feishu&#39;
-+             ? &#39;bg-blue-600 text-white&#39;
-+             : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
++           mode === 'feishu'
++             ? 'bg-blue-600 text-white'
++             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 +         }&#96;}
 +       &gt;
-+         &lt;LinkIcon className=&quot;w-4 h-4&quot; /&gt;
++         &lt;LinkIcon className="w-4 h-4" /&gt;
 +         飞书文档
 +       &lt;/button&gt;
 +       &lt;button
-+         onClick={() =&gt; onChange(&#39;json&#39;)}
++         onClick={() =&gt; onChange('json')}
 +         className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-+           mode === &#39;json&#39;
-+             ? &#39;bg-blue-600 text-white&#39;
-+             : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
++           mode === 'json'
++             ? 'bg-blue-600 text-white'
++             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 +         }&#96;}
 +       &gt;
-+         &lt;FileJson className=&quot;w-4 h-4&quot; /&gt;
++         &lt;FileJson className="w-4 h-4" /&gt;
 +         JSON 数据
 +       &lt;/button&gt;
 +     &lt;/div&gt;
@@ -10475,7 +10475,7 @@ Lines added: 54, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 79, lines removed: 1
@@ -10488,8 +10488,8 @@ Lines added: 79, lines removed: 1
 +  * Form for CSV file import
 +  */
 + 
-+ import { FileSpreadsheet } from &#39;lucide-react&#39;;
-+ import { useRef } from &#39;react&#39;;
++ import { FileSpreadsheet } from 'lucide-react';
++ import { useRef } from 'react';
 + 
 + interface CsvImportFormProps {
 +   csvFile: File | null;
@@ -10507,27 +10507,27 @@ Lines added: 79, lines removed: 1
 +   const fileInputRef = useRef&lt;HTMLInputElement&gt;(null);
 + 
 +   return (
-+     &lt;div className=&quot;space-y-4&quot;&gt;
++     &lt;div className="space-y-4"&gt;
 +       &lt;div&gt;
-+         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +           上传 CSV 文件
 +         &lt;/label&gt;
 +         &lt;input
 +           ref={fileInputRef}
-+           type=&quot;file&quot;
-+           accept=&quot;.csv,.txt&quot;
++           type="file"
++           accept=".csv,.txt"
 +           onChange={onFileChange}
-+           className=&quot;hidden&quot;
++           className="hidden"
 +         /&gt;
 +         &lt;button
 +           onClick={() =&gt; fileInputRef.current?.click()}
-+           className=&quot;w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center gap-2&quot;
++           className="w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center gap-2"
 +         &gt;
-+           &lt;FileSpreadsheet className=&quot;w-12 h-12 text-gray-400&quot; /&gt;
-+           &lt;span className=&quot;text-gray-600&quot;&gt;
-+             {csvFile ? csvFile.name : &#39;点击选择 CSV 文件&#39;}
++           &lt;FileSpreadsheet className="w-12 h-12 text-gray-400" /&gt;
++           &lt;span className="text-gray-600"&gt;
++             {csvFile ? csvFile.name : '点击选择 CSV 文件'}
 +           &lt;/span&gt;
-+           &lt;span className=&quot;text-xs text-gray-500&quot;&gt;
++           &lt;span className="text-xs text-gray-500"&gt;
 +             支持 .csv 和 .txt 格式
 +           &lt;/span&gt;
 +         &lt;/button&gt;
@@ -10535,23 +10535,23 @@ Lines added: 79, lines removed: 1
 + 
 +       {csvText &amp;&amp; (
 +         &lt;div&gt;
-+           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++           &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +             文件预览
 +           &lt;/label&gt;
 +           &lt;textarea
 +             value={csvText}
 +             onChange={(e) =&gt; onTextChange(e.target.value)}
-+             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono&quot;
-+             placeholder=&quot;CSV 内容将在此显示...&quot;
++             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono"
++             placeholder="CSV 内容将在此显示..."
 +           /&gt;
 +         &lt;/div&gt;
 +       )}
 + 
-+       &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
-+         &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
++       &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
++         &lt;p className="text-sm text-blue-800"&gt;
 +           💡 &lt;strong&gt;CSV 格式要求：&lt;/strong&gt;
 +         &lt;/p&gt;
-+         &lt;ul className=&quot;text-sm text-blue-700 mt-2 ml-4 list-disc space-y-1&quot;&gt;
++         &lt;ul className="text-sm text-blue-700 mt-2 ml-4 list-disc space-y-1"&gt;
 +           &lt;li&gt;第一行必须是标题行（字段名）&lt;/li&gt;
 +           &lt;li&gt;必填字段：效果、描述、提示词、来源&lt;/li&gt;
 +           &lt;li&gt;支持字段：评测对象（标签）、参考图、创建时间、更新时间&lt;/li&gt;
@@ -10572,7 +10572,7 @@ Lines added: 79, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 61, lines removed: 1
@@ -10599,38 +10599,38 @@ Lines added: 61, lines removed: 1
 +   onCookieChange 
 + }: FeishuImportFormProps) {
 +   return (
-+     &lt;div className=&quot;space-y-4&quot;&gt;
++     &lt;div className="space-y-4"&gt;
 +       &lt;div&gt;
-+         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +           飞书文档链接
 +         &lt;/label&gt;
 +         &lt;input
-+           type=&quot;text&quot;
++           type="text"
 +           value={feishuUrl}
 +           onChange={(e) =&gt; onUrlChange(e.target.value)}
-+           className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
-+           placeholder=&quot;https://xxx.feishu.cn/wiki/...&quot;
++           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
++           placeholder="https://xxx.feishu.cn/wiki/..."
 +         /&gt;
 +       &lt;/div&gt;
 + 
 +       &lt;div&gt;
-+         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +           Cookie（如果文档需要登录）
-+           &lt;span className=&quot;text-gray-500 text-xs ml-2&quot;&gt;可选&lt;/span&gt;
++           &lt;span className="text-gray-500 text-xs ml-2"&gt;可选&lt;/span&gt;
 +         &lt;/label&gt;
 +         &lt;textarea
 +           value={cookie}
 +           onChange={(e) =&gt; onCookieChange(e.target.value)}
-+           className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono&quot;
-+           placeholder=&quot;从浏览器开发者工具中复制 Cookie...&quot;
++           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono"
++           placeholder="从浏览器开发者工具中复制 Cookie..."
 +         /&gt;
 +       &lt;/div&gt;
 + 
-+       &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
-+         &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
++       &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
++         &lt;p className="text-sm text-blue-800"&gt;
 +           💡 &lt;strong&gt;提示：&lt;/strong&gt;如果文档需要登录，请：
 +         &lt;/p&gt;
-+         &lt;ol className=&quot;text-sm text-blue-700 mt-2 ml-4 list-decimal space-y-1&quot;&gt;
++         &lt;ol className="text-sm text-blue-700 mt-2 ml-4 list-decimal space-y-1"&gt;
 +           &lt;li&gt;在浏览器中打开飞书文档并登录&lt;/li&gt;
 +           &lt;li&gt;按 F12 打开开发者工具&lt;/li&gt;
 +           &lt;li&gt;在 Application/Storage → Cookies 中复制 Cookie&lt;/li&gt;
@@ -10651,7 +10651,7 @@ Lines added: 61, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 42, lines removed: 1
@@ -10671,24 +10671,24 @@ Lines added: 42, lines removed: 1
 + 
 + export default function JsonImportForm({ jsonData, onChange }: JsonImportFormProps) {
 +   return (
-+     &lt;div className=&quot;space-y-4&quot;&gt;
++     &lt;div className="space-y-4"&gt;
 +       &lt;div&gt;
-+         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +           JSON 数据
 +         &lt;/label&gt;
 +         &lt;textarea
 +           value={jsonData}
 +           onChange={(e) =&gt; onChange(e.target.value)}
-+           className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono&quot;
-+           placeholder={&#96;[\n  {\n    &quot;效果&quot;: &quot;示例标题&quot;,\n    &quot;描述&quot;: &quot;示例描述&quot;,\n    &quot;标签&quot;: &quot;标签1,标签2&quot;,\n    &quot;提示词&quot;: &quot;示例提示词&quot;,\n    &quot;来源&quot;: &quot;https://example.com&quot;\n  }\n]&#96;}
++           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono"
++           placeholder={&#96;[\n  {\n    "效果": "示例标题",\n    "描述": "示例描述",\n    "标签": "标签1,标签2",\n    "提示词": "示例提示词",\n    "来源": "https://example.com"\n  }\n]&#96;}
 +         /&gt;
 +       &lt;/div&gt;
 + 
-+       &lt;div className=&quot;bg-gray-50 border border-gray-200 rounded-lg p-4&quot;&gt;
-+         &lt;p className=&quot;text-sm text-gray-700&quot;&gt;
++       &lt;div className="bg-gray-50 border border-gray-200 rounded-lg p-4"&gt;
++         &lt;p className="text-sm text-gray-700"&gt;
 +           &lt;strong&gt;支持的字段：&lt;/strong&gt;
 +         &lt;/p&gt;
-+         &lt;ul className=&quot;text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1&quot;&gt;
++         &lt;ul className="text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1"&gt;
 +           &lt;li&gt;效果 / effect - 必填&lt;/li&gt;
 +           &lt;li&gt;描述 / description - 必填&lt;/li&gt;
 +           &lt;li&gt;提示词 / prompt - 必填&lt;/li&gt;
@@ -10711,7 +10711,7 @@ Lines added: 42, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/ImportModeSelector.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/import/ImportModeSelector.tsx</summary>
 
 **Chunk 1**
 Lines added: 42, lines removed: 1
@@ -10725,36 +10725,36 @@ Lines added: 42, lines removed: 1
 +  */
 + 
 + interface ImportModeSelectorProps {
-+   importMode: &#39;merge&#39; | &#39;replace&#39;;
-+   onChange: (mode: &#39;merge&#39; | &#39;replace&#39;) =&gt; void;
++   importMode: 'merge' | 'replace';
++   onChange: (mode: 'merge' | 'replace') =&gt; void;
 + }
 + 
 + export default function ImportModeSelector({ importMode, onChange }: ImportModeSelectorProps) {
 +   return (
 +     &lt;div&gt;
-+       &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
++       &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +         导入模式
 +       &lt;/label&gt;
-+       &lt;div className=&quot;flex gap-4&quot;&gt;
-+         &lt;label className=&quot;flex items-center&quot;&gt;
++       &lt;div className="flex gap-4"&gt;
++         &lt;label className="flex items-center"&gt;
 +           &lt;input
-+             type=&quot;radio&quot;
-+             value=&quot;merge&quot;
-+             checked={importMode === &#39;merge&#39;}
-+             onChange={(e) =&gt; onChange(e.target.value as &#39;merge&#39;)}
-+             className=&quot;mr-2&quot;
++             type="radio"
++             value="merge"
++             checked={importMode === 'merge'}
++             onChange={(e) =&gt; onChange(e.target.value as 'merge')}
++             className="mr-2"
 +           /&gt;
-+           &lt;span className=&quot;text-sm&quot;&gt;合并（跳过重复）&lt;/span&gt;
++           &lt;span className="text-sm"&gt;合并（跳过重复）&lt;/span&gt;
 +         &lt;/label&gt;
-+         &lt;label className=&quot;flex items-center&quot;&gt;
++         &lt;label className="flex items-center"&gt;
 +           &lt;input
-+             type=&quot;radio&quot;
-+             value=&quot;replace&quot;
-+             checked={importMode === &#39;replace&#39;}
-+             onChange={(e) =&gt; onChange(e.target.value as &#39;replace&#39;)}
-+             className=&quot;mr-2&quot;
++             type="radio"
++             value="replace"
++             checked={importMode === 'replace'}
++             onChange={(e) =&gt; onChange(e.target.value as 'replace')}
++             className="mr-2"
 +           /&gt;
-+           &lt;span className=&quot;text-sm&quot;&gt;替换（清空后导入）&lt;/span&gt;
++           &lt;span className="text-sm"&gt;替换（清空后导入）&lt;/span&gt;
 +         &lt;/label&gt;
 +       &lt;/div&gt;
 +     &lt;/div&gt;
@@ -10771,7 +10771,7 @@ Lines added: 42, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/StatusMessage.tsx</summary>
+<details><summary>Tool use: **write** • Edit file: app/(admin)/components/import/StatusMessage.tsx</summary>
 
 **Chunk 1**
 Lines added: 34, lines removed: 1
@@ -10784,7 +10784,7 @@ Lines added: 34, lines removed: 1
 +  * Display error and success messages
 +  */
 + 
-+ import { AlertCircle, CheckCircle } from &#39;lucide-react&#39;;
++ import { AlertCircle, CheckCircle } from 'lucide-react';
 + 
 + interface StatusMessageProps {
 +   error?: string;
@@ -10797,16 +10797,16 @@ Lines added: 34, lines removed: 1
 +   return (
 +     &lt;&gt;
 +       {error &amp;&amp; (
-+         &lt;div className=&quot;bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
-+           &lt;AlertCircle className=&quot;w-5 h-5 text-red-600 flex-shrink-0 mt-0.5&quot; /&gt;
-+           &lt;p className=&quot;text-sm text-red-800&quot;&gt;{error}&lt;/p&gt;
++         &lt;div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"&gt;
++           &lt;AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" /&gt;
++           &lt;p className="text-sm text-red-800"&gt;{error}&lt;/p&gt;
 +         &lt;/div&gt;
 +       )}
 + 
 +       {success &amp;&amp; (
-+         &lt;div className=&quot;bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
-+           &lt;CheckCircle className=&quot;w-5 h-5 text-green-600 flex-shrink-0 mt-0.5&quot; /&gt;
-+           &lt;p className=&quot;text-sm text-green-800&quot;&gt;{success}&lt;/p&gt;
++         &lt;div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3"&gt;
++           &lt;CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" /&gt;
++           &lt;p className="text-sm text-green-800"&gt;{success}&lt;/p&gt;
 +         &lt;/div&gt;
 +       )}
 +     &lt;/&gt;
@@ -10832,26 +10832,26 @@ Lines added: 34, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 8, lines removed: 3
 
 ```diff
 @@ -1,7 +1,12 @@
-  &#39;use client&#39;;
+  'use client';
   
-- import { useState, useRef } from &#39;react&#39;;
-- import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle, FileSpreadsheet } from &#39;lucide-react&#39;;
-- import { readFileAsText } from &#39;@/lib/csv-parser&#39;;
-+ import { X, Upload } from &#39;lucide-react&#39;;
-+ import ImportTabs from &#39;./import/ImportTabs&#39;;
-+ import CsvImportForm from &#39;./import/CsvImportForm&#39;;
-+ import FeishuImportForm from &#39;./import/FeishuImportForm&#39;;
-+ import JsonImportForm from &#39;./import/JsonImportForm&#39;;
-+ import ImportModeSelector from &#39;./import/ImportModeSelector&#39;;
-+ import StatusMessage from &#39;./import/StatusMessage&#39;;
-+ import { useImport } from &#39;@/hooks/useImport&#39;;
+- import { useState, useRef } from 'react';
+- import { X, Upload, Link as LinkIcon, FileJson, AlertCircle, CheckCircle, FileSpreadsheet } from 'lucide-react';
+- import { readFileAsText } from '@/lib/csv-parser';
++ import { X, Upload } from 'lucide-react';
++ import ImportTabs from './import/ImportTabs';
++ import CsvImportForm from './import/CsvImportForm';
++ import FeishuImportForm from './import/FeishuImportForm';
++ import JsonImportForm from './import/JsonImportForm';
++ import ImportModeSelector from './import/ImportModeSelector';
++ import StatusMessage from './import/StatusMessage';
++ import { useImport } from '@/hooks/useImport';
   
   interface ImportModalProps {
 ```
@@ -10864,19 +10864,19 @@ Lines added: 22, lines removed: 13
     onImportSuccess: () =&gt; void;
   }
 - 
-- type ImportMode = &#39;feishu&#39; | &#39;json&#39; | &#39;csv&#39;;
+- type ImportMode = 'feishu' | 'json' | 'csv';
   
   export default function ImportModal({ isOpen, onClose, onImportSuccess }: ImportModalProps) {
--   const [mode, setMode] = useState&lt;ImportMode&gt;(&#39;feishu&#39;);
--   const [feishuUrl, setFeishuUrl] = useState(&#39;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1&#39;);
--   const [cookie, setCookie] = useState(&#39;&#39;);
--   const [jsonData, setJsonData] = useState(&#39;&#39;);
+-   const [mode, setMode] = useState&lt;ImportMode&gt;('feishu');
+-   const [feishuUrl, setFeishuUrl] = useState('https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1');
+-   const [cookie, setCookie] = useState('');
+-   const [jsonData, setJsonData] = useState('');
 -   const [csvFile, setCsvFile] = useState&lt;File | null&gt;(null);
--   const [csvText, setCsvText] = useState(&#39;&#39;);
--   const [importMode, setImportMode] = useState&lt;&#39;merge&#39; | &#39;replace&#39;&gt;(&#39;merge&#39;);
+-   const [csvText, setCsvText] = useState('');
+-   const [importMode, setImportMode] = useState&lt;'merge' | 'replace'&gt;('merge');
 -   const [loading, setLoading] = useState(false);
--   const [error, setError] = useState(&#39;&#39;);
--   const [success, setSuccess] = useState(&#39;&#39;);
+-   const [error, setError] = useState('');
+-   const [success, setSuccess] = useState('');
 -   const fileInputRef = useRef&lt;HTMLInputElement&gt;(null);
 +   const {
 +     mode,
@@ -10912,7 +10912,7 @@ Lines added: 22, lines removed: 13
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 185
@@ -10924,14 +10924,14 @@ Lines added: 1, lines removed: 185
 - 
 -   const handleFeishuImport = async () =&gt; {
 -     setLoading(true);
--     setError(&#39;&#39;);
--     setSuccess(&#39;&#39;);
+-     setError('');
+-     setSuccess('');
 - 
 -     try {
 -       // Step 1: Fetch data from Feishu
--       const scrapeResponse = await fetch(&#39;/api/import/feishu&#39;, {
--         method: &#39;POST&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-       const scrapeResponse = await fetch('/api/import/feishu', {
+-         method: 'POST',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify({ url: feishuUrl, cookie: cookie || undefined }),
 -       });
 - 
@@ -10940,16 +10940,16 @@ Lines added: 1, lines removed: 185
 -       if (!scrapeResult.success) {
 -         setError(scrapeResult.message || scrapeResult.error);
 -         if (scrapeResult.requiresAuth) {
--           setError(&#39;文档需要认证。请提供 Cookie 或使用手动导入方式。&#39;);
+-           setError('文档需要认证。请提供 Cookie 或使用手动导入方式。');
 -         }
 -         setLoading(false);
 -         return;
 -       }
 - 
 -       // Step 2: Import the data
--       const importResponse = await fetch(&#39;/api/import&#39;, {
--         method: &#39;POST&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-       const importResponse = await fetch('/api/import', {
+-         method: 'POST',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify({
 -           items: scrapeResult.data.items,
 -           mode: importMode,
@@ -10965,10 +10965,10 @@ Lines added: 1, lines removed: 185
 -           handleClose();
 -         }, 1500);
 -       } else {
--         setError(importResult.error || &#39;导入失败&#39;);
+-         setError(importResult.error || '导入失败');
 -       }
 -     } catch (err) {
--       setError(&#39;请求失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
+-       setError('请求失败：' + (err instanceof Error ? err.message : '未知错误'));
 -     } finally {
 -       setLoading(false);
 -     }
@@ -10976,21 +10976,21 @@ Lines added: 1, lines removed: 185
 - 
 -   const handleJsonImport = async () =&gt; {
 -     setLoading(true);
--     setError(&#39;&#39;);
--     setSuccess(&#39;&#39;);
+-     setError('');
+-     setSuccess('');
 - 
 -     try {
 -       const items = JSON.parse(jsonData);
 - 
 -       if (!Array.isArray(items)) {
--         setError(&#39;JSON 格式错误：必须是数组&#39;);
+-         setError('JSON 格式错误：必须是数组');
 -         setLoading(false);
 -         return;
 -       }
 - 
--       const response = await fetch(&#39;/api/import&#39;, {
--         method: &#39;POST&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-       const response = await fetch('/api/import', {
+-         method: 'POST',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify({ items, mode: importMode }),
 -       });
 - 
@@ -11003,13 +11003,13 @@ Lines added: 1, lines removed: 185
 -           handleClose();
 -         }, 1500);
 -       } else {
--         setError(result.error || &#39;导入失败&#39;);
+-         setError(result.error || '导入失败');
 -       }
 -     } catch (err) {
 -       if (err instanceof SyntaxError) {
--         setError(&#39;JSON 格式错误：&#39; + err.message);
+-         setError('JSON 格式错误：' + err.message);
 -       } else {
--         setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
+-         setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
 -       }
 -     } finally {
 -       setLoading(false);
@@ -11018,8 +11018,8 @@ Lines added: 1, lines removed: 185
 - 
 -   const handleCsvImport = async () =&gt; {
 -     setLoading(true);
--     setError(&#39;&#39;);
--     setSuccess(&#39;&#39;);
+-     setError('');
+-     setSuccess('');
 - 
 -     try {
 -       let text = csvText;
@@ -11030,30 +11030,30 @@ Lines added: 1, lines removed: 185
 -       }
 - 
 -       if (!text) {
--         setError(&#39;请选择CSV文件或粘贴CSV内容&#39;);
+-         setError('请选择CSV文件或粘贴CSV内容');
 -         setLoading(false);
 -         return;
 -       }
 - 
 -       // Step 1: Parse CSV
--       const parseResponse = await fetch(&#39;/api/import/csv&#39;, {
--         method: &#39;POST&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-       const parseResponse = await fetch('/api/import/csv', {
+-         method: 'POST',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify({ csvText: text }),
 -       });
 - 
 -       const parseResult = await parseResponse.json();
 - 
 -       if (!parseResult.success) {
--         setError(parseResult.message || parseResult.error || &#39;CSV解析失败&#39;);
+-         setError(parseResult.message || parseResult.error || 'CSV解析失败');
 -         setLoading(false);
 -         return;
 -       }
 - 
 -       // Step 2: Import the data
--       const importResponse = await fetch(&#39;/api/import&#39;, {
--         method: &#39;POST&#39;,
--         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+-       const importResponse = await fetch('/api/import', {
+-         method: 'POST',
+-         headers: { 'Content-Type': 'application/json' },
 -         body: JSON.stringify({
 -           items: parseResult.data.items,
 -           mode: importMode,
@@ -11069,10 +11069,10 @@ Lines added: 1, lines removed: 185
 -           handleClose();
 -         }, 2000);
 -       } else {
--         setError(importResult.error || &#39;导入失败&#39;);
+-         setError(importResult.error || '导入失败');
 -       }
 -     } catch (err) {
--       setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
+-       setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
 -     } finally {
 -       setLoading(false);
 -     }
@@ -11085,28 +11085,28 @@ Lines added: 1, lines removed: 185
 -       // Automatically read and preview
 -       try {
 -         const text = await readFileAsText(file);
--         setCsvText(text.substring(0, 1000) + (text.length &gt; 1000 ? &#39;\n...(已截取前1000字符)&#39; : &#39;&#39;));
+-         setCsvText(text.substring(0, 1000) + (text.length &gt; 1000 ? '\n...(已截取前1000字符)' : ''));
 -       } catch (err) {
--         setError(&#39;文件读取失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
+-         setError('文件读取失败：' + (err instanceof Error ? err.message : '未知错误'));
 -       }
 -     }
 -   };
 - 
 -   const handleImport = () =&gt; {
--     if (mode === &#39;feishu&#39;) {
+-     if (mode === 'feishu') {
 -       handleFeishuImport();
--     } else if (mode === &#39;json&#39;) {
+-     } else if (mode === 'json') {
 -       handleJsonImport();
--     } else if (mode === &#39;csv&#39;) {
+-     } else if (mode === 'csv') {
 -       handleCsvImport();
 -     }
 -   };
   
     const handleClose = () =&gt; {
--     setError(&#39;&#39;);
--     setSuccess(&#39;&#39;);
--     setJsonData(&#39;&#39;);
--     setCsvText(&#39;&#39;);
+-     setError('');
+-     setSuccess('');
+-     setJsonData('');
+-     setCsvText('');
 -     setCsvFile(null);
 +     resetState();
       onClose();
@@ -11121,7 +11121,7 @@ Lines added: 1, lines removed: 185
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 27, lines removed: 199
@@ -11129,69 +11129,69 @@ Lines added: 27, lines removed: 199
 ```diff
 @@ -63,215 +63,43 @@
           {/* Content */}
-          &lt;div className=&quot;p-6&quot;&gt;
+          &lt;div className="p-6"&gt;
 -           {/* Import Mode Tabs */}
--           &lt;div className=&quot;flex gap-2 mb-6&quot;&gt;
+-           &lt;div className="flex gap-2 mb-6"&gt;
 -             &lt;button
--               onClick={() =&gt; setMode(&#39;csv&#39;)}
+-               onClick={() =&gt; setMode('csv')}
 -               className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
--                 mode === &#39;csv&#39;
--                   ? &#39;bg-blue-600 text-white&#39;
--                   : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
+-                 mode === 'csv'
+-                   ? 'bg-blue-600 text-white'
+-                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 -               }&#96;}
 -             &gt;
--               &lt;FileSpreadsheet className=&quot;w-4 h-4&quot; /&gt;
+-               &lt;FileSpreadsheet className="w-4 h-4" /&gt;
 -               CSV 文件
 -             &lt;/button&gt;
 -             &lt;button
--               onClick={() =&gt; setMode(&#39;feishu&#39;)}
+-               onClick={() =&gt; setMode('feishu')}
 -               className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
--                 mode === &#39;feishu&#39;
--                   ? &#39;bg-blue-600 text-white&#39;
--                   : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
+-                 mode === 'feishu'
+-                   ? 'bg-blue-600 text-white'
+-                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 -               }&#96;}
 -             &gt;
--               &lt;LinkIcon className=&quot;w-4 h-4&quot; /&gt;
+-               &lt;LinkIcon className="w-4 h-4" /&gt;
 -               飞书文档
 -             &lt;/button&gt;
 -             &lt;button
--               onClick={() =&gt; setMode(&#39;json&#39;)}
+-               onClick={() =&gt; setMode('json')}
 -               className={&#96;flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
--                 mode === &#39;json&#39;
--                   ? &#39;bg-blue-600 text-white&#39;
--                   : &#39;bg-gray-100 text-gray-700 hover:bg-gray-200&#39;
+-                 mode === 'json'
+-                   ? 'bg-blue-600 text-white'
+-                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
 -               }&#96;}
 -             &gt;
--               &lt;FileJson className=&quot;w-4 h-4&quot; /&gt;
+-               &lt;FileJson className="w-4 h-4" /&gt;
 -               JSON 数据
 -             &lt;/button&gt;
-+           &lt;div className=&quot;mb-6&quot;&gt;
++           &lt;div className="mb-6"&gt;
 +             &lt;ImportTabs mode={mode} onChange={setMode} /&gt;
             &lt;/div&gt;
   
 -           {/* CSV Import */}
-            {mode === &#39;csv&#39; &amp;&amp; (
--             &lt;div className=&quot;space-y-4&quot;&gt;
+            {mode === 'csv' &amp;&amp; (
+-             &lt;div className="space-y-4"&gt;
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 -                   上传 CSV 文件
 -                 &lt;/label&gt;
 -                 &lt;input
 -                   ref={fileInputRef}
--                   type=&quot;file&quot;
--                   accept=&quot;.csv,.txt&quot;
+-                   type="file"
+-                   accept=".csv,.txt"
 -                   onChange={handleFileChange}
--                   className=&quot;hidden&quot;
+-                   className="hidden"
 -                 /&gt;
 -                 &lt;button
 -                   onClick={() =&gt; fileInputRef.current?.click()}
--                   className=&quot;w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center gap-2&quot;
+-                   className="w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex flex-col items-center gap-2"
 -                 &gt;
--                   &lt;FileSpreadsheet className=&quot;w-12 h-12 text-gray-400&quot; /&gt;
--                   &lt;span className=&quot;text-gray-600&quot;&gt;
--                     {csvFile ? csvFile.name : &#39;点击选择 CSV 文件&#39;}
+-                   &lt;FileSpreadsheet className="w-12 h-12 text-gray-400" /&gt;
+-                   &lt;span className="text-gray-600"&gt;
+-                     {csvFile ? csvFile.name : '点击选择 CSV 文件'}
 -                   &lt;/span&gt;
--                   &lt;span className=&quot;text-xs text-gray-500&quot;&gt;
+-                   &lt;span className="text-xs text-gray-500"&gt;
 -                     支持 .csv 和 .txt 格式
 -                   &lt;/span&gt;
 -                 &lt;/button&gt;
@@ -11199,23 +11199,23 @@ Lines added: 27, lines removed: 199
 - 
 -               {csvText &amp;&amp; (
 -                 &lt;div&gt;
--                   &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-                   &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 -                     文件预览
 -                   &lt;/label&gt;
 -                   &lt;textarea
 -                     value={csvText}
 -                     onChange={(e) =&gt; setCsvText(e.target.value)}
--                     className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono&quot;
--                     placeholder=&quot;CSV 内容将在此显示...&quot;
+-                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono"
+-                     placeholder="CSV 内容将在此显示..."
 -                   /&gt;
 -                 &lt;/div&gt;
 -               )}
 - 
--               &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
--                 &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
+-               &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
+-                 &lt;p className="text-sm text-blue-800"&gt;
 -                   💡 &lt;strong&gt;CSV 格式要求：&lt;/strong&gt;
 -                 &lt;/p&gt;
--                 &lt;ul className=&quot;text-sm text-blue-700 mt-2 ml-4 list-disc space-y-1&quot;&gt;
+-                 &lt;ul className="text-sm text-blue-700 mt-2 ml-4 list-disc space-y-1"&gt;
 -                   &lt;li&gt;第一行必须是标题行（字段名）&lt;/li&gt;
 -                   &lt;li&gt;必填字段：效果、描述、提示词、来源&lt;/li&gt;
 -                   &lt;li&gt;支持字段：评测对象（标签）、参考图、创建时间、更新时间&lt;/li&gt;
@@ -11232,39 +11232,39 @@ Lines added: 27, lines removed: 199
             )}
   
 -           {/* Feishu Import */}
-            {mode === &#39;feishu&#39; &amp;&amp; (
--             &lt;div className=&quot;space-y-4&quot;&gt;
+            {mode === 'feishu' &amp;&amp; (
+-             &lt;div className="space-y-4"&gt;
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 -                   飞书文档链接
 -                 &lt;/label&gt;
 -                 &lt;input
--                   type=&quot;text&quot;
+-                   type="text"
 -                   value={feishuUrl}
 -                   onChange={(e) =&gt; setFeishuUrl(e.target.value)}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
--                   placeholder=&quot;https://xxx.feishu.cn/wiki/...&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+-                   placeholder="https://xxx.feishu.cn/wiki/..."
 -                 /&gt;
 -               &lt;/div&gt;
 - 
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 -                   Cookie（如果文档需要登录）
--                   &lt;span className=&quot;text-gray-500 text-xs ml-2&quot;&gt;可选&lt;/span&gt;
+-                   &lt;span className="text-gray-500 text-xs ml-2"&gt;可选&lt;/span&gt;
 -                 &lt;/label&gt;
 -                 &lt;textarea
 -                   value={cookie}
 -                   onChange={(e) =&gt; setCookie(e.target.value)}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono&quot;
--                   placeholder=&quot;从浏览器开发者工具中复制 Cookie...&quot;
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono"
+-                   placeholder="从浏览器开发者工具中复制 Cookie..."
 -                 /&gt;
 -               &lt;/div&gt;
 - 
--               &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
--                 &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
+-               &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
+-                 &lt;p className="text-sm text-blue-800"&gt;
 -                   💡 &lt;strong&gt;提示：&lt;/strong&gt;如果文档需要登录，请：
 -                 &lt;/p&gt;
--                 &lt;ol className=&quot;text-sm text-blue-700 mt-2 ml-4 list-decimal space-y-1&quot;&gt;
+-                 &lt;ol className="text-sm text-blue-700 mt-2 ml-4 list-decimal space-y-1"&gt;
 -                   &lt;li&gt;在浏览器中打开飞书文档并登录&lt;/li&gt;
 -                   &lt;li&gt;按 F12 打开开发者工具&lt;/li&gt;
 -                   &lt;li&gt;在 Application/Storage → Cookies 中复制 Cookie&lt;/li&gt;
@@ -11281,25 +11281,25 @@ Lines added: 27, lines removed: 199
             )}
   
 -           {/* JSON Import */}
-            {mode === &#39;json&#39; &amp;&amp; (
--             &lt;div className=&quot;space-y-4&quot;&gt;
+            {mode === 'json' &amp;&amp; (
+-             &lt;div className="space-y-4"&gt;
 -               &lt;div&gt;
--                 &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-                 &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 -                   JSON 数据
 -                 &lt;/label&gt;
 -                 &lt;textarea
 -                   value={jsonData}
 -                   onChange={(e) =&gt; setJsonData(e.target.value)}
--                   className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono&quot;
--                   placeholder={&#96;[\n  {\n    &quot;效果&quot;: &quot;示例标题&quot;,\n    &quot;描述&quot;: &quot;示例描述&quot;,\n    &quot;标签&quot;: &quot;标签1,标签2&quot;,\n    &quot;提示词&quot;: &quot;示例提示词&quot;,\n    &quot;来源&quot;: &quot;https://example.com&quot;\n  }\n]&#96;}
+-                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono"
+-                   placeholder={&#96;[\n  {\n    "效果": "示例标题",\n    "描述": "示例描述",\n    "标签": "标签1,标签2",\n    "提示词": "示例提示词",\n    "来源": "https://example.com"\n  }\n]&#96;}
 -                 /&gt;
 -               &lt;/div&gt;
 - 
--               &lt;div className=&quot;bg-gray-50 border border-gray-200 rounded-lg p-4&quot;&gt;
--                 &lt;p className=&quot;text-sm text-gray-700&quot;&gt;
+-               &lt;div className="bg-gray-50 border border-gray-200 rounded-lg p-4"&gt;
+-                 &lt;p className="text-sm text-gray-700"&gt;
 -                   &lt;strong&gt;支持的字段：&lt;/strong&gt;
 -                 &lt;/p&gt;
--                 &lt;ul className=&quot;text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1&quot;&gt;
+-                 &lt;ul className="text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1"&gt;
 -                   &lt;li&gt;效果 / effect - 必填&lt;/li&gt;
 -                   &lt;li&gt;描述 / description - 必填&lt;/li&gt;
 -                   &lt;li&gt;提示词 / prompt - 必填&lt;/li&gt;
@@ -11318,30 +11318,30 @@ Lines added: 27, lines removed: 199
 +             /&gt;
 +           )}
 + 
-            &lt;div className=&quot;mt-6&quot;&gt;
--             &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+            &lt;div className="mt-6"&gt;
+-             &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 -               导入模式
 -             &lt;/label&gt;
--             &lt;div className=&quot;flex gap-4&quot;&gt;
--               &lt;label className=&quot;flex items-center&quot;&gt;
+-             &lt;div className="flex gap-4"&gt;
+-               &lt;label className="flex items-center"&gt;
 -                 &lt;input
--                   type=&quot;radio&quot;
--                   value=&quot;merge&quot;
--                   checked={importMode === &#39;merge&#39;}
--                   onChange={(e) =&gt; setImportMode(e.target.value as &#39;merge&#39;)}
--                   className=&quot;mr-2&quot;
+-                   type="radio"
+-                   value="merge"
+-                   checked={importMode === 'merge'}
+-                   onChange={(e) =&gt; setImportMode(e.target.value as 'merge')}
+-                   className="mr-2"
 -                 /&gt;
--                 &lt;span className=&quot;text-sm&quot;&gt;合并（跳过重复）&lt;/span&gt;
+-                 &lt;span className="text-sm"&gt;合并（跳过重复）&lt;/span&gt;
 -               &lt;/label&gt;
--               &lt;label className=&quot;flex items-center&quot;&gt;
+-               &lt;label className="flex items-center"&gt;
 -                 &lt;input
--                   type=&quot;radio&quot;
--                   value=&quot;replace&quot;
--                   checked={importMode === &#39;replace&#39;}
--                   onChange={(e) =&gt; setImportMode(e.target.value as &#39;replace&#39;)}
--                   className=&quot;mr-2&quot;
+-                   type="radio"
+-                   value="replace"
+-                   checked={importMode === 'replace'}
+-                   onChange={(e) =&gt; setImportMode(e.target.value as 'replace')}
+-                   className="mr-2"
 -                 /&gt;
--                 &lt;span className=&quot;text-sm&quot;&gt;替换（清空后导入）&lt;/span&gt;
+-                 &lt;span className="text-sm"&gt;替换（清空后导入）&lt;/span&gt;
 -               &lt;/label&gt;
 -             &lt;/div&gt;
 +             &lt;ImportModeSelector
@@ -11352,20 +11352,20 @@ Lines added: 27, lines removed: 199
   
 -           {/* Error Message */}
 -           {error &amp;&amp; (
--             &lt;div className=&quot;mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
--               &lt;AlertCircle className=&quot;w-5 h-5 text-red-600 flex-shrink-0 mt-0.5&quot; /&gt;
--               &lt;p className=&quot;text-sm text-red-800&quot;&gt;{error}&lt;/p&gt;
+-             &lt;div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"&gt;
+-               &lt;AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" /&gt;
+-               &lt;p className="text-sm text-red-800"&gt;{error}&lt;/p&gt;
 -             &lt;/div&gt;
 -           )}
 - 
 -           {/* Success Message */}
 -           {success &amp;&amp; (
--             &lt;div className=&quot;mt-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
--               &lt;CheckCircle className=&quot;w-5 h-5 text-green-600 flex-shrink-0 mt-0.5&quot; /&gt;
--               &lt;p className=&quot;text-sm text-green-800&quot;&gt;{success}&lt;/p&gt;
+-             &lt;div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3"&gt;
+-               &lt;CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" /&gt;
+-               &lt;p className="text-sm text-green-800"&gt;{success}&lt;/p&gt;
 -             &lt;/div&gt;
 -           )}
-+           &lt;div className=&quot;mt-4&quot;&gt;
++           &lt;div className="mt-4"&gt;
 +             &lt;StatusMessage error={error} success={success} /&gt;
 +           &lt;/div&gt;
           &lt;/div&gt;
@@ -11660,7 +11660,7 @@ Output mode: content
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: types/prompt.ts</summary>
+<details><summary>Tool use: **write** • Edit file: types/prompt.ts</summary>
 
 **Chunk 1**
 Lines added: 16, lines removed: 1
@@ -11694,7 +11694,7 @@ Lines added: 16, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: types/api.ts</summary>
+<details><summary>Tool use: **write** • Edit file: types/api.ts</summary>
 
 **Chunk 1**
 Lines added: 24, lines removed: 1
@@ -11736,7 +11736,7 @@ Lines added: 24, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: types/import.ts</summary>
+<details><summary>Tool use: **write** • Edit file: types/import.ts</summary>
 
 **Chunk 1**
 Lines added: 17, lines removed: 1
@@ -11749,10 +11749,10 @@ Lines added: 17, lines removed: 1
 +  */
 + 
 + // Import data mode: merge with existing data or replace all
-+ export type DataImportMode = &#39;merge&#39; | &#39;replace&#39;;
++ export type DataImportMode = 'merge' | 'replace';
 + 
 + // Import source type: CSV, Feishu, or JSON
-+ export type ImportSourceType = &#39;csv&#39; | &#39;feishu&#39; | &#39;json&#39;;
++ export type ImportSourceType = 'csv' | 'feishu' | 'json';
 + 
 + export interface ImportResult {
 +   total: number;
@@ -11771,7 +11771,7 @@ Lines added: 17, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: types/index.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: types/index.ts</summary>
 
 **Chunk 1**
 Lines added: 21, lines removed: 33
@@ -11817,21 +11817,21 @@ Lines added: 21, lines removed: 33
 +  */
 + 
 + // Prompt types
-+ export type { PromptItem } from &#39;./prompt&#39;;
++ export type { PromptItem } from './prompt';
 + 
 + // API types
 + export type { 
 +   CreatePromptRequest, 
 +   UpdatePromptRequest, 
 +   ApiResponse 
-+ } from &#39;./api&#39;;
++ } from './api';
 + 
 + // Import types
 + export type { 
 +   DataImportMode, 
 +   ImportSourceType, 
 +   ImportResult 
-+ } from &#39;./import&#39;;
++ } from './import';
   
   
 ```
@@ -11921,7 +11921,7 @@ Output mode: content
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 205, lines removed: 48
@@ -11934,29 +11934,29 @@ Lines added: 205, lines removed: 48
 +  * Manages data import state and logic for ImportModal
    */
   
-  import { useState } from &#39;react&#39;;
-- import { importService } from &#39;@/services/import.service&#39;;
-- import { useToast } from &#39;@/components/shared/ToastContainer&#39;;
-- import { formatErrorMessage } from &#39;@/lib/error-handler&#39;;
+  import { useState } from 'react';
+- import { importService } from '@/services/import.service';
+- import { useToast } from '@/components/shared/ToastContainer';
+- import { formatErrorMessage } from '@/lib/error-handler';
 - 
-- export type ImportMode = &#39;merge&#39; | &#39;replace&#39;;
-+ import { DataImportMode, ImportSourceType } from &#39;@/types&#39;;
-+ import { readFileAsText } from &#39;@/lib/csv-parser&#39;;
+- export type ImportMode = 'merge' | 'replace';
++ import { DataImportMode, ImportSourceType } from '@/types';
++ import { readFileAsText } from '@/lib/csv-parser';
   
   export function useImport(onSuccess?: () =&gt; void) {
 -   const toast = useToast();
-+   const [mode, setMode] = useState&lt;ImportSourceType&gt;(&#39;csv&#39;);
++   const [mode, setMode] = useState&lt;ImportSourceType&gt;('csv');
 +   const [feishuUrl, setFeishuUrl] = useState(
-+     &#39;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1&#39;
++     'https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1'
 +   );
-+   const [cookie, setCookie] = useState(&#39;&#39;);
-+   const [jsonData, setJsonData] = useState(&#39;&#39;);
++   const [cookie, setCookie] = useState('');
++   const [jsonData, setJsonData] = useState('');
 +   const [csvFile, setCsvFile] = useState&lt;File | null&gt;(null);
-+   const [csvText, setCsvText] = useState(&#39;&#39;);
-+   const [importMode, setImportMode] = useState&lt;DataImportMode&gt;(&#39;merge&#39;);
++   const [csvText, setCsvText] = useState('');
++   const [importMode, setImportMode] = useState&lt;DataImportMode&gt;('merge');
     const [loading, setLoading] = useState(false);
 - 
--   const importFromCSV = async (csvText: string, mode: ImportMode = &#39;merge&#39;) =&gt; {
+-   const importFromCSV = async (csvText: string, mode: ImportMode = 'merge') =&gt; {
 -     try {
 -       setLoading(true);
 -       const result = await importService.importFromCSV(csvText, mode);
@@ -11964,11 +11964,11 @@ Lines added: 205, lines removed: 48
 -       onSuccess?.();
 -       return result;
 -     } catch (error) {
--       console.error(&#39;CSV import failed:&#39;, error);
--       toast.showError(&#39;导入失败：&#39; + formatErrorMessage(error));
+-       console.error('CSV import failed:', error);
+-       toast.showError('导入失败：' + formatErrorMessage(error));
 -       throw error;
-+   const [error, setError] = useState(&#39;&#39;);
-+   const [success, setSuccess] = useState(&#39;&#39;);
++   const [error, setError] = useState('');
++   const [success, setSuccess] = useState('');
 + 
 +   const handleFileChange = async (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
 +     const file = e.target.files?.[0];
@@ -11978,11 +11978,11 @@ Lines added: 205, lines removed: 48
 +         const text = await readFileAsText(file);
 +         setCsvText(
 +           text.substring(0, 1000) +
-+             (text.length &gt; 1000 ? &#39;\n...(已截取前1000字符)&#39; : &#39;&#39;)
++             (text.length &gt; 1000 ? '\n...(已截取前1000字符)' : '')
 +         );
 +       } catch (err) {
 +         setError(
-+           &#39;文件读取失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;)
++           '文件读取失败：' + (err instanceof Error ? err.message : '未知错误')
 +         );
 +       }
 +     }
@@ -11990,13 +11990,13 @@ Lines added: 205, lines removed: 48
 + 
 +   const handleFeishuImport = async () =&gt; {
 +     setLoading(true);
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
++     setError('');
++     setSuccess('');
 + 
 +     try {
-+       const scrapeResponse = await fetch(&#39;/api/import/feishu&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const scrapeResponse = await fetch('/api/import/feishu', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({ url: feishuUrl, cookie: cookie || undefined }),
 +       });
 + 
@@ -12005,15 +12005,15 @@ Lines added: 205, lines removed: 48
 +       if (!scrapeResult.success) {
 +         setError(scrapeResult.message || scrapeResult.error);
 +         if (scrapeResult.requiresAuth) {
-+           setError(&#39;文档需要认证。请提供 Cookie 或使用手动导入方式。&#39;);
++           setError('文档需要认证。请提供 Cookie 或使用手动导入方式。');
 +         }
 +         setLoading(false);
 +         return;
 +       }
 + 
-+       const importResponse = await fetch(&#39;/api/import&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const importResponse = await fetch('/api/import', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({
 +           items: scrapeResult.data.items,
 +           mode: importMode,
@@ -12028,10 +12028,10 @@ Lines added: 205, lines removed: 48
 +           onSuccess?.();
 +         }, 1500);
 +       } else {
-+         setError(importResult.error || &#39;导入失败&#39;);
++         setError(importResult.error || '导入失败');
 +       }
 +     } catch (err) {
-+       setError(&#39;请求失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++       setError('请求失败：' + (err instanceof Error ? err.message : '未知错误'));
       } finally {
         setLoading(false);
       }
@@ -12039,7 +12039,7 @@ Lines added: 205, lines removed: 48
   
 -   const importFromFeishu = async (
 -     url: string,
--     mode: ImportMode = &#39;merge&#39;,
+-     mode: ImportMode = 'merge',
 -     cookie?: string
 -   ) =&gt; {
 -     try {
@@ -12049,26 +12049,26 @@ Lines added: 205, lines removed: 48
 -       onSuccess?.();
 -       return result;
 -     } catch (error) {
--       console.error(&#39;Feishu import failed:&#39;, error);
--       toast.showError(&#39;导入失败：&#39; + formatErrorMessage(error));
+-       console.error('Feishu import failed:', error);
+-       toast.showError('导入失败：' + formatErrorMessage(error));
 -       throw error;
 +   const handleJsonImport = async () =&gt; {
 +     setLoading(true);
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
++     setError('');
++     setSuccess('');
 + 
 +     try {
 +       const items = JSON.parse(jsonData);
 + 
 +       if (!Array.isArray(items)) {
-+         setError(&#39;JSON 格式错误：必须是数组&#39;);
++         setError('JSON 格式错误：必须是数组');
 +         setLoading(false);
 +         return;
 +       }
 + 
-+       const response = await fetch(&#39;/api/import&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const response = await fetch('/api/import', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({ items, mode: importMode }),
 +       });
 + 
@@ -12080,20 +12080,20 @@ Lines added: 205, lines removed: 48
 +           onSuccess?.();
 +         }, 1500);
 +       } else {
-+         setError(result.error || &#39;导入失败&#39;);
++         setError(result.error || '导入失败');
 +       }
 +     } catch (err) {
 +       if (err instanceof SyntaxError) {
-+         setError(&#39;JSON 格式错误：&#39; + err.message);
++         setError('JSON 格式错误：' + err.message);
 +       } else {
-+         setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++         setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
 +       }
       } finally {
         setLoading(false);
       }
     };
   
--   const importFromJSON = async (items: any[], mode: ImportMode = &#39;merge&#39;) =&gt; {
+-   const importFromJSON = async (items: any[], mode: ImportMode = 'merge') =&gt; {
 -     try {
 -       setLoading(true);
 -       const result = await importService.importFromJSON(items, mode);
@@ -12101,13 +12101,13 @@ Lines added: 205, lines removed: 48
 -       onSuccess?.();
 -       return result;
 -     } catch (error) {
--       console.error(&#39;JSON import failed:&#39;, error);
--       toast.showError(&#39;导入失败：&#39; + formatErrorMessage(error));
+-       console.error('JSON import failed:', error);
+-       toast.showError('导入失败：' + formatErrorMessage(error));
 -       throw error;
 +   const handleCsvImport = async () =&gt; {
 +     setLoading(true);
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
++     setError('');
++     setSuccess('');
 + 
 +     try {
 +       let text = csvText;
@@ -12117,28 +12117,28 @@ Lines added: 205, lines removed: 48
 +       }
 + 
 +       if (!text) {
-+         setError(&#39;请选择CSV文件或粘贴CSV内容&#39;);
++         setError('请选择CSV文件或粘贴CSV内容');
 +         setLoading(false);
 +         return;
 +       }
 + 
-+       const parseResponse = await fetch(&#39;/api/import/csv&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const parseResponse = await fetch('/api/import/csv', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({ csvText: text }),
 +       });
 + 
 +       const parseResult = await parseResponse.json();
 + 
 +       if (!parseResult.success) {
-+         setError(parseResult.message || parseResult.error || &#39;CSV解析失败&#39;);
++         setError(parseResult.message || parseResult.error || 'CSV解析失败');
 +         setLoading(false);
 +         return;
 +       }
 + 
-+       const importResponse = await fetch(&#39;/api/import&#39;, {
-+         method: &#39;POST&#39;,
-+         headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
++       const importResponse = await fetch('/api/import', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
 +         body: JSON.stringify({
 +           items: parseResult.data.items,
 +           mode: importMode,
@@ -12155,30 +12155,30 @@ Lines added: 205, lines removed: 48
 +           onSuccess?.();
 +         }, 2000);
 +       } else {
-+         setError(importResult.error || &#39;导入失败&#39;);
++         setError(importResult.error || '导入失败');
 +       }
 +     } catch (err) {
-+       setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
++       setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
       } finally {
         setLoading(false);
       }
     };
 + 
 +   const handleImport = () =&gt; {
-+     if (mode === &#39;feishu&#39;) {
++     if (mode === 'feishu') {
 +       handleFeishuImport();
-+     } else if (mode === &#39;json&#39;) {
++     } else if (mode === 'json') {
 +       handleJsonImport();
-+     } else if (mode === &#39;csv&#39;) {
++     } else if (mode === 'csv') {
 +       handleCsvImport();
 +     }
 +   };
 + 
 +   const resetState = () =&gt; {
-+     setError(&#39;&#39;);
-+     setSuccess(&#39;&#39;);
-+     setJsonData(&#39;&#39;);
-+     setCsvText(&#39;&#39;);
++     setError('');
++     setSuccess('');
++     setJsonData('');
++     setCsvText('');
 +     setCsvFile(null);
 +   };
   
@@ -12223,7 +12223,7 @@ Lines added: 205, lines removed: 48
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/ImportTabs.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/ImportTabs.tsx</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 4
@@ -12231,10 +12231,10 @@ Lines added: 3, lines removed: 4
 ```diff
 @@ -5,10 +5,9 @@
   
-  import { LinkIcon, FileJson, FileSpreadsheet } from &#39;lucide-react&#39;;
+  import { LinkIcon, FileJson, FileSpreadsheet } from 'lucide-react';
 - 
-- type ImportMode = &#39;feishu&#39; | &#39;json&#39; | &#39;csv&#39;;
-+ import { ImportSourceType } from &#39;@/types&#39;;
+- type ImportMode = 'feishu' | 'json' | 'csv';
++ import { ImportSourceType } from '@/types';
   
   interface ImportTabsProps {
 -   mode: ImportMode;
@@ -12253,7 +12253,7 @@ Lines added: 3, lines removed: 4
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/ImportModeSelector.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/ImportModeSelector.tsx</summary>
 
 **Chunk 1**
 Lines added: 4, lines removed: 2
@@ -12262,11 +12262,11 @@ Lines added: 4, lines removed: 2
 @@ -4,7 +4,9 @@
    */
   
-+ import { DataImportMode } from &#39;@/types&#39;;
++ import { DataImportMode } from '@/types';
 + 
   interface ImportModeSelectorProps {
--   importMode: &#39;merge&#39; | &#39;replace&#39;;
--   onChange: (mode: &#39;merge&#39; | &#39;replace&#39;) =&gt; void;
+-   importMode: 'merge' | 'replace';
+-   onChange: (mode: 'merge' | 'replace') =&gt; void;
 +   importMode: DataImportMode;
 +   onChange: (mode: DataImportMode) =&gt; void;
   }
@@ -12338,7 +12338,7 @@ _No matches found_
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/import.service.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: services/import.service.ts</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 8
@@ -12347,12 +12347,12 @@ Lines added: 2, lines removed: 8
 @@ -4,15 +4,9 @@
    */
   
-- import { ApiResponse } from &#39;@/types&#39;;
-+ import { ApiResponse, DataImportMode, ImportResult } from &#39;@/types&#39;;
+- import { ApiResponse } from '@/types';
++ import { ApiResponse, DataImportMode, ImportResult } from '@/types';
   
   interface ImportOptions {
     items: any[];
--   mode: &#39;merge&#39; | &#39;replace&#39;;
+-   mode: 'merge' | 'replace';
 - }
 - 
 - interface ImportResult {
@@ -12372,7 +12372,7 @@ Lines added: 2, lines removed: 8
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/import.service.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: services/import.service.ts</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -12381,8 +12381,8 @@ Lines added: 1, lines removed: 1
 @@ -99,5 +99,5 @@
      * Import from CSV text
      */
--   async importFromCSV(csvText: string, mode: &#39;merge&#39; | &#39;replace&#39; = &#39;merge&#39;): Promise&lt;ImportResult&gt; {
-+   async importFromCSV(csvText: string, mode: DataImportMode = &#39;merge&#39;): Promise&lt;ImportResult&gt; {
+-   async importFromCSV(csvText: string, mode: 'merge' | 'replace' = 'merge'): Promise&lt;ImportResult&gt; {
++   async importFromCSV(csvText: string, mode: DataImportMode = 'merge'): Promise&lt;ImportResult&gt; {
       // Step 1: Parse CSV
       const parseResult = await this.parseCSV(csvText);
 ```
@@ -12395,7 +12395,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/import.service.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: services/import.service.ts</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -12404,8 +12404,8 @@ Lines added: 1, lines removed: 1
 @@ -117,5 +117,5 @@
     async importFromFeishu(
       url: string,
--     mode: &#39;merge&#39; | &#39;replace&#39; = &#39;merge&#39;,
-+     mode: DataImportMode = &#39;merge&#39;,
+-     mode: 'merge' | 'replace' = 'merge',
++     mode: DataImportMode = 'merge',
       cookie?: string
     ): Promise&lt;ImportResult&gt; {
 ```
@@ -12418,7 +12418,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/import.service.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: services/import.service.ts</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -12427,8 +12427,8 @@ Lines added: 1, lines removed: 1
 @@ -135,5 +135,5 @@
      * Import from JSON data
      */
--   async importFromJSON(items: any[], mode: &#39;merge&#39; | &#39;replace&#39; = &#39;merge&#39;): Promise&lt;ImportResult&gt; {
-+   async importFromJSON(items: any[], mode: DataImportMode = &#39;merge&#39;): Promise&lt;ImportResult&gt; {
+-   async importFromJSON(items: any[], mode: 'merge' | 'replace' = 'merge'): Promise&lt;ImportResult&gt; {
++   async importFromJSON(items: any[], mode: DataImportMode = 'merge'): Promise&lt;ImportResult&gt; {
       return await this.importData({ items, mode });
     }
 ```
@@ -12446,7 +12446,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: types/import.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: types/import.ts</summary>
 
 **Chunk 1**
 Lines added: 4, lines removed: 3
@@ -12715,7 +12715,7 @@ Output mode: content
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: lib/constants.ts</summary>
+<details><summary>Tool use: **write** • Edit file: lib/constants.ts</summary>
 
 **Chunk 1**
 Lines added: 84, lines removed: 1
@@ -12730,17 +12730,17 @@ Lines added: 84, lines removed: 1
 + 
 + // API Endpoints
 + export const API_ENDPOINTS = {
-+   PROMPTS: &#39;/api/prompts&#39;,
++   PROMPTS: '/api/prompts',
 +   PROMPTS_BY_ID: (id: string) =&gt; &#96;/api/prompts/${id}&#96;,
-+   IMPORT: &#39;/api/import&#39;,
-+   IMPORT_CSV: &#39;/api/import/csv&#39;,
-+   IMPORT_FEISHU: &#39;/api/import/feishu&#39;,
++   IMPORT: '/api/import',
++   IMPORT_CSV: '/api/import/csv',
++   IMPORT_FEISHU: '/api/import/feishu',
 + } as const;
 + 
 + // Default Values
 + export const DEFAULTS = {
-+   FEISHU_URL: &#39;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1&#39;,
-+   IMPORT_MODE: &#39;merge&#39; as const,
++   FEISHU_URL: 'https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1',
++   IMPORT_MODE: 'merge' as const,
 +   CSV_PREVIEW_LENGTH: 1000,
 + } as const;
 + 
@@ -12750,61 +12750,61 @@ Lines added: 84, lines removed: 1
 +     IMPORT: (count: number) =&gt; &#96;成功导入 ${count} 条数据！&#96;,
 +     IMPORT_CSV: (total: number, imported: number) =&gt; 
 +       &#96;成功解析 ${total} 条，导入 ${imported} 条有效数据！&#96;,
-+     CREATE: &#39;创建成功！&#39;,
-+     UPDATE: &#39;更新成功！&#39;,
-+     DELETE: &#39;删除成功！&#39;,
++     CREATE: '创建成功！',
++     UPDATE: '更新成功！',
++     DELETE: '删除成功！',
 +   },
 +   ERROR: {
-+     IMPORT: &#39;导入失败&#39;,
-+     IMPORT_FEISHU_AUTH: &#39;文档需要认证。请提供 Cookie 或使用手动导入方式。&#39;,
-+     IMPORT_CSV_PARSE: &#39;CSV解析失败&#39;,
-+     IMPORT_JSON_FORMAT: &#39;JSON 格式错误：必须是数组&#39;,
++     IMPORT: '导入失败',
++     IMPORT_FEISHU_AUTH: '文档需要认证。请提供 Cookie 或使用手动导入方式。',
++     IMPORT_CSV_PARSE: 'CSV解析失败',
++     IMPORT_JSON_FORMAT: 'JSON 格式错误：必须是数组',
 +     IMPORT_JSON_SYNTAX: (msg: string) =&gt; &#96;JSON 格式错误：${msg}&#96;,
-+     IMPORT_CSV_REQUIRED: &#39;请选择CSV文件或粘贴CSV内容&#39;,
++     IMPORT_CSV_REQUIRED: '请选择CSV文件或粘贴CSV内容',
 +     IMPORT_FILE_READ: (msg: string) =&gt; &#96;文件读取失败：${msg}&#96;,
-+     CREATE: &#39;创建失败&#39;,
-+     UPDATE: &#39;更新失败&#39;,
-+     DELETE: &#39;删除失败&#39;,
-+     FETCH: &#39;获取数据失败&#39;,
++     CREATE: '创建失败',
++     UPDATE: '更新失败',
++     DELETE: '删除失败',
++     FETCH: '获取数据失败',
 +     NETWORK: (msg: string) =&gt; &#96;请求失败：${msg}&#96;,
-+     UNKNOWN: &#39;未知错误&#39;,
++     UNKNOWN: '未知错误',
 +   },
 +   LOADING: {
-+     IMPORT: &#39;导入中...&#39;,
-+     SAVE: &#39;保存中...&#39;,
++     IMPORT: '导入中...',
++     SAVE: '保存中...',
 +   },
 + } as const;
 + 
 + // File Upload
 + export const FILE_UPLOAD = {
-+   CSV_ACCEPT: &#39;.csv,.txt&#39;,
-+   CSV_PREVIEW_TRUNCATE_SUFFIX: &#39;\n...(已截取前1000字符)&#39;,
++   CSV_ACCEPT: '.csv,.txt',
++   CSV_PREVIEW_TRUNCATE_SUFFIX: '\n...(已截取前1000字符)',
 + } as const;
 + 
 + // UI Text
 + export const UI_TEXT = {
 +   EMPTY_STATE: {
-+     TITLE: &#39;暂无数据&#39;,
-+     DESCRIPTION: &#39;点击&quot;新建提示词&quot;开始添加&#39;,
++     TITLE: '暂无数据',
++     DESCRIPTION: '点击"新建提示词"开始添加',
 +   },
 +   PLACEHOLDER: {
-+     EFFECT: &#39;例如：生成产品介绍文案&#39;,
-+     DESCRIPTION: &#39;详细描述该提示词的用途和特点&#39;,
-+     TAGS: &#39;例如：营销, 文案, 创意&#39;,
-+     PROMPT: &#39;输入完整的提示词内容&#39;,
-+     SOURCE: &#39;例如：https://example.com&#39;,
-+     IMAGE_URL: &#39;https://example.com/image.jpg&#39;,
-+     FEISHU_URL: &#39;https://xxx.feishu.cn/wiki/...&#39;,
-+     COOKIE: &#39;从浏览器开发者工具中复制 Cookie...&#39;,
-+     CSV: &#39;CSV 内容将在此显示...&#39;,
-+     JSON: &#96;[\n  {\n    &quot;效果&quot;: &quot;示例标题&quot;,\n    &quot;描述&quot;: &quot;示例描述&quot;,\n    &quot;标签&quot;: &quot;标签1,标签2&quot;,\n    &quot;提示词&quot;: &quot;示例提示词&quot;,\n    &quot;来源&quot;: &quot;https://example.com&quot;\n  }\n]&#96;,
++     EFFECT: '例如：生成产品介绍文案',
++     DESCRIPTION: '详细描述该提示词的用途和特点',
++     TAGS: '例如：营销, 文案, 创意',
++     PROMPT: '输入完整的提示词内容',
++     SOURCE: '例如：https://example.com',
++     IMAGE_URL: 'https://example.com/image.jpg',
++     FEISHU_URL: 'https://xxx.feishu.cn/wiki/...',
++     COOKIE: '从浏览器开发者工具中复制 Cookie...',
++     CSV: 'CSV 内容将在此显示...',
++     JSON: &#96;[\n  {\n    "效果": "示例标题",\n    "描述": "示例描述",\n    "标签": "标签1,标签2",\n    "提示词": "示例提示词",\n    "来源": "https://example.com"\n  }\n]&#96;,
 +   },
 + } as const;
 + 
 + // Data Storage
 + export const STORAGE = {
-+   DATA_DIR: &#39;data&#39;,
-+   PROMPTS_FILE: &#39;prompts.json&#39;,
++   DATA_DIR: 'data',
++   PROMPTS_FILE: 'prompts.json',
 + } as const;
 + 
 ```
@@ -12830,7 +12830,7 @@ The string to replace was not found in the file.
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/import.service.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: services/import.service.ts</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
@@ -12838,8 +12838,8 @@ Lines added: 1, lines removed: undefined
 ```diff
 @@ -5,4 +5,5 @@
   
-  import { ApiResponse, DataImportMode, ImportResult } from &#39;@/types&#39;;
-+ import { API_ENDPOINTS } from &#39;@/lib/constants&#39;;
+  import { ApiResponse, DataImportMode, ImportResult } from '@/types';
++ import { API_ENDPOINTS } from '@/lib/constants';
   
   interface ImportOptions {
 ```
@@ -12851,9 +12851,9 @@ Lines added: 3, lines removed: 3
 @@ -23,7 +24,7 @@
   
   class ImportService {
--   private importUrl = &#39;/api/import&#39;;
--   private csvUrl = &#39;/api/import/csv&#39;;
--   private feishuUrl = &#39;/api/import/feishu&#39;;
+-   private importUrl = '/api/import';
+-   private csvUrl = '/api/import/csv';
+-   private feishuUrl = '/api/import/feishu';
 +   private importUrl = API_ENDPOINTS.IMPORT;
 +   private csvUrl = API_ENDPOINTS.IMPORT_CSV;
 +   private feishuUrl = API_ENDPOINTS.IMPORT_FEISHU;
@@ -12887,7 +12887,7 @@ Lines added: 3, lines removed: 3
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: services/prompt.service.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: services/prompt.service.ts</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 1
@@ -12895,11 +12895,11 @@ Lines added: 2, lines removed: 1
 ```diff
 @@ -5,7 +5,8 @@
   
-  import { PromptItem, CreatePromptRequest, ApiResponse } from &#39;@/types&#39;;
-+ import { API_ENDPOINTS } from &#39;@/lib/constants&#39;;
+  import { PromptItem, CreatePromptRequest, ApiResponse } from '@/types';
++ import { API_ENDPOINTS } from '@/lib/constants';
   
   class PromptService {
--   private baseUrl = &#39;/api/prompts&#39;;
+-   private baseUrl = '/api/prompts';
 +   private baseUrl = API_ENDPOINTS.PROMPTS;
   
     /**
@@ -12913,25 +12913,25 @@ Lines added: 2, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 3
 
 ```diff
 @@ -7,10 +7,9 @@
-  import { DataImportMode, ImportSourceType } from &#39;@/types&#39;;
-  import { readFileAsText } from &#39;@/lib/csv-parser&#39;;
-+ import { DEFAULTS, API_ENDPOINTS, MESSAGES } from &#39;@/lib/constants&#39;;
+  import { DataImportMode, ImportSourceType } from '@/types';
+  import { readFileAsText } from '@/lib/csv-parser';
++ import { DEFAULTS, API_ENDPOINTS, MESSAGES } from '@/lib/constants';
   
   export function useImport(onSuccess?: () =&gt; void) {
-    const [mode, setMode] = useState&lt;ImportSourceType&gt;(&#39;csv&#39;);
+    const [mode, setMode] = useState&lt;ImportSourceType&gt;('csv');
 -   const [feishuUrl, setFeishuUrl] = useState(
--     &#39;https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1&#39;
+-     'https://u55dyuejxc.feishu.cn/wiki/S5nowuX3uiHXq4kNPb3c7cPpngh?table=tblJT29vyAEQmZzq&amp;view=vewBBRuwm1'
 -   );
 +   const [feishuUrl, setFeishuUrl] = useState(DEFAULTS.FEISHU_URL);
-    const [cookie, setCookie] = useState(&#39;&#39;);
-    const [jsonData, setJsonData] = useState(&#39;&#39;);
+    const [cookie, setCookie] = useState('');
+    const [jsonData, setJsonData] = useState('');
 ```
 
 </details>
@@ -12947,7 +12947,7 @@ Lines added: 2, lines removed: 3
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -12955,11 +12955,11 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -16,5 +16,5 @@
     const [csvFile, setCsvFile] = useState&lt;File | null&gt;(null);
-    const [csvText, setCsvText] = useState(&#39;&#39;);
--   const [importMode, setImportMode] = useState&lt;DataImportMode&gt;(&#39;merge&#39;);
+    const [csvText, setCsvText] = useState('');
+-   const [importMode, setImportMode] = useState&lt;DataImportMode&gt;('merge');
 +   const [importMode, setImportMode] = useState&lt;DataImportMode&gt;(DEFAULTS.IMPORT_MODE);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(&#39;&#39;);
+    const [error, setError] = useState('');
 ```
 
 **Chunk 2**
@@ -12972,13 +12972,13 @@ Lines added: 4, lines removed: 5
 +         const previewLength = DEFAULTS.CSV_PREVIEW_LENGTH;
           setCsvText(
 -           text.substring(0, 1000) +
--             (text.length &gt; 1000 ? &#39;\n...(已截取前1000字符)&#39; : &#39;&#39;)
+-             (text.length &gt; 1000 ? '\n...(已截取前1000字符)' : '')
 +           text.substring(0, previewLength) +
-+             (text.length &gt; previewLength ? &#39;\n...(已截取前1000字符)&#39; : &#39;&#39;)
++             (text.length &gt; previewLength ? '\n...(已截取前1000字符)' : '')
           );
         } catch (err) {
 -         setError(
--           &#39;文件读取失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;)
+-           '文件读取失败：' + (err instanceof Error ? err.message : '未知错误')
 -         );
 +         setError(MESSAGES.ERROR.IMPORT_FILE_READ(err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
         }
@@ -12993,7 +12993,7 @@ Lines added: 4, lines removed: 5
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13002,10 +13002,10 @@ Lines added: 1, lines removed: 1
 @@ -44,5 +44,5 @@
   
       try {
--       const scrapeResponse = await fetch(&#39;/api/import/feishu&#39;, {
+-       const scrapeResponse = await fetch('/api/import/feishu', {
 +       const scrapeResponse = await fetch(API_ENDPOINTS.IMPORT_FEISHU, {
-          method: &#39;POST&#39;,
-          headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
 ```
 
 **Chunk 2**
@@ -13015,17 +13015,17 @@ Lines added: 2, lines removed: 2
 @@ -55,11 +55,11 @@
           setError(scrapeResult.message || scrapeResult.error);
           if (scrapeResult.requiresAuth) {
--           setError(&#39;文档需要认证。请提供 Cookie 或使用手动导入方式。&#39;);
+-           setError('文档需要认证。请提供 Cookie 或使用手动导入方式。');
 +           setError(MESSAGES.ERROR.IMPORT_FEISHU_AUTH);
           }
           setLoading(false);
           return;
         }
   
--       const importResponse = await fetch(&#39;/api/import&#39;, {
+-       const importResponse = await fetch('/api/import', {
 +       const importResponse = await fetch(API_ENDPOINTS.IMPORT, {
-          method: &#39;POST&#39;,
-          headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
 ```
 
 **Chunk 3**
@@ -13041,11 +13041,11 @@ Lines added: 3, lines removed: 3
             onSuccess?.();
           }, 1500);
         } else {
--         setError(importResult.error || &#39;导入失败&#39;);
+-         setError(importResult.error || '导入失败');
 +         setError(importResult.error || MESSAGES.ERROR.IMPORT);
         }
       } catch (err) {
--       setError(&#39;请求失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
+-       setError('请求失败：' + (err instanceof Error ? err.message : '未知错误'));
 +       setError(MESSAGES.ERROR.NETWORK(err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
       } finally {
         setLoading(false);
@@ -13059,7 +13059,7 @@ Lines added: 3, lines removed: 3
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
@@ -13068,16 +13068,16 @@ Lines added: 2, lines removed: 2
 @@ -96,10 +96,10 @@
   
         if (!Array.isArray(items)) {
--         setError(&#39;JSON 格式错误：必须是数组&#39;);
+-         setError('JSON 格式错误：必须是数组');
 +         setError(MESSAGES.ERROR.IMPORT_JSON_FORMAT);
           setLoading(false);
           return;
         }
   
--       const response = await fetch(&#39;/api/import&#39;, {
+-       const response = await fetch('/api/import', {
 +       const response = await fetch(API_ENDPOINTS.IMPORT, {
-          method: &#39;POST&#39;,
-          headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
 ```
 
 **Chunk 2**
@@ -13093,16 +13093,16 @@ Lines added: 4, lines removed: 4
             onSuccess?.();
           }, 1500);
         } else {
--         setError(result.error || &#39;导入失败&#39;);
+-         setError(result.error || '导入失败');
 +         setError(result.error || MESSAGES.ERROR.IMPORT);
         }
       } catch (err) {
         if (err instanceof SyntaxError) {
--         setError(&#39;JSON 格式错误：&#39; + err.message);
+-         setError('JSON 格式错误：' + err.message);
 +         setError(MESSAGES.ERROR.IMPORT_JSON_SYNTAX(err.message));
         } else {
--         setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
-+         setError(MESSAGES.ERROR.IMPORT + &#39;：&#39; + (err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
+-         setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
++         setError(MESSAGES.ERROR.IMPORT + '：' + (err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
         }
       } finally {
 ```
@@ -13115,7 +13115,7 @@ Lines added: 4, lines removed: 4
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: hooks/useImport.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: hooks/useImport.ts</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
@@ -13124,16 +13124,16 @@ Lines added: 2, lines removed: 2
 @@ -141,10 +141,10 @@
   
         if (!text) {
--         setError(&#39;请选择CSV文件或粘贴CSV内容&#39;);
+-         setError('请选择CSV文件或粘贴CSV内容');
 +         setError(MESSAGES.ERROR.IMPORT_CSV_REQUIRED);
           setLoading(false);
           return;
         }
   
--       const parseResponse = await fetch(&#39;/api/import/csv&#39;, {
+-       const parseResponse = await fetch('/api/import/csv', {
 +       const parseResponse = await fetch(API_ENDPOINTS.IMPORT_CSV, {
-          method: &#39;POST&#39;,
-          headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
 ```
 
 **Chunk 2**
@@ -13143,16 +13143,16 @@ Lines added: 2, lines removed: 2
 @@ -155,10 +155,10 @@
   
         if (!parseResult.success) {
--         setError(parseResult.message || parseResult.error || &#39;CSV解析失败&#39;);
+-         setError(parseResult.message || parseResult.error || 'CSV解析失败');
 +         setError(parseResult.message || parseResult.error || MESSAGES.ERROR.IMPORT_CSV_PARSE);
           setLoading(false);
           return;
         }
   
--       const importResponse = await fetch(&#39;/api/import&#39;, {
+-       const importResponse = await fetch('/api/import', {
 +       const importResponse = await fetch(API_ENDPOINTS.IMPORT, {
-          method: &#39;POST&#39;,
-          headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
 ```
 
 **Chunk 3**
@@ -13170,12 +13170,12 @@ Lines added: 3, lines removed: 5
             onSuccess?.();
           }, 2000);
         } else {
--         setError(importResult.error || &#39;导入失败&#39;);
+-         setError(importResult.error || '导入失败');
 +         setError(importResult.error || MESSAGES.ERROR.IMPORT);
         }
       } catch (err) {
--       setError(&#39;导入失败：&#39; + (err instanceof Error ? err.message : &#39;未知错误&#39;));
-+       setError(MESSAGES.ERROR.IMPORT + &#39;：&#39; + (err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
+-       setError('导入失败：' + (err instanceof Error ? err.message : '未知错误'));
++       setError(MESSAGES.ERROR.IMPORT + '：' + (err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
       } finally {
         setLoading(false);
 ```
@@ -13197,16 +13197,16 @@ Lines added: 3, lines removed: 5
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -6,4 +6,5 @@
-  import { CreatePromptRequest } from &#39;@/types&#39;;
-  import { Save, X } from &#39;lucide-react&#39;;
-+ import { UI_TEXT, MESSAGES } from &#39;@/lib/constants&#39;;
+  import { CreatePromptRequest } from '@/types';
+  import { Save, X } from 'lucide-react';
++ import { UI_TEXT, MESSAGES } from '@/lib/constants';
   
   interface PromptFormProps {
 ```
@@ -13219,7 +13219,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13227,8 +13227,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -45,5 +45,5 @@
               disabled={submitting}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
--             placeholder=&quot;例如：生成产品介绍文案&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+-             placeholder="例如：生成产品介绍文案"
 +             placeholder={UI_TEXT.PLACEHOLDER.EFFECT}
             /&gt;
           &lt;/div&gt;
@@ -13242,7 +13242,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13250,8 +13250,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -59,5 +59,5 @@
               disabled={submitting}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24 disabled:bg-gray-100&quot;
--             placeholder=&quot;详细描述该提示词的用途和特点&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-24 disabled:bg-gray-100"
+-             placeholder="详细描述该提示词的用途和特点"
 +             placeholder={UI_TEXT.PLACEHOLDER.DESCRIPTION}
             /&gt;
           &lt;/div&gt;
@@ -13265,7 +13265,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13273,8 +13273,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -74,5 +74,5 @@
               disabled={submitting}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
--             placeholder=&quot;例如：营销, 文案, 创意&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+-             placeholder="例如：营销, 文案, 创意"
 +             placeholder={UI_TEXT.PLACEHOLDER.TAGS}
             /&gt;
           &lt;/div&gt;
@@ -13288,7 +13288,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13296,8 +13296,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -88,5 +88,5 @@
               disabled={submitting}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm disabled:bg-gray-100&quot;
--             placeholder=&quot;输入完整的提示词内容&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 font-mono text-sm disabled:bg-gray-100"
+-             placeholder="输入完整的提示词内容"
 +             placeholder={UI_TEXT.PLACEHOLDER.PROMPT}
             /&gt;
           &lt;/div&gt;
@@ -13311,7 +13311,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13319,8 +13319,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -103,5 +103,5 @@
               disabled={submitting}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
--             placeholder=&quot;例如：https://example.com&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+-             placeholder="例如：https://example.com"
 +             placeholder={UI_TEXT.PLACEHOLDER.SOURCE}
             /&gt;
           &lt;/div&gt;
@@ -13334,7 +13334,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13342,8 +13342,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -118,5 +118,5 @@
               disabled={submitting}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100&quot;
--             placeholder=&quot;https://example.com/image.jpg&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+-             placeholder="https://example.com/image.jpg"
 +             placeholder={UI_TEXT.PLACEHOLDER.IMAGE_URL}
             /&gt;
           &lt;/div&gt;
@@ -13357,7 +13357,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13365,9 +13365,9 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -130,5 +130,5 @@
             &gt;
-              &lt;Save className=&quot;w-4 h-4&quot; /&gt;
--             {submitting ? &#39;保存中...&#39; : &#39;保存&#39;}
-+             {submitting ? MESSAGES.LOADING.SAVE : &#39;保存&#39;}
+              &lt;Save className="w-4 h-4" /&gt;
+-             {submitting ? '保存中...' : '保存'}
++             {submitting ? MESSAGES.LOADING.SAVE : '保存'}
             &lt;/button&gt;
             &lt;button
 ```
@@ -13385,16 +13385,16 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -6,4 +6,5 @@
-  import { FileSpreadsheet } from &#39;lucide-react&#39;;
-  import { useRef } from &#39;react&#39;;
-+ import { FILE_UPLOAD, UI_TEXT } from &#39;@/lib/constants&#39;;
+  import { FileSpreadsheet } from 'lucide-react';
+  import { useRef } from 'react';
++ import { FILE_UPLOAD, UI_TEXT } from '@/lib/constants';
   
   interface CsvImportFormProps {
 ```
@@ -13407,7 +13407,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13415,11 +13415,11 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -32,5 +32,5 @@
             ref={fileInputRef}
-            type=&quot;file&quot;
--           accept=&quot;.csv,.txt&quot;
+            type="file"
+-           accept=".csv,.txt"
 +           accept={FILE_UPLOAD.CSV_ACCEPT}
             onChange={onFileChange}
-            className=&quot;hidden&quot;
+            className="hidden"
 ```
 
 </details>
@@ -13430,7 +13430,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13438,8 +13438,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -59,5 +59,5 @@
               onChange={(e) =&gt; onTextChange(e.target.value)}
-              className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono&quot;
--             placeholder=&quot;CSV 内容将在此显示...&quot;
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono"
+-             placeholder="CSV 内容将在此显示..."
 +             placeholder={UI_TEXT.PLACEHOLDER.CSV}
             /&gt;
           &lt;/div&gt;
@@ -13453,7 +13453,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: undefined
@@ -13462,7 +13462,7 @@ Lines added: 2, lines removed: undefined
 @@ -4,4 +4,6 @@
    */
   
-+ import { UI_TEXT } from &#39;@/lib/constants&#39;;
++ import { UI_TEXT } from '@/lib/constants';
 + 
   interface FeishuImportFormProps {
     feishuUrl: string;
@@ -13476,7 +13476,7 @@ Lines added: 2, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13484,8 +13484,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -30,5 +30,5 @@
             onChange={(e) =&gt; onUrlChange(e.target.value)}
-            className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
--           placeholder=&quot;https://xxx.feishu.cn/wiki/...&quot;
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+-           placeholder="https://xxx.feishu.cn/wiki/..."
 +           placeholder={UI_TEXT.PLACEHOLDER.FEISHU_URL}
           /&gt;
         &lt;/div&gt;
@@ -13499,7 +13499,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13507,8 +13507,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -43,5 +43,5 @@
             onChange={(e) =&gt; onCookieChange(e.target.value)}
-            className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono&quot;
--           placeholder=&quot;从浏览器开发者工具中复制 Cookie...&quot;
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono"
+-           placeholder="从浏览器开发者工具中复制 Cookie..."
 +           placeholder={UI_TEXT.PLACEHOLDER.COOKIE}
           /&gt;
         &lt;/div&gt;
@@ -13522,7 +13522,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: undefined
@@ -13531,7 +13531,7 @@ Lines added: 2, lines removed: undefined
 @@ -4,4 +4,6 @@
    */
   
-+ import { UI_TEXT } from &#39;@/lib/constants&#39;;
++ import { UI_TEXT } from '@/lib/constants';
 + 
   interface JsonImportFormProps {
     jsonData: string;
@@ -13545,7 +13545,7 @@ Lines added: 2, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -13553,8 +13553,8 @@ Lines added: 1, lines removed: 1
 ```diff
 @@ -22,5 +22,5 @@
             onChange={(e) =&gt; onChange(e.target.value)}
-            className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono&quot;
--           placeholder={&#96;[\n  {\n    &quot;效果&quot;: &quot;示例标题&quot;,\n    &quot;描述&quot;: &quot;示例描述&quot;,\n    &quot;标签&quot;: &quot;标签1,标签2&quot;,\n    &quot;提示词&quot;: &quot;示例提示词&quot;,\n    &quot;来源&quot;: &quot;https://example.com&quot;\n  }\n]&#96;}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono"
+-           placeholder={&#96;[\n  {\n    "效果": "示例标题",\n    "描述": "示例描述",\n    "标签": "标签1,标签2",\n    "提示词": "示例提示词",\n    "来源": "https://example.com"\n  }\n]&#96;}
 +           placeholder={UI_TEXT.PLACEHOLDER.JSON}
           /&gt;
         &lt;/div&gt;
@@ -13568,16 +13568,16 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -11,4 +11,5 @@
-  import { usePrompts } from &#39;@/hooks/usePrompts&#39;;
-  import { usePromptForm } from &#39;@/hooks/usePromptForm&#39;;
-+ import { UI_TEXT } from &#39;@/lib/constants&#39;;
+  import { usePrompts } from '@/hooks/usePrompts';
+  import { usePromptForm } from '@/hooks/usePromptForm';
++ import { UI_TEXT } from '@/lib/constants';
   
   export default function AdminPage() {
 ```
@@ -13590,7 +13590,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
@@ -13598,9 +13598,9 @@ Lines added: 2, lines removed: 2
 ```diff
 @@ -89,6 +89,6 @@
             &lt;EmptyState
-              icon={&lt;FolderOpen className=&quot;w-16 h-16 text-gray-400&quot; /&gt;}
--             title=&quot;暂无数据&quot;
--             description=&#39;点击&quot;新建提示词&quot;开始添加&#39;
+              icon={&lt;FolderOpen className="w-16 h-16 text-gray-400" /&gt;}
+-             title="暂无数据"
+-             description='点击"新建提示词"开始添加'
 +             title={UI_TEXT.EMPTY_STATE.TITLE}
 +             description={UI_TEXT.EMPTY_STATE.DESCRIPTION}
             /&gt;
@@ -13659,19 +13659,19 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: lib/storage.ts</summary>
+<details><summary>Tool use: **search_replace** • Edit file: lib/storage.ts</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 2
 
 ```diff
 @@ -2,7 +2,8 @@
-  import fs from &#39;fs&#39;;
-  import path from &#39;path&#39;;
-+ import { STORAGE } from &#39;./constants&#39;;
+  import fs from 'fs';
+  import path from 'path';
++ import { STORAGE } from './constants';
   
-- const DATA_DIR = path.join(process.cwd(), &#39;data&#39;);
-- const DATA_FILE = path.join(DATA_DIR, &#39;prompts.json&#39;);
+- const DATA_DIR = path.join(process.cwd(), 'data');
+- const DATA_FILE = path.join(DATA_DIR, 'prompts.json');
 + const DATA_DIR = path.join(process.cwd(), STORAGE.DATA_DIR);
 + const DATA_FILE = path.join(DATA_DIR, STORAGE.PROMPTS_FILE);
   
@@ -13981,17 +13981,17 @@ Output mode: content
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -7,4 +7,5 @@
-  import { Save, X } from &#39;lucide-react&#39;;
-  import { UI_TEXT, MESSAGES } from &#39;@/lib/constants&#39;;
-+ import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from &#39;@/lib/styles&#39;;
-  import { INPUT_STYLES, BUTTON_STYLES, LABEL_STYLES, CARD_STYLES } from &#39;@/lib/styles&#39;;
+  import { Save, X } from 'lucide-react';
+  import { UI_TEXT, MESSAGES } from '@/lib/constants';
++ import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
+  import { INPUT_STYLES, BUTTON_STYLES, LABEL_STYLES, CARD_STYLES } from '@/lib/styles';
   
 ```
 
@@ -14012,17 +14012,17 @@ The string to replace was not found in the file.
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/PromptTable.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/PromptTable.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -6,4 +6,5 @@
-  import { PromptItem } from &#39;@/types&#39;;
-  import { Edit2, Trash2 } from &#39;lucide-react&#39;;
-+ import { CARD_STYLES, TABLE_STYLES, ICON_BUTTON_STYLES, BADGE_STYLES } from &#39;@/lib/styles&#39;;
-  import { CARD_STYLES, TABLE_STYLES, ICON_BUTTON_STYLES, BADGE_STYLES } from &#39;@/lib/styles&#39;;
+  import { PromptItem } from '@/types';
+  import { Edit2, Trash2 } from 'lucide-react';
++ import { CARD_STYLES, TABLE_STYLES, ICON_BUTTON_STYLES, BADGE_STYLES } from '@/lib/styles';
+  import { CARD_STYLES, TABLE_STYLES, ICON_BUTTON_STYLES, BADGE_STYLES } from '@/lib/styles';
   
 ```
 
@@ -14043,16 +14043,16 @@ The string to replace was not found in the file.
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -9,4 +9,5 @@
-  import StatusMessage from &#39;./import/StatusMessage&#39;;
-  import { useImport } from &#39;@/hooks/useImport&#39;;
-+ import { BUTTON_STYLES } from &#39;@/lib/styles&#39;;
+  import StatusMessage from './import/StatusMessage';
+  import { useImport } from '@/hooks/useImport';
++ import { BUTTON_STYLES } from '@/lib/styles';
   
   interface ImportModalProps {
 ```
@@ -14065,7 +14065,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/ImportModal.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 4
@@ -14073,10 +14073,10 @@ Lines added: 1, lines removed: 4
 ```diff
 @@ -107,8 +107,5 @@
           {/* Footer */}
-          &lt;div className=&quot;flex items-center justify-end gap-3 p-6 border-t bg-gray-50&quot;&gt;
+          &lt;div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50"&gt;
 -           &lt;button
 -             onClick={handleClose}
--             className=&quot;px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium&quot;
+-             className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
 -           &gt;
 +           &lt;button onClick={handleClose} className={BUTTON_STYLES.ghost}&gt;
               取消
@@ -14088,9 +14088,9 @@ Lines added: 1, lines removed: 1
 
 ```diff
 @@ -121,5 +118,5 @@
-                (mode === &#39;csv&#39; &amp;&amp; !csvFile &amp;&amp; !csvText)
+                (mode === 'csv' &amp;&amp; !csvFile &amp;&amp; !csvText)
               }
--             className=&quot;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed&quot;
+-             className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
 +             className={BUTTON_STYLES.primary}
             &gt;
               {loading ? (
@@ -14104,16 +14104,16 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -7,4 +7,5 @@
-  import { useRef } from &#39;react&#39;;
-  import { FILE_UPLOAD, UI_TEXT } from &#39;@/lib/constants&#39;;
-+ import { INPUT_STYLES, LABEL_STYLES, ALERT_STYLES } from &#39;@/lib/styles&#39;;
+  import { useRef } from 'react';
+  import { FILE_UPLOAD, UI_TEXT } from '@/lib/constants';
++ import { INPUT_STYLES, LABEL_STYLES, ALERT_STYLES } from '@/lib/styles';
   
   interface CsvImportFormProps {
 ```
@@ -14126,16 +14126,16 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
 
 ```diff
 @@ -27,5 +27,5 @@
-      &lt;div className=&quot;space-y-4&quot;&gt;
+      &lt;div className="space-y-4"&gt;
         &lt;div&gt;
--         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +         &lt;label className={&#96;${LABEL_STYLES.base} mb-2&#96;}&gt;
             上传 CSV 文件
           &lt;/label&gt;
@@ -14149,7 +14149,7 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/CsvImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 3, lines removed: 3
@@ -14158,23 +14158,23 @@ Lines added: 3, lines removed: 3
 @@ -53,17 +53,17 @@
         {csvText &amp;&amp; (
           &lt;div&gt;
--           &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-           &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +           &lt;label className={&#96;${LABEL_STYLES.base} mb-2&#96;}&gt;
               文件预览
             &lt;/label&gt;
             &lt;textarea
               value={csvText}
               onChange={(e) =&gt; onTextChange(e.target.value)}
--             className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono&quot;
+-             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-48 text-sm font-mono"
 +             className={&#96;${INPUT_STYLES.mono} h-48&#96;}
               placeholder={UI_TEXT.PLACEHOLDER.CSV}
             /&gt;
           &lt;/div&gt;
         )}
   
--       &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
+-       &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
 +       &lt;div className={ALERT_STYLES.info}&gt;
-          &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
+          &lt;p className="text-sm text-blue-800"&gt;
             💡 &lt;strong&gt;CSV 格式要求：&lt;/strong&gt;
 ```
 
@@ -14186,7 +14186,7 @@ Lines added: 3, lines removed: 3
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
@@ -14194,8 +14194,8 @@ Lines added: 1, lines removed: undefined
 ```diff
 @@ -5,4 +5,5 @@
   
-  import { UI_TEXT } from &#39;@/lib/constants&#39;;
-+ import { INPUT_STYLES, LABEL_STYLES, ALERT_STYLES } from &#39;@/lib/styles&#39;;
+  import { UI_TEXT } from '@/lib/constants';
++ import { INPUT_STYLES, LABEL_STYLES, ALERT_STYLES } from '@/lib/styles';
   
   interface FeishuImportFormProps {
 ```
@@ -14208,16 +14208,16 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/FeishuImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
 
 ```diff
 @@ -23,5 +23,5 @@
-      &lt;div className=&quot;space-y-4&quot;&gt;
+      &lt;div className="space-y-4"&gt;
         &lt;div&gt;
--         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +         &lt;label className={&#96;${LABEL_STYLES.base} mb-2&#96;}&gt;
             飞书文档链接
           &lt;/label&gt;
@@ -14230,17 +14230,17 @@ Lines added: 2, lines removed: 2
 @@ -30,11 +30,11 @@
             value={feishuUrl}
             onChange={(e) =&gt; onUrlChange(e.target.value)}
--           className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent&quot;
+-           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 +           className={INPUT_STYLES.base}
             placeholder={UI_TEXT.PLACEHOLDER.FEISHU_URL}
           /&gt;
         &lt;/div&gt;
   
         &lt;div&gt;
--         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +         &lt;label className={&#96;${LABEL_STYLES.base} mb-2&#96;}&gt;
             Cookie（如果文档需要登录）
-            &lt;span className=&quot;text-gray-500 text-xs ml-2&quot;&gt;可选&lt;/span&gt;
+            &lt;span className="text-gray-500 text-xs ml-2"&gt;可选&lt;/span&gt;
 ```
 
 **Chunk 3**
@@ -14250,15 +14250,15 @@ Lines added: 2, lines removed: 2
 @@ -43,10 +43,10 @@
             value={cookie}
             onChange={(e) =&gt; onCookieChange(e.target.value)}
--           className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono&quot;
+-           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-20 text-sm font-mono"
 +           className={&#96;${INPUT_STYLES.mono} h-20&#96;}
             placeholder={UI_TEXT.PLACEHOLDER.COOKIE}
           /&gt;
         &lt;/div&gt;
   
--       &lt;div className=&quot;bg-blue-50 border border-blue-200 rounded-lg p-4&quot;&gt;
+-       &lt;div className="bg-blue-50 border border-blue-200 rounded-lg p-4"&gt;
 +       &lt;div className={ALERT_STYLES.info}&gt;
-          &lt;p className=&quot;text-sm text-blue-800&quot;&gt;
+          &lt;p className="text-sm text-blue-800"&gt;
             💡 &lt;strong&gt;提示：&lt;/strong&gt;如果文档需要登录，请：
 ```
 
@@ -14270,7 +14270,7 @@ Lines added: 2, lines removed: 2
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
@@ -14278,8 +14278,8 @@ Lines added: 1, lines removed: undefined
 ```diff
 @@ -5,4 +5,5 @@
   
-  import { UI_TEXT } from &#39;@/lib/constants&#39;;
-+ import { INPUT_STYLES, LABEL_STYLES } from &#39;@/lib/styles&#39;;
+  import { UI_TEXT } from '@/lib/constants';
++ import { INPUT_STYLES, LABEL_STYLES } from '@/lib/styles';
   
   interface JsonImportFormProps {
 ```
@@ -14292,23 +14292,23 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/JsonImportForm.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
 
 ```diff
 @@ -16,11 +16,11 @@
-      &lt;div className=&quot;space-y-4&quot;&gt;
+      &lt;div className="space-y-4"&gt;
         &lt;div&gt;
--         &lt;label className=&quot;block text-sm font-medium text-gray-700 mb-2&quot;&gt;
+-         &lt;label className="block text-sm font-medium text-gray-700 mb-2"&gt;
 +         &lt;label className={&#96;${LABEL_STYLES.base} mb-2&#96;}&gt;
             JSON 数据
           &lt;/label&gt;
           &lt;textarea
             value={jsonData}
             onChange={(e) =&gt; onChange(e.target.value)}
--           className=&quot;w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono&quot;
+-           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 text-sm font-mono"
 +           className={&#96;${INPUT_STYLES.mono} h-64&#96;}
             placeholder={UI_TEXT.PLACEHOLDER.JSON}
           /&gt;
@@ -14322,7 +14322,7 @@ Lines added: 2, lines removed: 2
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/StatusMessage.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/StatusMessage.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
@@ -14330,8 +14330,8 @@ Lines added: 1, lines removed: undefined
 ```diff
 @@ -5,4 +5,5 @@
   
-  import { AlertCircle, CheckCircle } from &#39;lucide-react&#39;;
-+ import { ALERT_STYLES } from &#39;@/lib/styles&#39;;
+  import { AlertCircle, CheckCircle } from 'lucide-react';
++ import { ALERT_STYLES } from '@/lib/styles';
   
   interface StatusMessageProps {
 ```
@@ -14344,7 +14344,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/components/import/StatusMessage.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/components/import/StatusMessage.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: 1
@@ -14353,10 +14353,10 @@ Lines added: 1, lines removed: 1
 @@ -18,5 +18,5 @@
       &lt;&gt;
         {error &amp;&amp; (
--         &lt;div className=&quot;bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
+-         &lt;div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"&gt;
 +         &lt;div className={ALERT_STYLES.error}&gt;
-            &lt;AlertCircle className=&quot;w-5 h-5 text-red-600 flex-shrink-0 mt-0.5&quot; /&gt;
-            &lt;p className=&quot;text-sm text-red-800&quot;&gt;{error}&lt;/p&gt;
+            &lt;AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" /&gt;
+            &lt;p className="text-sm text-red-800"&gt;{error}&lt;/p&gt;
 ```
 
 **Chunk 2**
@@ -14366,10 +14366,10 @@ Lines added: 1, lines removed: 1
 @@ -25,5 +25,5 @@
   
         {success &amp;&amp; (
--         &lt;div className=&quot;bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3&quot;&gt;
+-         &lt;div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3"&gt;
 +         &lt;div className={ALERT_STYLES.success}&gt;
-            &lt;CheckCircle className=&quot;w-5 h-5 text-green-600 flex-shrink-0 mt-0.5&quot; /&gt;
-            &lt;p className=&quot;text-sm text-green-800&quot;&gt;{success}&lt;/p&gt;
+            &lt;CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" /&gt;
+            &lt;p className="text-sm text-green-800"&gt;{success}&lt;/p&gt;
 ```
 
 </details>
@@ -14380,16 +14380,16 @@ Lines added: 1, lines removed: 1
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 1, lines removed: undefined
 
 ```diff
 @@ -12,4 +12,5 @@
-  import { usePromptForm } from &#39;@/hooks/usePromptForm&#39;;
-  import { UI_TEXT } from &#39;@/lib/constants&#39;;
-+ import { CONTAINER_STYLES } from &#39;@/lib/styles&#39;;
+  import { usePromptForm } from '@/hooks/usePromptForm';
+  import { UI_TEXT } from '@/lib/constants';
++ import { CONTAINER_STYLES } from '@/lib/styles';
   
   export default function AdminPage() {
 ```
@@ -14402,7 +14402,7 @@ Lines added: 1, lines removed: undefined
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: app/(admin)/admin/page.tsx</summary>
+<details><summary>Tool use: **search_replace** • Edit file: app/(admin)/admin/page.tsx</summary>
 
 **Chunk 1**
 Lines added: 2, lines removed: 2
@@ -14411,14 +14411,14 @@ Lines added: 2, lines removed: 2
 @@ -57,11 +57,11 @@
   
     return (
--     &lt;div className=&quot;min-h-screen bg-gray-50&quot;&gt;
+-     &lt;div className="min-h-screen bg-gray-50"&gt;
 +     &lt;div className={CONTAINER_STYLES.page}&gt;
         &lt;AdminHeader
           onImport={() =&gt; setShowImportModal(true)}
           onCreate={startCreate}
         /&gt;
   
--       &lt;main className=&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+-       &lt;main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"&gt;
 +       &lt;main className={CONTAINER_STYLES.main}&gt;
           &lt;ImportModal
             isOpen={showImportModal}
@@ -14497,7 +14497,7 @@ Lint results
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 51, lines removed: 14
@@ -14583,7 +14583,7 @@ Lines added: 51, lines removed: 14
 
 <tool-use data-tool-type="write" data-tool-name="search_replace">
 
-<details><summary>Tool use: **code_edit** • Edit file: README.md</summary>
+<details><summary>Tool use: **search_replace** • Edit file: README.md</summary>
 
 **Chunk 1**
 Lines added: 41, lines removed: 2
@@ -14657,7 +14657,7 @@ Lines added: 41, lines removed: 2
 
 <tool-use data-tool-type="write" data-tool-name="write">
 
-<details><summary>Tool use: **code_edit** • Edit file: docs/ARCHITECTURE.md</summary>
+<details><summary>Tool use: **write** • Edit file: docs/ARCHITECTURE.md</summary>
 
 **Chunk 1**
 Lines added: 295, lines removed: 1
@@ -14799,8 +14799,8 @@ Lines added: 295, lines removed: 1
 + &#96;&#96;&#96;typescript
 + // lib/constants.ts
 + export const API_ENDPOINTS = {
-+   PROMPTS: &#39;/api/prompts&#39;,
-+   IMPORT_CSV: &#39;/api/import/csv&#39;,
++   PROMPTS: '/api/prompts',
++   IMPORT_CSV: '/api/import/csv',
 +   // ...
 + } as const;
 + 
@@ -14809,7 +14809,7 @@ Lines added: 295, lines removed: 1
 +     IMPORT: (count: number) =&gt; &#96;成功导入 ${count} 条数据！&#96;,
 +   },
 +   ERROR: {
-+     IMPORT: &#39;导入失败&#39;,
++     IMPORT: '导入失败',
 +   },
 + } as const;
 + &#96;&#96;&#96;
@@ -14827,8 +14827,8 @@ Lines added: 295, lines removed: 1
 + &#96;&#96;&#96;typescript
 + // lib/styles.ts
 + export const BUTTON_STYLES = {
-+   primary: &#39;px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ...&#39;,
-+   secondary: &#39;px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg ...&#39;,
++   primary: 'px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ...',
++   secondary: 'px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg ...',
 + } as const;
 + &#96;&#96;&#96;
 + 

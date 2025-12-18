@@ -1,6 +1,25 @@
 import { PromptItem } from '@/types';
-import { Tag, Calendar, ExternalLink, Copy, Check, Zap } from 'lucide-react';
+import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu } from 'lucide-react';
 import { useState } from 'react';
+
+// AI模型标签颜色映射
+const MODEL_TAG_COLORS: Record<string, string> = {
+  'Midjourney': '#5865F2',
+  'DALL-E 3': '#10A37F',
+  'Stable Diffusion': '#A855F7',
+  'Flux': '#EC4899',
+  'Leonardo.AI': '#F97316',
+  'ComfyUI': '#22C55E',
+  'Runway': '#3B82F6',
+  'Sora': '#000000',
+  'Pika': '#8B5CF6',
+  'Kling': '#FF6B35',
+  'Suno': '#FACC15',
+  'Udio': '#06B6D4',
+  'DeepSeek': '#2563EB',
+  'Banana': '#FBBF24',
+  '其他模型': '#6B7280',
+};
 
 interface PromptCardProps {
   prompt: PromptItem;
@@ -66,13 +85,46 @@ export default function PromptCard({ prompt }: PromptCardProps) {
           </div>
         )}
         
-        {/* Floating Badge - 调整为黑金/银灰风格 */}
-        <div className="absolute top-3 left-3">
-          <div className="px-3 py-1 bg-dark-900/90 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-gray-200 shadow-lg flex items-center gap-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-tech-accent animate-pulse" />
-            AI Art
-          </div>
+        {/* AI Model Tags - 左上角显示 AI 模型 */}
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[70%]">
+          {(prompt.modelTags || []).slice(0, 2).map(modelTag => {
+            const color = MODEL_TAG_COLORS[modelTag] || '#6B7280';
+            return (
+              <div
+                key={modelTag}
+                className="px-2.5 py-1 backdrop-blur-md border rounded-full text-xs font-medium text-white shadow-lg flex items-center gap-1"
+                style={{ 
+                  backgroundColor: `${color}E6`,
+                  borderColor: `${color}50`
+                }}
+              >
+                <Cpu className="w-3 h-3" />
+                {modelTag}
+              </div>
+            );
+          })}
+          {(prompt.modelTags || []).length > 2 && (
+            <div className="px-2 py-1 bg-dark-900/90 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-gray-300">
+              +{(prompt.modelTags || []).length - 2}
+            </div>
+          )}
+          {(!prompt.modelTags || prompt.modelTags.length === 0) && (
+            <div className="px-3 py-1 bg-dark-900/90 backdrop-blur-md border border-white/10 rounded-full text-xs font-medium text-gray-200 shadow-lg flex items-center gap-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-tech-accent animate-pulse" />
+              AI Art
+            </div>
+          )}
         </div>
+        
+        {/* Category Badge - 右上角显示生成类型 */}
+        {prompt.category && (
+          <div className="absolute top-3 right-3">
+            <div className="px-3 py-1 bg-amber-500/90 backdrop-blur-md border border-amber-400/30 rounded-full text-xs font-medium text-white shadow-lg flex items-center gap-1.5">
+              <FolderOpen className="w-3 h-3" />
+              {prompt.category}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="p-6 flex-1 flex flex-col relative z-10">

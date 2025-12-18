@@ -5,6 +5,7 @@
 
 import { PromptItem } from '@/types';
 import prisma from './db';
+import { DEFAULT_CATEGORY } from './constants';
 
 /**
  * Read all prompts from database
@@ -12,7 +13,7 @@ import prisma from './db';
 export async function readPrompts(): Promise<PromptItem[]> {
   try {
     const prompts = await prisma.prompt.findMany({
-      include: { tags: true },
+      include: { tags: true, category: true, modelTags: true },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -21,9 +22,11 @@ export async function readPrompts(): Promise<PromptItem[]> {
       effect: p.effect,
       description: p.description,
       tags: p.tags.map((t) => t.name),
+      modelTags: p.modelTags.map((m) => m.name),
       prompt: p.prompt,
       source: p.source,
       imageUrl: p.imageUrl || undefined,
+      category: p.category?.name || undefined,
       createdAt: p.createdAt.toISOString(),
       updatedAt: p.updatedAt.toISOString(),
     }));
@@ -40,7 +43,7 @@ export async function getPromptById(id: string): Promise<PromptItem | null> {
   try {
     const prompt = await prisma.prompt.findUnique({
       where: { id },
-      include: { tags: true },
+      include: { tags: true, category: true, modelTags: true },
     });
 
     if (!prompt) return null;
@@ -50,9 +53,11 @@ export async function getPromptById(id: string): Promise<PromptItem | null> {
       effect: prompt.effect,
       description: prompt.description,
       tags: prompt.tags.map((t) => t.name),
+      modelTags: prompt.modelTags.map((m) => m.name),
       prompt: prompt.prompt,
       source: prompt.source,
       imageUrl: prompt.imageUrl || undefined,
+      category: prompt.category?.name || undefined,
       createdAt: prompt.createdAt.toISOString(),
       updatedAt: prompt.updatedAt.toISOString(),
     };
@@ -68,6 +73,9 @@ export async function getPromptById(id: string): Promise<PromptItem | null> {
 export async function createPrompt(
   data: Omit<PromptItem, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<PromptItem> {
+  // Get or create category
+  const categoryName = data.category || DEFAULT_CATEGORY;
+  
   const prompt = await prisma.prompt.create({
     data: {
       effect: data.effect,
@@ -81,8 +89,20 @@ export async function createPrompt(
           create: { name },
         })),
       },
+      modelTags: data.modelTags && data.modelTags.length > 0 ? {
+        connectOrCreate: data.modelTags.map((name) => ({
+          where: { name },
+          create: { name },
+        })),
+      } : undefined,
+      category: {
+        connectOrCreate: {
+          where: { name: categoryName },
+          create: { name: categoryName },
+        },
+      },
     },
-    include: { tags: true },
+    include: { tags: true, category: true, modelTags: true },
   });
 
   return {
@@ -90,9 +110,11 @@ export async function createPrompt(
     effect: prompt.effect,
     description: prompt.description,
     tags: prompt.tags.map((t) => t.name),
+    modelTags: prompt.modelTags.map((m) => m.name),
     prompt: prompt.prompt,
     source: prompt.source,
     imageUrl: prompt.imageUrl || undefined,
+    category: prompt.category?.name || undefined,
     createdAt: prompt.createdAt.toISOString(),
     updatedAt: prompt.updatedAt.toISOString(),
   };
@@ -106,11 +128,14 @@ export async function updatePrompt(
   data: Partial<Omit<PromptItem, 'id' | 'createdAt' | 'updatedAt'>>
 ): Promise<PromptItem | null> {
   try {
-    // First disconnect all existing tags if tags are being updated
-    if (data.tags) {
+    // First disconnect all existing tags/modelTags if they are being updated
+    if (data.tags || data.modelTags) {
       await prisma.prompt.update({
         where: { id },
-        data: { tags: { set: [] } },
+        data: {
+          ...(data.tags && { tags: { set: [] } }),
+          ...(data.modelTags && { modelTags: { set: [] } }),
+        },
       });
     }
 
@@ -130,8 +155,24 @@ export async function updatePrompt(
             })),
           },
         }),
+        ...(data.modelTags && {
+          modelTags: {
+            connectOrCreate: data.modelTags.map((name) => ({
+              where: { name },
+              create: { name },
+            })),
+          },
+        }),
+        ...(data.category !== undefined && {
+          category: {
+            connectOrCreate: {
+              where: { name: data.category },
+              create: { name: data.category },
+            },
+          },
+        }),
       },
-      include: { tags: true },
+      include: { tags: true, category: true, modelTags: true },
     });
 
     return {
@@ -139,9 +180,11 @@ export async function updatePrompt(
       effect: prompt.effect,
       description: prompt.description,
       tags: prompt.tags.map((t) => t.name),
+      modelTags: prompt.modelTags.map((m) => m.name),
       prompt: prompt.prompt,
       source: prompt.source,
       imageUrl: prompt.imageUrl || undefined,
+      category: prompt.category?.name || undefined,
       createdAt: prompt.createdAt.toISOString(),
       updatedAt: prompt.updatedAt.toISOString(),
     };
@@ -174,6 +217,8 @@ export async function bulkCreatePrompts(
 
   for (const item of items) {
     try {
+      const categoryName = item.category || DEFAULT_CATEGORY;
+      
       await prisma.prompt.create({
         data: {
           effect: item.effect,
@@ -186,6 +231,18 @@ export async function bulkCreatePrompts(
               where: { name },
               create: { name },
             })),
+          },
+          modelTags: item.modelTags && item.modelTags.length > 0 ? {
+            connectOrCreate: item.modelTags.map((name) => ({
+              where: { name },
+              create: { name },
+            })),
+          } : undefined,
+          category: {
+            connectOrCreate: {
+              where: { name: categoryName },
+              create: { name: categoryName },
+            },
           },
         },
       });
@@ -261,6 +318,118 @@ export async function deleteTag(name: string): Promise<boolean> {
   } catch (error) {
     console.error('Error deleting tag:', error);
     return false;
+  }
+}
+
+// ============================================
+// Category CRUD Operations
+// ============================================
+
+/**
+ * Get all categories
+ */
+export async function getAllCategories(): Promise<string[]> {
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: { createdAt: 'asc' },
+    });
+    return categories.map((c) => c.name);
+  } catch (error) {
+    console.error('Error getting categories from database:', error);
+    return [];
+  }
+}
+
+/**
+ * Create a new category
+ */
+export async function createCategory(name: string): Promise<string | null> {
+  try {
+    const category = await prisma.category.create({
+      data: { name },
+    });
+    return category.name;
+  } catch (error) {
+    console.error('Error creating category:', error);
+    return null;
+  }
+}
+
+/**
+ * Update an existing category
+ */
+export async function updateCategory(oldName: string, newName: string): Promise<boolean> {
+  try {
+    await prisma.category.update({
+      where: { name: oldName },
+      data: { name: newName },
+    });
+    return true;
+  } catch (error) {
+    console.error('Error updating category:', error);
+    return false;
+  }
+}
+
+/**
+ * Delete a category by name
+ */
+export async function deleteCategory(name: string): Promise<boolean> {
+  try {
+    // First, set categoryId to null for all prompts with this category
+    const category = await prisma.category.findUnique({ where: { name } });
+    if (category) {
+      await prisma.prompt.updateMany({
+        where: { categoryId: category.id },
+        data: { categoryId: null },
+      });
+    }
+    // Then delete the category
+    await prisma.category.delete({ where: { name } });
+    return true;
+  } catch (error) {
+    console.error('Error deleting category:', error);
+    return false;
+  }
+}
+
+// ============================================
+// Model Tag CRUD Operations
+// ============================================
+
+/**
+ * Get all model tags
+ */
+export async function getAllModelTags(): Promise<string[]> {
+  try {
+    const modelTags = await prisma.modelTag.findMany({
+      orderBy: { createdAt: 'asc' },
+    });
+    return modelTags.map((m) => m.name);
+  } catch (error) {
+    console.error('Error getting model tags from database:', error);
+    return [];
+  }
+}
+
+/**
+ * Get model tags with details (including color and type)
+ */
+export async function getModelTagsWithDetails() {
+  try {
+    const modelTags = await prisma.modelTag.findMany({
+      orderBy: { createdAt: 'asc' },
+    });
+    return modelTags.map((m) => ({
+      id: m.id,
+      name: m.name,
+      icon: m.icon,
+      color: m.color,
+      type: m.type,
+    }));
+  } catch (error) {
+    console.error('Error getting model tags with details:', error);
+    return [];
   }
 }
 

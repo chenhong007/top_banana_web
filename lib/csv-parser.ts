@@ -77,15 +77,28 @@ export function transformCSVToPrompts(csvData: CSVRow[]) {
     const prompt = row['提示词'] || row['prompt'] || '';
     const source = row['引用来源'] || row['来源'] || row['source'] || '';
     
-    // Parse tags from multiple possible fields
+    // Parse tags (场景/用途标签) from multiple possible fields
     let tags: string[] = [];
-    const tagFields = ['评测对象', 'tags', '标签'];
+    const tagFields = ['评测对象', 'tags', '标签', '场景标签'];
     for (const field of tagFields) {
       if (row[field]) {
         tags = row[field].split(/[,，、]/).map(t => t.trim()).filter(t => t);
         break;
       }
     }
+    
+    // Parse modelTags (AI模型标签) from multiple possible fields
+    let modelTags: string[] = [];
+    const modelTagFields = ['AI模型', 'modelTags', '模型标签', '模型', 'model'];
+    for (const field of modelTagFields) {
+      if (row[field]) {
+        modelTags = row[field].split(/[,，、]/).map(t => t.trim()).filter(t => t);
+        break;
+      }
+    }
+    
+    // Parse category (生成类型)
+    const category = row['类别'] || row['category'] || row['生成类型'] || row['分类'] || '';
     
     // Get image URL
     const imageUrl = row['参考图'] || row['imageUrl'] || row['图片'] || '';
@@ -104,6 +117,8 @@ export function transformCSVToPrompts(csvData: CSVRow[]) {
       effect: effect.trim(),
       description: fullDescription.trim(),
       tags,
+      modelTags,
+      category: category.trim(),
       prompt: prompt.trim(),
       source: source.trim(),
       imageUrl: imageUrl.trim(),

@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       prompt: body.prompt,
       source: body.source || 'unknown',
       imageUrl: body.imageUrl,
+      category: body.category, // Will default to '文生图' in storage layer
     });
     
     return NextResponse.json({
