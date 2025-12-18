@@ -567,8 +567,9 @@ topai/
 - ✅ 域名访问控制
 
 ### v1.1 (规划中)
-- 🔲 AI 模型标签功能（支持按 Midjourney/DALL-E/Stable Diffusion 等模型筛选）
-- 🔲 自动标签推断（根据提示词内容自动推荐/填充标签）
+- ✅ AI 模型标签功能（支持按 Midjourney/DALL-E/Stable Diffusion 等模型筛选）
+- ✅ 自动标签推断（根据提示词内容自动推荐/填充标签）
+- ✅ 数据完整性检查脚本（检测缺失字段并自动填充）
 - 🔲 标签缺失提醒（导入时提示标签为空的记录）
 - 🔲 提示词收藏功能
 - 🔲 用户评分系统
@@ -637,7 +638,54 @@ topai/
 }
 ```
 
-### 7.4 参考文档
+### 7.4 数据完整性检查脚本
+
+系统提供了数据完整性检查和自动填充脚本，用于确保数据库中的提示词数据完整。
+
+#### 检查脚本
+
+```bash
+# 检查缺失字段
+npx ts-node scripts/check-missing-fields.ts
+```
+
+检查以下字段的缺失情况：
+- `category` - 生成类型类别
+- `tags` - 场景/用途标签
+- `modelTags` - AI模型标签
+- `description` - 描述
+- `source` - 来源
+- `imageUrl` - 图片URL
+
+#### 填充脚本
+
+```bash
+# 自动填充缺失字段
+npx ts-node scripts/fill-missing-fields.ts
+```
+
+脚本执行以下操作：
+
+1. **初始化默认类别**: 创建"文生图"、"文生视频"、"文生音频"、"其他"四个默认类别
+2. **初始化默认AI模型标签**: 创建15个常用AI模型标签（含颜色和类型信息）
+3. **填充缺失类别**: 将没有类别的提示词默认设为"文生图"
+4. **智能推断AI模型标签**: 根据提示词内容和来源自动匹配AI模型标签
+
+#### 智能模型推断规则
+
+| 关键词 | 推断模型 |
+|--------|----------|
+| midjourney, mj, midj | Midjourney |
+| dall-e, dalle, openai | DALL-E 3 |
+| stable diffusion, sd, sdxl | Stable Diffusion |
+| flux, black forest | Flux |
+| runway, gen-2 | Runway |
+| sora | Sora |
+| pika | Pika |
+| 可灵, kling | Kling（可灵）|
+| banana (来源) | Banana |
+
+### 7.5 参考文档
 
 - [快速开始指南](./QUICKSTART.md)
 - [部署指南](./DEPLOYMENT.md)

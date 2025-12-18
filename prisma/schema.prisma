@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,29 +5,27 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // directUrl 仅在使用连接池时需要（如 Vercel Postgres）
-  // 如需使用，在环境变量中设置 DIRECT_URL
 }
 
 model Prompt {
   id          String     @id @default(uuid())
-  effect      String     // Effect/title description
+  effect      String
   description String
-  prompt      String     // The actual prompt content
+  prompt      String
   source      String
   imageUrl    String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  tags        Tag[]      // 场景/用途标签
+  categoryId  String?
   category    Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  String?    // 生成类型类别ID
-  modelTags   ModelTag[] // AI模型标签（多对多）
+  modelTags   ModelTag[] @relation("ModelTagToPrompt")
+  tags        Tag[]      @relation("PromptToTag")
 }
 
 model Tag {
   id      String   @id @default(uuid())
   name    String   @unique
-  prompts Prompt[]
+  prompts Prompt[] @relation("PromptToTag")
 }
 
 model Category {
@@ -40,30 +35,28 @@ model Category {
   prompts   Prompt[]
 }
 
-// AI模型标签
 model ModelTag {
   id        String   @id @default(uuid())
-  name      String   @unique  // 模型名称
-  icon      String?           // 模型图标URL（可选）
-  color     String?           // 显示颜色（可选）
-  type      String?           // 模型类型：文生图/文生视频/文生音频/多模态/其他
+  name      String   @unique
+  icon      String?
+  color     String?
+  type      String?
   createdAt DateTime @default(now())
-  prompts   Prompt[]          // 多对多关联
+  prompts   Prompt[] @relation("ModelTagToPrompt")
 }
 
-// 图片存储记录 (Cloudflare R2)
 model Image {
-  id           String   @id @default(uuid())
-  key          String   @unique  // R2 存储的 key（如 images/xxx.jpg）
-  originalUrl  String?           // 原始图片 URL（迁移前的 URL）
-  url          String             // 当前访问 URL
-  fileName     String?           // 原始文件名
-  contentType  String?           // MIME 类型
-  size         Int?              // 文件大小（字节）
-  promptId     String?           // 关联的提示词 ID（可选）
-  status       String   @default("active")  // 状态: active, deleted, pending
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  key         String   @unique
+  originalUrl String?
+  url         String
+  fileName    String?
+  contentType String?
+  size        Int?
+  promptId    String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([promptId])
   @@index([status])
