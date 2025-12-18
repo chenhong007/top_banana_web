@@ -20,3 +20,12 @@ export type {
   ImportResult 
 } from './import';
 
+// Image types
+export type {
+  ImageUploadResult,
+  ImageInfo,
+  R2ImageInfo,
+  MigrationResult,
+  MigrationStatus,
+  BatchUploadResult
+} from './image';

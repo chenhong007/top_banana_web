@@ -50,3 +50,21 @@ model ModelTag {
   createdAt DateTime @default(now())
   prompts   Prompt[]          // 多对多关联
 }
+
+// 图片存储记录 (Cloudflare R2)
+model Image {
+  id           String   @id @default(uuid())
+  key          String   @unique  // R2 存储的 key（如 images/xxx.jpg）
+  originalUrl  String?           // 原始图片 URL（迁移前的 URL）
+  url          String             // 当前访问 URL
+  fileName     String?           // 原始文件名
+  contentType  String?           // MIME 类型
+  size         Int?              // 文件大小（字节）
+  promptId     String?           // 关联的提示词 ID（可选）
+  status       String   @default("active")  // 状态: active, deleted, pending
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([promptId])
+  @@index([status])
+}

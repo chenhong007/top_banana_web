@@ -232,13 +232,87 @@ TopAI 是一个现代化的 AI 提示词收集与管理平台，旨在为用户�
 | `/api/auth/logout` | POST | 用户登出 |
 | `/api/auth/check` | GET | 检查登录状态 |
 
-#### 2.3.5 工具接口
+#### 2.3.5 图片存储接口 (Cloudflare R2)
+
+| 接口 | 方法 | 描述 |
+|------|------|------|
+| `/api/images` | GET | 获取已上传图片列表 |
+| `/api/images/upload` | POST | 上传图片（文件或 URL） |
+| `/api/images/upload` | PUT | 批量从 URL 上传图片 |
+| `/api/images/[key]` | GET | 获取 R2 存储的图片 |
+| `/api/images/[key]` | DELETE | 删除 R2 图片 |
+| `/api/images/migrate` | GET | 获取迁移状态统计 |
+| `/api/images/migrate` | POST | 执行图片迁移（外部URL→R2） |
+
+#### 2.3.6 工具接口
 
 | 接口 | 方法 | 描述 |
 |------|------|------|
 | `/api/image-proxy` | GET | 图片代理（绕过防盗链） |
 | `/api/local-image` | GET | 本地图片访问 |
 | `/api/init-db` | POST | 数据库初始化 |
+
+---
+
+### 2.4 图片存储模块 (Cloudflare R2) - 新增
+
+#### 2.4.1 功能概述
+
+采用 Cloudflare R2 对象存储服务管理提示词图片，提供可靠的图片托管和快速访问。
+
+| 功能点 | 描述 | 优先级 |
+|--------|------|--------|
+| 文件上传 | 支持拖拽上传、点击选择上传图片文件 | P0 |
+| URL 上传 | 从外部 URL 下载图片并上传到 R2 | P0 |
+| 图片预览 | 上传后即时预览图片效果 | P1 |
+| 图片迁移 | 批量将现有外部图片链接迁移到 R2 | P1 |
+| 图片管理 | 查看、删除已上传的图片 | P2 |
+
+#### 2.4.2 上传方式
+
+| 方式 | 描述 | 使用场景 |
+|------|------|----------|
+| 文件上传 | 直接上传本地图片文件 | 新建提示词时上传图片 |
+| URL 上传 | 从网络 URL 下载并存储到 R2 | 导入外部图片资源 |
+| 批量迁移 | 自动迁移数据库中的外部图片 | 系统升级后迁移旧数据 |
+
+#### 2.4.3 支持的图片格式
+
+- JPEG / JPG
+- PNG
+- GIF
+- WebP
+- SVG
+
+最大文件大小：10MB
+
+#### 2.4.4 存储结构
+
+```
+R2 Bucket: topai-images/
+├── images/
+│   ├── {timestamp}-{random}-{filename}.jpg
+│   ├── {timestamp}-{random}-{filename}.png
+│   └── ...
+```
+
+#### 2.4.5 访问方式
+
+| 方式 | 说明 | URL 格式 |
+|------|------|----------|
+| 公开访问 | 配置 R2 公开域名后直接访问 | `https://images.yourdomain.com/images/xxx.jpg` |
+| API 代理 | 通过 API 路由代理访问 | `/api/images/{key}` |
+
+#### 2.4.6 配置说明
+
+使用 R2 存储需要配置以下环境变量：
+
+1. **CLOUDFLARE_R2_ACCOUNT_ID**: 在 Cloudflare Dashboard 首页获取
+2. **CLOUDFLARE_R2_ACCESS_KEY_ID** 和 **CLOUDFLARE_R2_SECRET_ACCESS_KEY**: 
+   - 进入 R2 > Manage R2 API Tokens
+   - 创建 API Token，选择 Object Read & Write 权限
+3. **CLOUDFLARE_R2_BUCKET_NAME**: R2 Bucket 名称（需先创建）
+4. **CLOUDFLARE_R2_PUBLIC_URL**: (可选) 配置公开访问域名
 
 ---
 
@@ -300,6 +374,26 @@ model ModelTag {
   color     String?               // 显示颜色（可选）
   createdAt DateTime @default(now())
   prompts   Prompt[] // 多对多关联
+}
+```
+
+### 3.5 图片存储 (Image) - 新增
+
+用于记录上传到 Cloudflare R2 的图片信息。
+
+```prisma
+model Image {
+  id           String   @id @default(uuid())
+  key          String   @unique    // R2 存储的 key（如 images/xxx.jpg）
+  originalUrl  String?             // 原始图片 URL（迁移前的 URL）
+  url          String              // 当前访问 URL
+  fileName     String?             // 原始文件名
+  contentType  String?             // MIME 类型
+  size         Int?                // 文件大小（字节）
+  promptId     String?             // 关联的提示词 ID（可选）
+  status       String   @default("active")  // 状态: active, deleted, pending
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 ```
 
@@ -473,6 +567,11 @@ topai/
 | `AUTH_SECRET` | Token 签名密钥 | your-secret-key... |
 | `NEXT_PUBLIC_SHOW_ADMIN_ENTRY` | 是否显示管理入口 | true |
 | `NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS` | 允许访问的域名 | (全部允许) |
+| `CLOUDFLARE_R2_ACCOUNT_ID` | Cloudflare Account ID | - |
+| `CLOUDFLARE_R2_ACCESS_KEY_ID` | R2 API Access Key ID | - |
+| `CLOUDFLARE_R2_SECRET_ACCESS_KEY` | R2 API Secret Access Key | - |
+| `CLOUDFLARE_R2_BUCKET_NAME` | R2 Bucket 名称 | topai-images |
+| `CLOUDFLARE_R2_PUBLIC_URL` | R2 公开访问 URL | (使用 API 代理) |
 
 ### 7.2 默认 AI 模型标签
 

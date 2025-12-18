@@ -4,11 +4,12 @@
  */
 
 import { CreatePromptRequest } from '@/types';
-import { Save, X, FolderOpen } from 'lucide-react';
+import { Save, X, FolderOpen, ImageIcon } from 'lucide-react';
 import { UI_TEXT, MESSAGES, DEFAULT_CATEGORIES } from '@/lib/constants';
 import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
 import TagInput from './TagInput';
 import ModelTagInput from './ModelTagInput';
+import ImageUpload from './ImageUpload';
 
 interface PromptFormProps {
   formData: CreatePromptRequest;
@@ -159,16 +160,16 @@ export default function PromptForm({
           </div>
         </div>
 
-        {/* Image URL Field */}
+        {/* Image Upload Field */}
         <div>
-          <label className={LABEL_STYLES.base}>图片 URL（可选）</label>
-          <input
-            type="text"
+          <label className={LABEL_STYLES.base}>
+            <ImageIcon className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
+            图片（可选）
+          </label>
+          <ImageUpload
             value={formData.imageUrl}
-            onChange={(e) => onChange({ ...formData, imageUrl: e.target.value })}
+            onChange={(url) => onChange({ ...formData, imageUrl: url })}
             disabled={submitting}
-            className={submitting ? INPUT_STYLES.disabled : INPUT_STYLES.base}
-            placeholder={UI_TEXT.PLACEHOLDER.IMAGE_URL}
           />
         </div>
 

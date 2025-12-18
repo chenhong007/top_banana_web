@@ -37,6 +37,19 @@ export default function PromptCard({ prompt }: PromptCardProps) {
       return `/api/local-image?path=${encodeURIComponent(url)}`;
     }
     
+    // 如果是 R2 存储的图片（/api/images/ 开头），直接返回
+    if (url.startsWith('/api/images/')) {
+      return url;
+    }
+    
+    // 如果是 R2 公开 URL（配置了 CLOUDFLARE_R2_PUBLIC_URL），直接返回
+    // 支持常见的 CDN 域名格式
+    if (url.includes('.r2.cloudflarestorage.com') || 
+        url.includes('.r2.dev') ||
+        url.includes('images/') && !url.startsWith('http')) {
+      return url;
+    }
+    
     // 如果是外部 URL，使用代理绕过防盗链
     if (url.startsWith('http') || url.startsWith('//')) {
       // 处理 // 开头的协议相对 URL
