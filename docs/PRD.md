@@ -300,10 +300,31 @@ R2 Bucket: topai-images/
 
 | 方式 | 说明 | URL 格式 |
 |------|------|----------|
-| 公开访问 | 配置 R2 公开域名后直接访问 | `https://images.yourdomain.com/images/xxx.jpg` |
+| 公开访问 | 配置 R2 公开域名后直接访问（推荐，速度最快） | `https://images.yourdomain.com/images/xxx.jpg` |
 | API 代理 | 通过 API 路由代理访问 | `/api/images/{key}` |
 
-#### 2.4.6 配置说明
+#### 2.4.6 图片加载优化 (v1.1 新增)
+
+为提升图片加载速度和用户体验，系统实现了以下优化措施：
+
+| 优化项 | 描述 | 效果 |
+|--------|------|------|
+| R2 公开 URL | 配置 `CLOUDFLARE_R2_PUBLIC_URL` 后直接从 CDN 访问 | 减少 API 代理延迟 |
+| Next.js Image 优化 | 自动转换 WebP/AVIF 格式，响应式尺寸 | 减少图片体积 30-50% |
+| Intersection Observer | 视口进入前 200px 开始预加载 | 减少等待时间 |
+| 骨架屏占位符 | 加载中显示动画骨架屏 | 改善用户体验 |
+| 渐进式加载 | 图片加载完成后淡入显示 | 平滑过渡效果 |
+| 长期缓存 | 1年 Cache-Control + immutable | 重复访问即时加载 |
+
+**OptimizedImage 组件**：
+
+位于 `app/(frontend)/components/OptimizedImage.tsx`，封装了所有图片优化逻辑：
+- 自动判断图片来源并选择最佳加载方式
+- 支持 fill 模式和固定尺寸模式
+- 内置错误处理和占位符
+- 支持 priority 属性优先加载首屏图片
+
+#### 2.4.7 配置说明
 
 使用 R2 存储需要配置以下环境变量：
 
@@ -504,6 +525,13 @@ topai/
 - 搜索响应时间 < 200ms
 - 分页切换无明显延迟
 - 支持 1000+ 条数据流畅操作
+- **图片加载优化**（v1.1 新增）:
+  - 使用 Intersection Observer 实现视口预加载（提前 200px）
+  - 骨架屏占位符动画，优化用户等待体验
+  - 渐进式图片加载（淡入效果）
+  - Next.js Image 组件自动 WebP/AVIF 转换
+  - 响应式图片尺寸 (sizes 属性优化)
+  - 1年缓存策略 (Cache-Control: max-age=31536000)
 
 ### 5.2 安全要求
 

@@ -1,6 +1,7 @@
 import { PromptItem } from '@/types';
 import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu } from 'lucide-react';
 import { useState } from 'react';
+import OptimizedImage from './OptimizedImage';
 
 // AI模型标签颜色映射
 const MODEL_TAG_COLORS: Record<string, string> = {
@@ -29,43 +30,6 @@ export default function PromptCard({ prompt }: PromptCardProps) {
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const getImageUrl = (url: string | undefined) => {
-    if (!url) return '';
-    
-    // 如果是本地相对路径 (./data/image/... 或 data/image/...)
-    if (url.startsWith('./data/image') || url.startsWith('data/image')) {
-      return `/api/local-image?path=${encodeURIComponent(url)}`;
-    }
-    
-    // 如果是 R2 存储的图片（/api/images/ 开头）
-    if (url.startsWith('/api/images/')) {
-      // 检查 URL 是否被错误编码（如 images%2F），需要解码后重新构建
-      if (url.includes('%2F') || url.includes('%2f')) {
-        const key = decodeURIComponent(url.replace('/api/images/', ''));
-        return `/api/images/${key}`;
-      }
-      return url;
-    }
-    
-    // 如果是 R2 公开 URL（配置了 CLOUDFLARE_R2_PUBLIC_URL），直接返回
-    // 支持常见的 CDN 域名格式
-    if (url.includes('.r2.cloudflarestorage.com') || 
-        url.includes('.r2.dev') ||
-        url.includes('images/') && !url.startsWith('http')) {
-      return url;
-    }
-    
-    // 如果是外部 URL，使用代理绕过防盗链
-    if (url.startsWith('http') || url.startsWith('//')) {
-      // 处理 // 开头的协议相对 URL
-      const fullUrl = url.startsWith('//') ? `https:${url}` : url;
-      return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
-    }
-    
-    // 其他情况原样返回
-    return url;
-  };
-
   const copyPrompt = async () => {
     try {
       await navigator.clipboard.writeText(prompt.prompt);
@@ -82,20 +46,19 @@ export default function PromptCard({ prompt }: PromptCardProps) {
       {/* Glow Effect - 保持微弱的白色辉光，增加质感 */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-      {/* Image */}
+      {/* Image - 使用优化的图片组件 */}
       <div className="relative aspect-video bg-dark-900 overflow-hidden border-b border-white/5">
         {prompt.imageUrl && !imageError ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={getImageUrl(prompt.imageUrl)}
+            <OptimizedImage
+              src={prompt.imageUrl}
               alt={prompt.effect}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              loading="lazy"
-              referrerPolicy="no-referrer"
+              fill
+              className="w-full h-full transition-transform duration-700 group-hover:scale-110"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               onError={() => setImageError(true)}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-dark-800 to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-dark-800 to-transparent opacity-60 pointer-events-none" />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-dark-400 bg-dark-900/50">
