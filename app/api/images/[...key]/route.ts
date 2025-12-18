@@ -1,7 +1,10 @@
 /**
- * 图片代理 API
- * GET /api/images/[key] - 获取 R2 存储的图片
- * DELETE /api/images/[key] - 删除图片
+ * 图片代理 API (Catch-all 路由)
+ * GET /api/images/[...key] - 获取 R2 存储的图片
+ * DELETE /api/images/[...key] - 删除图片
+ * 
+ * 说明：使用 [...key] catch-all 路由来支持包含斜杠的图片路径
+ * 例如: /api/images/images/1234-xxx.jpg
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -22,25 +25,34 @@ function getContentType(key: string): string {
   return mimeTypes[ext || ''] || 'application/octet-stream';
 }
 
+// 从 catch-all 参数数组构建完整的 key
+function buildKeyFromSegments(segments: string[]): string {
+  // segments 是路径段数组，如 ['images', '1234-xxx.jpg']
+  // 需要将它们拼接成完整路径 'images/1234-xxx.jpg'
+  return segments.map(s => decodeURIComponent(s)).join('/');
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ key: string }> }
+  { params }: { params: Promise<{ key: string[] }> }
 ) {
   try {
-    const { key } = await params;
-    const decodedKey = decodeURIComponent(key);
+    const { key: keySegments } = await params;
+    const fullKey = buildKeyFromSegments(keySegments);
 
     if (!isR2Configured()) {
+      console.error('R2 not configured. Check environment variables: CLOUDFLARE_R2_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY_ID, CLOUDFLARE_R2_SECRET_ACCESS_KEY');
       return new NextResponse('R2 not configured', { status: 500 });
     }
 
-    const imageBuffer = await getImageFromR2(decodedKey);
+    const imageBuffer = await getImageFromR2(fullKey);
 
     if (!imageBuffer) {
+      console.error(`Image not found in R2: ${fullKey}`);
       return new NextResponse('Image not found', { status: 404 });
     }
 
-    const contentType = getContentType(decodedKey);
+    const contentType = getContentType(fullKey);
 
     return new NextResponse(new Uint8Array(imageBuffer), {
       headers: {
@@ -56,11 +68,11 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ key: string }> }
+  { params }: { params: Promise<{ key: string[] }> }
 ) {
   try {
-    const { key } = await params;
-    const decodedKey = decodeURIComponent(key);
+    const { key: keySegments } = await params;
+    const fullKey = buildKeyFromSegments(keySegments);
 
     if (!isR2Configured()) {
       return NextResponse.json(
@@ -70,7 +82,7 @@ export async function DELETE(
     }
 
     // 从 R2 删除
-    const deleted = await deleteImageFromR2(decodedKey);
+    const deleted = await deleteImageFromR2(fullKey);
 
     if (!deleted) {
       return NextResponse.json(
@@ -81,7 +93,7 @@ export async function DELETE(
 
     // 更新数据库状态
     await prisma.image.updateMany({
-      where: { key: decodedKey },
+      where: { key: fullKey },
       data: { status: 'deleted' },
     });
 

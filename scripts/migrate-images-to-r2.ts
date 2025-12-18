@@ -80,7 +80,8 @@ function getPublicUrl(key: string): string {
   if (R2_PUBLIC_URL) {
     return `${R2_PUBLIC_URL}/${key}`;
   }
-  return `/api/images/${encodeURIComponent(key)}`;
+  // 注意：使用 catch-all 路由 [...key]，不需要 URL 编码
+  return `/api/images/${key}`;
 }
 
 // 判断 URL 是否是 R2 存储的图片

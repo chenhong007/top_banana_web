@@ -72,7 +72,8 @@ export function getPublicUrl(key: string): string {
     return `${R2_PUBLIC_URL}/${key}`;
   }
   // 如果没有配置公开 URL，返回 API 代理路径
-  return `/api/images/${encodeURIComponent(key)}`;
+  // 注意：使用 catch-all 路由 [...key]，不需要 URL 编码
+  return `/api/images/${key}`;
 }
 
 /**

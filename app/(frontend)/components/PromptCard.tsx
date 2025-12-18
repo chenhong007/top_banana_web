@@ -37,8 +37,13 @@ export default function PromptCard({ prompt }: PromptCardProps) {
       return `/api/local-image?path=${encodeURIComponent(url)}`;
     }
     
-    // 如果是 R2 存储的图片（/api/images/ 开头），直接返回
+    // 如果是 R2 存储的图片（/api/images/ 开头）
     if (url.startsWith('/api/images/')) {
+      // 检查 URL 是否被错误编码（如 images%2F），需要解码后重新构建
+      if (url.includes('%2F') || url.includes('%2f')) {
+        const key = decodeURIComponent(url.replace('/api/images/', ''));
+        return `/api/images/${key}`;
+      }
       return url;
     }
     
