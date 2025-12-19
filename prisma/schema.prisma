@@ -21,15 +21,6 @@ model Prompt {
   modelTags   ModelTag[] @relation("ModelTagToPrompt")
   tags        Tag[]      @relation("PromptToTag")
   images      Image[]    // Related images stored in R2
-  
-  // Hash fields for duplicate detection
-  effectHash     String?   // Hash of effect/title (SimHash for similarity)
-  promptHash     String?   // Hash of prompt content (SimHash for similarity)
-  imageUrlHash   String?   // Hash of imageUrl (MD5 for exact match)
-
-  @@index([effectHash])
-  @@index([promptHash])
-  @@index([imageUrlHash])
 }
 
 model Tag {
