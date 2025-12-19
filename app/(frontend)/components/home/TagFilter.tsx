@@ -33,9 +33,9 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
         >
           全部标签
         </button>
-        {tags.map((tag) => (
+        {tags.filter(t => t).map((tag, idx) => (
           <button
-            key={tag}
+            key={tag || idx}
             onClick={() => onSelect(tag)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
               selected === tag

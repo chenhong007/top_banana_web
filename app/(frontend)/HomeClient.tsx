@@ -19,6 +19,7 @@ import {
   ModelTagFilter,
   TagFilter,
   PromptGrid,
+  Sidebar,
 } from './components/home';
 
 // Hooks
@@ -192,13 +193,17 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <HeroSection />
 
-        {/* Search and Filter */}
-        <div className="mb-12 space-y-6">
+        {/* Search - 全宽与卡片对齐 */}
+        <div className="mb-8">
           <SearchBox value={searchTerm} onChange={handleSearchChange} />
+        </div>
+
+        {/* 移动端筛选器 - 仅在 lg 以下显示 */}
+        <div className="lg:hidden mb-8 space-y-4">
           <CategoryFilter
             categories={allCategories}
             selected={selectedCategory}
@@ -209,11 +214,31 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
             selected={selectedModelTag}
             onSelect={handleModelTagChange}
           />
-          <TagFilter tags={allTags} selected={selectedTag} onSelect={handleTagChange} />
         </div>
 
-        {/* Prompts Grid */}
-        <PromptGrid loading={loading} filteredPrompts={filteredPrompts} pagination={pagination} />
+        {/* 主内容区：左侧导航 + 右侧卡片 */}
+        <div className="flex gap-8">
+          {/* 左侧导航栏 - 仅桌面端显示 */}
+          <Sidebar
+            categories={allCategories}
+            selectedCategory={selectedCategory}
+            onCategorySelect={handleCategoryChange}
+            modelTags={allModelTags}
+            selectedModelTag={selectedModelTag}
+            onModelTagSelect={handleModelTagChange}
+          />
+
+          {/* 右侧内容区 */}
+          <div className="flex-1 min-w-0">
+            {/* 场景标签筛选 */}
+            <div className="mb-8">
+              <TagFilter tags={allTags} selected={selectedTag} onSelect={handleTagChange} />
+            </div>
+
+            {/* Prompts Grid */}
+            <PromptGrid loading={loading} filteredPrompts={filteredPrompts} pagination={pagination} />
+          </div>
+        </div>
       </main>
     </div>
   );

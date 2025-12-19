@@ -97,7 +97,7 @@ export default function ModelTagInput({ selectedTags, onChange, disabled }: Mode
 
   // Filter tags based on input
   const filteredTags = allModelTags.filter(tag => 
-    tag.name.toLowerCase().includes(inputValue.toLowerCase())
+    (tag.name || '').toLowerCase().includes(inputValue.toLowerCase())
   );
 
   // Get color for a tag

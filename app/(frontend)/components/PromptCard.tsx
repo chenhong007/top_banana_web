@@ -120,20 +120,20 @@ export default function PromptCard({ prompt }: PromptCardProps) {
         </p>
 
         {/* Tags - 颜色调整为更冷淡的青色/天蓝 */}
-        {(prompt.tags || []).length > 0 && (
+        {(prompt.tags || []).filter(t => t).length > 0 && (
           <div className="flex flex-wrap gap-2 mb-5">
-            {(prompt.tags || []).slice(0, 3).map(tag => (
+            {(prompt.tags || []).filter(t => t).slice(0, 3).map((tag, idx) => (
               <span
-                key={tag}
+                key={tag || idx}
                 className="inline-flex items-center px-2.5 py-1 bg-tech-primary/5 text-tech-primary/90 rounded-md text-xs font-medium border border-tech-primary/20 hover:bg-tech-primary/10 transition-colors"
               >
                 <Tag className="w-3 h-3 mr-1.5 opacity-70" />
                 {tag}
               </span>
             ))}
-            {(prompt.tags || []).length > 3 && (
+            {(prompt.tags || []).filter(t => t).length > 3 && (
               <span className="inline-flex items-center px-2 py-1 text-xs text-gray-500 border border-transparent">
-                +{(prompt.tags || []).length - 3}
+                +{(prompt.tags || []).filter(t => t).length - 3}
               </span>
             )}
           </div>

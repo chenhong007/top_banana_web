@@ -16,7 +16,7 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
   const allTags = useMemo(() => {
     if (!prompts) return [];
     return Array.from(
-      new Set(prompts.flatMap(p => p.tags || []))
+      new Set(prompts.flatMap(p => p.tags || []).filter((t): t is string => !!t))
     ).sort();
   }, [prompts]);
 
@@ -32,7 +32,7 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
   const allModelTags = useMemo(() => {
     if (!prompts) return [];
     return Array.from(
-      new Set(prompts.flatMap(p => p.modelTags || []))
+      new Set(prompts.flatMap(p => p.modelTags || []).filter((t): t is string => !!t))
     ).sort();
   }, [prompts]);
 

@@ -188,7 +188,7 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
 
   // Filter tags based on input
   const filteredTags = allTags.filter(tag => 
-    tag.toLowerCase().includes(inputValue.toLowerCase())
+    tag && tag.toLowerCase().includes(inputValue.toLowerCase())
   );
 
   const showCreateOption = inputValue.trim() && !allTags.includes(inputValue.trim());
