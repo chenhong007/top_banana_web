@@ -8,6 +8,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_ENDPOINTS } from '@/lib/constants';
 
+// Model tag object returned from API
+interface ModelTagDTO {
+  id: string;
+  name: string;
+  color?: string;
+  type?: string;
+  createdAt: string;
+}
+
 // Query keys
 export const modelTagKeys = {
   all: ['modelTags'] as const,
@@ -16,6 +25,7 @@ export const modelTagKeys = {
 
 /**
  * Fetch all model tags from API
+ * API returns full objects, but we extract just the names for filter usage
  */
 async function fetchModelTags(): Promise<string[]> {
   const response = await fetch(API_ENDPOINTS.MODEL_TAGS);
@@ -25,7 +35,9 @@ async function fetchModelTags(): Promise<string[]> {
     throw new Error(result.error || 'Failed to fetch model tags');
   }
 
-  return result.data || [];
+  // API returns ModelTagDTO[], extract just the names
+  const modelTags: ModelTagDTO[] = result.data || [];
+  return modelTags.map((tag) => tag.name);
 }
 
 /**
