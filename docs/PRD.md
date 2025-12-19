@@ -98,18 +98,32 @@ TopAI 是一个现代化的 AI 提示词收集与管理平台，旨在为用户�
 | 功能点 | 描述 | 优先级 |
 |--------|------|--------|
 | 用户名密码登录 | 基于环境变量配置的管理员账号密码 | P0 |
-| Token 认证 | 使用 Base64 编码的 Token，有效期7天 | P0 |
+| Token 认证 | 使用 HMAC-SHA256 签名的安全 Token，有效期7天 | P0 |
 | 自动跳转 | 未登录访问管理页自动跳转登录页 | P0 |
 | 域名访问控制 | 支持配置允许访问管理后台的域名白名单 | P1 |
 | 退出登录 | 支持主动退出，清除认证 Cookie | P1 |
+| 登录频率限制 | 15分钟内最多5次登录尝试，超过后锁定30分钟 | P0 |
+| 时序安全验证 | 使用 timing-safe 比较防止时序攻击 | P0 |
 
 **环境变量配置**:
 
-- `ADMIN_USERNAME`: 管理员用户名（默认: admin）
-- `ADMIN_PASSWORD`: 管理员密码（默认: admin123）
-- `AUTH_SECRET`: Token 签名密钥
+- `ADMIN_USERNAME`: 管理员用户名（生产环境必填，不使用默认值）
+- `ADMIN_PASSWORD`: 管理员密码（生产环境必须至少12位）
+- `AUTH_SECRET`: Token 签名密钥（生产环境必须至少32位随机字符串）
 - `NEXT_PUBLIC_SHOW_ADMIN_ENTRY`: 是否显示管理入口
 - `NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS`: 允许访问的域名列表
+
+**⚠️ 安全要求（生产环境）**:
+
+1. `ADMIN_USERNAME` 必须设置，避免使用 `admin`、`administrator` 等常见用户名
+2. `ADMIN_PASSWORD` 必须至少12位，建议包含大小写字母、数字和特殊字符
+3. `AUTH_SECRET` 必须至少32位随机字符串，可使用以下命令生成：
+   ```bash
+   # Linux/macOS
+   openssl rand -hex 32
+   # 或 Node.js
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
 
 #### 2.2.2 仪表盘统计
 
@@ -558,6 +572,23 @@ topai/
 - 支持域名白名单访问控制
 - Token 使用 HTTPOnly Cookie 存储
 - 生产环境强制 Secure Cookie
+- **Token 安全**（v1.2 新增）:
+  - 使用 HMAC-SHA256 签名机制，防止 Token 伪造
+  - Token 不包含敏感信息（如密钥），只包含用户名和过期时间
+  - 使用 timing-safe 比较，防止时序攻击
+- **登录保护**（v1.2 新增）:
+  - 登录频率限制：15分钟内最多5次尝试
+  - 超过限制后锁定30分钟
+  - 成功登录后自动清除限制
+  - 返回剩余尝试次数，提升用户体验
+- **环境变量安全**（v1.2 新增）:
+  - 生产环境强制配置 `ADMIN_USERNAME`、`ADMIN_PASSWORD`、`AUTH_SECRET`
+  - 不再使用不安全的硬编码默认值
+  - 密码最少12位，密钥最少32位
+- **Cookie 安全**:
+  - `sameSite: 'strict'` 防止 CSRF 攻击
+  - `httpOnly: true` 防止 XSS 窃取
+  - 生产环境启用 `secure: true`
 
 ### 5.3 兼容性要求
 
@@ -585,10 +616,20 @@ topai/
 - ✅ 登录认证
 - ✅ 域名访问控制
 
-### v1.1 (规划中)
+### v1.1 (已完成)
 - ✅ AI 模型标签功能（支持按 Midjourney/DALL-E/Stable Diffusion 等模型筛选）
 - ✅ 自动标签推断（根据提示词内容自动推荐/填充标签）
 - ✅ 数据完整性检查脚本（检测缺失字段并自动填充）
+
+### v1.2 (当前版本) - 安全加固
+- ✅ **Token 安全升级**: 从 Base64 编码改为 HMAC-SHA256 签名
+- ✅ **移除硬编码默认凭据**: 生产环境强制配置安全凭据
+- ✅ **登录频率限制**: 防止暴力破解攻击（15分钟5次，超过锁定30分钟）
+- ✅ **时序安全验证**: 使用 timing-safe 比较防止时序攻击
+- ✅ **Cookie 安全增强**: 使用 `sameSite: 'strict'` 防止 CSRF
+- ✅ **密码强度要求**: 生产环境密码至少12位，密钥至少32位
+
+### v1.3 (规划中)
 - 🔲 标签缺失提醒（导入时提示标签为空的记录）
 - 🔲 提示词收藏功能
 - 🔲 用户评分系统
@@ -610,9 +651,9 @@ topai/
 | 变量名 | 描述 | 默认值 |
 |--------|------|--------|
 | `DATABASE_URL` | 数据库连接字符串 | - |
-| `ADMIN_USERNAME` | 管理员用户名 | admin |
-| `ADMIN_PASSWORD` | 管理员密码 | admin123 |
-| `AUTH_SECRET` | Token 签名密钥 | your-secret-key... |
+| `ADMIN_USERNAME` | 管理员用户名 | ⚠️ 生产环境必填 |
+| `ADMIN_PASSWORD` | 管理员密码（生产环境至少12位） | ⚠️ 生产环境必填 |
+| `AUTH_SECRET` | Token 签名密钥（生产环境至少32位） | ⚠️ 生产环境必填 |
 | `NEXT_PUBLIC_SHOW_ADMIN_ENTRY` | 是否显示管理入口 | true |
 | `NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS` | 允许访问的域名 | (全部允许) |
 | `CLOUDFLARE_R2_ACCOUNT_ID` | Cloudflare Account ID | - |

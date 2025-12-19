@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { DEFAULT_CATEGORIES, DEFAULT_CATEGORY } from '@/lib/constants';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 /**
  * POST /api/init-categories
  * 初始化默认类别数据，部署后调用一次即可

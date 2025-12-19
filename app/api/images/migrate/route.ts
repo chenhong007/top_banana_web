@@ -9,6 +9,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { uploadImageFromUrl, isR2Configured, isR2ImageUrl } from '@/lib/r2';
 import prisma from '@/lib/db';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 interface MigrationResult {
   promptId: string;
   effect: string;

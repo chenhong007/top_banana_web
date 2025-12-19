@@ -14,16 +14,25 @@ const commaSeparatedArray = z.string().optional().transform((val) =>
   val ? val.split(',').map((d) => d.trim().toLowerCase()).filter(Boolean) : []
 );
 
+// Check if we're in production mode
+const isProduction = process.env.NODE_ENV === 'production';
+
 // Server-side environment variables schema
 const serverEnvSchema = z.object({
   // Database
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   DIRECT_URL: z.string().optional(),
 
-  // Authentication
-  ADMIN_USERNAME: z.string().optional().default('admin'),
-  ADMIN_PASSWORD: z.string().min(6).optional().default('admin123'),
-  AUTH_SECRET: z.string().min(16).optional().default('your-secret-key-change-in-production'),
+  // Authentication - 生产环境必须配置，开发环境使用安全的默认值
+  ADMIN_USERNAME: isProduction 
+    ? z.string().min(1, 'ADMIN_USERNAME is required in production')
+    : z.string().optional().default('admin'),
+  ADMIN_PASSWORD: isProduction 
+    ? z.string().min(12, 'ADMIN_PASSWORD must be at least 12 characters in production')
+    : z.string().min(6).optional().default('dev_password_change_me'),
+  AUTH_SECRET: isProduction 
+    ? z.string().min(32, 'AUTH_SECRET must be at least 32 characters in production')
+    : z.string().min(16).optional().default('dev_secret_key_not_for_production_use'),
 
   // Deployment
   DEPLOY_MODE: z.enum(['frontend', 'full']).optional().default('full'),

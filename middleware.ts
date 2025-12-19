@@ -1,8 +1,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
 
 const TOKEN_NAME = 'admin_token';
-const AUTH_SECRET = process.env.AUTH_SECRET || 'your-secret-key-change-in-production';
+
+// 获取安全配置 - 不再使用不安全的默认值
+const getAuthSecret = (): string => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const AUTH_SECRET = process.env.AUTH_SECRET || (isProduction ? '' : 'dev_secret_key_not_for_production_use');
+  
+  if (isProduction && (!AUTH_SECRET || AUTH_SECRET.length < 32)) {
+    console.error('❌ AUTH_SECRET must be at least 32 characters in production');
+    return '';
+  }
+  
+  return AUTH_SECRET;
+};
 
 // Admin access control configuration
 const SHOW_ADMIN_ENTRY = process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY !== 'false';
@@ -18,12 +31,52 @@ const PROTECTED_ROUTES = ['/admin'];
 const AUTH_ROUTES = ['/login'];
 
 /**
- * Simple token verification in middleware
+ * Create HMAC-SHA256 signature for payload
+ */
+function createSignature(payload: string, secret: string): string {
+  return createHmac('sha256', secret).update(payload).digest('hex');
+}
+
+/**
+ * Secure token verification with HMAC-SHA256 signature
  */
 function verifyToken(token: string): boolean {
   try {
-    const payload = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
-    return payload.secret === AUTH_SECRET && payload.exp > Date.now();
+    const AUTH_SECRET = getAuthSecret();
+    if (!AUTH_SECRET) {
+      return false;
+    }
+    
+    const parts = token.split('.');
+    if (parts.length !== 2) {
+      return false;
+    }
+    
+    const [payloadBase64, providedSignature] = parts;
+    
+    // Verify signature using timing-safe comparison
+    const expectedSignature = createSignature(payloadBase64, AUTH_SECRET);
+    
+    const providedBuffer = Buffer.from(providedSignature, 'utf-8');
+    const expectedBuffer = Buffer.from(expectedSignature, 'utf-8');
+    
+    if (providedBuffer.length !== expectedBuffer.length) {
+      return false;
+    }
+    
+    if (!timingSafeEqual(providedBuffer, expectedBuffer)) {
+      return false;
+    }
+    
+    // Parse and validate payload
+    const payload = JSON.parse(Buffer.from(payloadBase64, 'base64url').toString('utf-8'));
+    
+    // Check expiration
+    if (!payload.exp || payload.exp < Date.now()) {
+      return false;
+    }
+    
+    return true;
   } catch {
     return false;
   }
@@ -98,4 +151,3 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
-

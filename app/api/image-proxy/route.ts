@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 /**
  * Image Proxy API
  * Fetches external images server-side to bypass CORS and hotlink protection

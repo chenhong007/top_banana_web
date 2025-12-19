@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseCSV, transformCSVToPrompts } from '@/lib/csv-parser';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 // POST parse CSV data
 export async function POST(request: NextRequest) {
   try {

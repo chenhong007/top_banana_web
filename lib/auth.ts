@@ -1,41 +1,98 @@
 /**
- * Simple authentication utilities for admin panel
- * Uses JWT-like token stored in cookies
+ * Secure authentication utilities for admin panel
+ * Uses HMAC-SHA256 signed tokens stored in cookies
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
 
-// Configuration from environment variables
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-const AUTH_SECRET = process.env.AUTH_SECRET || 'your-secret-key-change-in-production';
+// Configuration from environment variables - 不再使用不安全的默认值
+const getAuthConfig = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  const ADMIN_USERNAME = process.env.ADMIN_USERNAME || (isProduction ? '' : 'admin');
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (isProduction ? '' : 'dev_password_change_me');
+  const AUTH_SECRET = process.env.AUTH_SECRET || (isProduction ? '' : 'dev_secret_key_not_for_production_use');
+  
+  // 生产环境强制检查
+  if (isProduction && (!ADMIN_USERNAME || !ADMIN_PASSWORD || !AUTH_SECRET)) {
+    throw new Error('ADMIN_USERNAME, ADMIN_PASSWORD, and AUTH_SECRET must be set in production');
+  }
+  
+  if (isProduction && AUTH_SECRET.length < 32) {
+    throw new Error('AUTH_SECRET must be at least 32 characters in production');
+  }
+  
+  return { ADMIN_USERNAME, ADMIN_PASSWORD, AUTH_SECRET };
+};
+
 const TOKEN_NAME = 'admin_token';
 const TOKEN_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 /**
- * Simple token generation (base64 encoded JSON with expiry)
+ * Create HMAC-SHA256 signature for payload
  */
-export function generateToken(username: string): string {
-  const payload = {
-    username,
-    exp: Date.now() + TOKEN_MAX_AGE * 1000,
-    secret: AUTH_SECRET,
-  };
-  return Buffer.from(JSON.stringify(payload)).toString('base64');
+function createSignature(payload: string, secret: string): string {
+  return createHmac('sha256', secret).update(payload).digest('hex');
 }
 
 /**
- * Verify token validity
+ * Secure token generation with HMAC-SHA256 signature
+ * Token format: base64(payload).signature
+ */
+export function generateToken(username: string): string {
+  const { AUTH_SECRET } = getAuthConfig();
+  
+  const payload = {
+    username,
+    exp: Date.now() + TOKEN_MAX_AGE * 1000,
+    iat: Date.now(), // issued at
+  };
+  
+  const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = createSignature(payloadBase64, AUTH_SECRET);
+  
+  return `${payloadBase64}.${signature}`;
+}
+
+/**
+ * Verify token validity with timing-safe comparison
  */
 export function verifyToken(token: string): { valid: boolean; username?: string } {
   try {
-    const payload = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+    const { AUTH_SECRET } = getAuthConfig();
     
-    if (payload.secret !== AUTH_SECRET) {
+    const parts = token.split('.');
+    if (parts.length !== 2) {
       return { valid: false };
     }
     
-    if (payload.exp < Date.now()) {
+    const [payloadBase64, providedSignature] = parts;
+    
+    // Verify signature using timing-safe comparison
+    const expectedSignature = createSignature(payloadBase64, AUTH_SECRET);
+    
+    const providedBuffer = Buffer.from(providedSignature, 'utf-8');
+    const expectedBuffer = Buffer.from(expectedSignature, 'utf-8');
+    
+    if (providedBuffer.length !== expectedBuffer.length) {
+      return { valid: false };
+    }
+    
+    if (!timingSafeEqual(providedBuffer, expectedBuffer)) {
+      return { valid: false };
+    }
+    
+    // Parse and validate payload
+    const payload = JSON.parse(Buffer.from(payloadBase64, 'base64url').toString('utf-8'));
+    
+    // Check expiration
+    if (!payload.exp || payload.exp < Date.now()) {
+      return { valid: false };
+    }
+    
+    // Validate payload structure
+    if (!payload.username || typeof payload.username !== 'string') {
       return { valid: false };
     }
     
@@ -46,10 +103,24 @@ export function verifyToken(token: string): { valid: boolean; username?: string 
 }
 
 /**
- * Validate login credentials
+ * Validate login credentials with timing-safe comparison
  */
 export function validateCredentials(username: string, password: string): boolean {
-  return username === ADMIN_USERNAME && password === ADMIN_PASSWORD;
+  const { ADMIN_USERNAME, ADMIN_PASSWORD } = getAuthConfig();
+  
+  // Use timing-safe comparison to prevent timing attacks
+  const usernameBuffer = Buffer.from(username);
+  const expectedUsernameBuffer = Buffer.from(ADMIN_USERNAME);
+  const passwordBuffer = Buffer.from(password);
+  const expectedPasswordBuffer = Buffer.from(ADMIN_PASSWORD);
+  
+  // Ensure we always compare both to prevent timing leaks
+  const usernameMatch = usernameBuffer.length === expectedUsernameBuffer.length &&
+    timingSafeEqual(usernameBuffer, expectedUsernameBuffer);
+  const passwordMatch = passwordBuffer.length === expectedPasswordBuffer.length &&
+    timingSafeEqual(passwordBuffer, expectedPasswordBuffer);
+  
+  return usernameMatch && passwordMatch;
 }
 
 /**
@@ -75,7 +146,7 @@ export function setAuthCookie(response: NextResponse, token: string): NextRespon
   response.cookies.set(TOKEN_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict', // 更严格的 CSRF 保护
     maxAge: TOKEN_MAX_AGE,
     path: '/',
   });
@@ -91,4 +162,3 @@ export function clearAuthCookie(response: NextResponse): NextResponse {
 }
 
 export { TOKEN_NAME };
-

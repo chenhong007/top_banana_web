@@ -9,10 +9,12 @@ import prisma from '@/lib/db';
 import { DEFAULT_CATEGORY } from '@/lib/constants';
 import {
   successResponse,
-  errorResponse,
   badRequestResponse,
   handleApiRoute,
 } from '@/lib/api-utils';
+
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
 
 // POST import prompts from external data
 export async function POST(request: NextRequest) {

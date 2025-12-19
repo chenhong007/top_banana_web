@@ -11,6 +11,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getImageFromR2, deleteImageFromR2, isR2Configured } from '@/lib/r2';
 import prisma from '@/lib/db';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 // 根据文件扩展名获取 Content-Type
 function getContentType(key: string): string {
   const ext = key.split('.').pop()?.toLowerCase();

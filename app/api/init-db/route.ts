@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 // 初始数据 - 从 prompts.json 精简
 const INITIAL_DATA = [
   {

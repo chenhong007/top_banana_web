@@ -10,6 +10,9 @@ import { NextRequest } from 'next/server';
 import { tagRepository } from '@/repositories';
 import { successResponse, errorResponse, handleApiRoute } from '@/lib/api-utils';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 // GET all tags
 export async function GET() {
   return handleApiRoute(async () => {

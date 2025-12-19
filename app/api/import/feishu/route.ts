@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scrapeFeishuDocument, extractTableData } from '@/lib/feishu-scraper';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 // POST scrape Feishu document
 export async function POST(request: NextRequest) {
   try {

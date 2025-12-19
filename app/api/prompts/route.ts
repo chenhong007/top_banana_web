@@ -8,12 +8,14 @@ import { NextRequest } from 'next/server';
 import { promptRepository } from '@/repositories';
 import {
   successResponse,
-  errorResponse,
   badRequestResponse,
   validateBody,
   handleApiRoute,
   createPromptSchema,
 } from '@/lib/api-utils';
+
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
 
 // GET all prompts
 export async function GET() {

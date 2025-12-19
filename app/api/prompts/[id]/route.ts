@@ -16,6 +16,9 @@ import {
   updatePromptSchema,
 } from '@/lib/api-utils';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 interface RouteParams {
   params: Promise<{ id: string }>;
 }

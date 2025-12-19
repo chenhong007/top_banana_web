@@ -6,6 +6,9 @@
 import { modelTagRepository } from '@/repositories';
 import { successResponse, handleApiRoute } from '@/lib/api-utils';
 
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
+
 // GET all model tags
 export async function GET() {
   return handleApiRoute(async () => {

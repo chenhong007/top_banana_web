@@ -8,8 +8,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadImageToR2, uploadImageFromUrl, isR2Configured, getPublicUrl } from '@/lib/r2';
+import { uploadImageToR2, uploadImageFromUrl, isR2Configured } from '@/lib/r2';
 import prisma from '@/lib/db';
+
+// Force dynamic rendering to avoid database calls during build
+export const dynamic = 'force-dynamic';
 
 // 允许的图片类型
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
