@@ -72,22 +72,11 @@ export default function PromptTable({ prompts, onEdit, onDelete }: PromptTablePr
                   </td>
                   <td className={TABLE_STYLES.cell}>
                     <div className="flex flex-wrap gap-1.5">
-                      {(prompt.tags || []).filter(tag => tag).map((tag, idx) => {
-                        const styles = [
-                          BADGE_STYLES.primary,
-                          BADGE_STYLES.success,
-                          BADGE_STYLES.warning, 
-                          BADGE_STYLES.neutral
-                        ];
-                        // Deterministic random color based on tag string length
-                        const style = styles[(tag || '').length % styles.length];
-                        
-                        return (
-                          <span key={tag || idx} className={style}>
-                            {tag}
-                          </span>
-                        );
-                      })}
+                      {(prompt.tags || []).filter(tag => tag).map((tag, idx) => (
+                        <span key={tag || idx} className={BADGE_STYLES.primary}>
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </td>
                   <td className={TABLE_STYLES.cell}>
