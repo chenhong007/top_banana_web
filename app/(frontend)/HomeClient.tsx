@@ -1,17 +1,34 @@
 'use client';
 
-import { Search, FileQuestion, Sparkles, Settings, LogOut, FolderOpen, Tag, Cpu } from 'lucide-react';
+/**
+ * HomeClient Component
+ * Main client component for the home page
+ * Refactored to use smaller sub-components and React Query
+ */
+
+import { Sparkles, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import PromptCard from './components/PromptCard';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import EmptyState from '@/components/shared/EmptyState';
-import Pagination from './components/Pagination';
+import { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+
+// Sub-components
+import {
+  HeroSection,
+  SearchBox,
+  CategoryFilter,
+  ModelTagFilter,
+  TagFilter,
+  PromptGrid,
+} from './components/home';
+
+// Hooks
 import { useSearch } from '@/hooks/useSearch';
 import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/hooks/useAuth';
+import { usePromptsQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
+
+// Types and config
 import { PromptItem } from '@/types';
-import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import { ADMIN_CONFIG } from '@/lib/constants';
 
 interface HomeClientProps {
@@ -19,59 +36,71 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ initialPrompts }: HomeClientProps) {
-  const [prompts] = useState<PromptItem[]>(initialPrompts);
-  const loading = false;
-  const router = useRouter();
+  // Use React Query with initial data from server
+  const { data: prompts = initialPrompts, isLoading: promptsLoading } = usePromptsQuery(initialPrompts);
+  const { data: serverTags = [] } = useTagsQuery();
+  const { data: serverCategories = [] } = useCategoriesQuery();
+  const { data: serverModelTags = [] } = useModelTagsQuery();
   
+  const loading = promptsLoading;
+  const router = useRouter();
+
   // Authentication state
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
-  
+
   // Check if admin entry should be shown based on domain and config
   const [currentDomain, setCurrentDomain] = useState<string>('');
-  
+
   useEffect(() => {
     // Get current domain on client side
     setCurrentDomain(window.location.hostname.toLowerCase());
   }, []);
-  
+
   // Determine if admin entry should be visible
   const showAdminEntry = useMemo(() => {
     // If admin entry is disabled globally, hide it
     if (!ADMIN_CONFIG.SHOW_ADMIN_ENTRY) {
       return false;
     }
-    
+
     // If no allowed domains configured, show for all domains
     if (ADMIN_CONFIG.ALLOWED_DOMAINS.length === 0) {
       return true;
     }
-    
+
     // Check if current domain is in allowed list
     if (!currentDomain) return true; // Default to show during SSR/initial load
-    
-    return ADMIN_CONFIG.ALLOWED_DOMAINS.some(domain => 
-      currentDomain === domain || 
-      currentDomain.endsWith(`.${domain}`) ||
-      domain.includes('vercel.app') && currentDomain.includes('vercel.app')
+
+    return ADMIN_CONFIG.ALLOWED_DOMAINS.some(
+      (domain) =>
+        currentDomain === domain ||
+        currentDomain.endsWith(`.${domain}`) ||
+        (domain.includes('vercel.app') && currentDomain.includes('vercel.app'))
     );
   }, [currentDomain]);
-  
-  // Search and filter
-  const { 
-    searchTerm, 
-    setSearchTerm, 
-    selectedTag, 
+
+  // Search and filter with server-provided options where available
+  const {
+    searchTerm,
+    setSearchTerm,
+    selectedTag,
     setSelectedTag,
     selectedCategory,
     setSelectedCategory,
     selectedModelTag,
     setSelectedModelTag,
-    allTags,
-    allCategories,
-    allModelTags,
-    filteredPrompts 
+    allTags: derivedTags,
+    allCategories: derivedCategories,
+    allModelTags: derivedModelTags,
+    filteredPrompts,
   } = useSearch(prompts);
-  
+
+  // Prefer server data for filter options, fallback to derived from prompts
+  // Note: Query hooks already return string arrays
+  const allTags = serverTags.length > 0 ? serverTags : derivedTags;
+  const allCategories = serverCategories.length > 0 ? serverCategories : derivedCategories;
+  const allModelTags = serverModelTags.length > 0 ? serverModelTags : derivedModelTags;
+
   // Handle logout
   const handleLogout = async () => {
     await logout();
@@ -102,38 +131,22 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
     pagination.resetPagination();
   };
 
-  // AI模型标签颜色映射
-  const MODEL_TAG_COLORS: Record<string, string> = {
-    'Midjourney': '#5865F2',
-    'DALL-E 3': '#10A37F',
-    'Stable Diffusion': '#A855F7',
-    'Flux': '#EC4899',
-    'Leonardo.AI': '#F97316',
-    'ComfyUI': '#22C55E',
-    'Runway': '#3B82F6',
-    'Sora': '#000000',
-    'Pika': '#8B5CF6',
-    'Kling': '#FF6B35',
-    'Suno': '#FACC15',
-    'Udio': '#06B6D4',
-    'DeepSeek': '#2563EB',
-    'Banana': '#FBBF24',
-    '其他模型': '#6B7280',
-  };
-
   return (
     <div className="min-h-screen bg-dark-900 text-white bg-tech-grid bg-fixed">
-      {/* Background Decoration - 移除紫色，改用深邃的黑蓝光晕 */}
+      {/* Background Decoration */}
       <div className="fixed inset-0 bg-subtle-gradient pointer-events-none z-0" />
       <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-tech-primary/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-tech-accent/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow" style={{ animationDelay: '3s' }} />
+      <div
+        className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-tech-accent/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow"
+        style={{ animationDelay: '3s' }}
+      />
 
       {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-white/5 shadow-lg shadow-black/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              {/* Logo 调整为黑金/冷蓝风格 */}
+              {/* Logo */}
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-tech-primary to-tech-accent flex items-center justify-center shadow-lg shadow-tech-primary/10">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
@@ -141,7 +154,9 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
                 <h1 className="text-2xl font-bold text-white tracking-tight">
                   全球最热门banana玩法大全
                 </h1>
-                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">top ai prompts</p>
+                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">
+                  top ai prompts
+                </p>
               </div>
             </div>
             {/* Auth buttons - only show if admin entry is enabled for this domain */}
@@ -153,7 +168,7 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
                   </div>
                 ) : (
                   <>
-                    <Link 
+                    <Link
                       href="/admin"
                       className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
                     >
@@ -179,196 +194,26 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <div className="text-center mb-12 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-white animate-float tracking-tight drop-shadow-xl">
-            探索无限创意
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto font-light">
-            精选优质 AI 提示词，激发你的创作灵感
-          </p>
-        </div>
+        <HeroSection />
 
         {/* Search and Filter */}
         <div className="mb-12 space-y-6">
-          <div className="relative max-w-2xl mx-auto group">
-            {/* 搜索框光晕改为冷色调 */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-tech-primary/50 to-tech-accent/50 rounded-2xl opacity-20 group-hover:opacity-50 transition duration-500 blur-lg"></div>
-            <div className="relative flex items-center bg-dark-900/80 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl group-hover:border-white/20 transition-all duration-300">
-              <Search className="absolute left-4 text-gray-500 w-5 h-5 group-focus-within:text-tech-primary transition-colors" />
-              <input
-                type="text"
-                placeholder="搜索提示词、效果或描述..."
-                value={searchTerm}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-transparent text-white placeholder-gray-500 rounded-xl focus:outline-none text-lg"
-              />
-            </div>
-          </div>
-
-          {/* Category Filter (生成类型) */}
-          {allCategories.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-                <FolderOpen className="w-4 h-4" />
-                <span>按生成类型筛选</span>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3">
-                <button
-                  onClick={() => handleCategoryChange('')}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
-                    !selectedCategory
-                      ? 'bg-amber-500/10 border-amber-500/50 text-amber-400 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]'
-                      : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  全部类型
-                </button>
-                {allCategories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => handleCategoryChange(category)}
-                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
-                      selectedCategory === category
-                        ? 'bg-amber-500/10 border-amber-500/50 text-amber-400 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]'
-                        : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* AI Model Filter (AI模型筛选) */}
-          {allModelTags.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-                <Cpu className="w-4 h-4" />
-                <span>按 AI 模型筛选</span>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3">
-                <button
-                  onClick={() => handleModelTagChange('')}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
-                    !selectedModelTag
-                      ? 'bg-purple-500/10 border-purple-500/50 text-purple-400 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]'
-                      : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  全部模型
-                </button>
-                {allModelTags.map(modelTag => {
-                  const color = MODEL_TAG_COLORS[modelTag] || '#6B7280';
-                  const isSelected = selectedModelTag === modelTag;
-                  return (
-                    <button
-                      key={modelTag}
-                      onClick={() => handleModelTagChange(modelTag)}
-                      className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center gap-1.5 ${
-                        isSelected
-                          ? 'shadow-[0_0_15px_-3px_rgba(168,85,247,0.3)]'
-                          : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
-                      }`}
-                      style={isSelected ? { 
-                        backgroundColor: `${color}20`, 
-                        borderColor: `${color}80`,
-                        color: color 
-                      } : {}}
-                    >
-                      <Cpu className="w-3.5 h-3.5" />
-                      {modelTag}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Tags Filter (场景/用途标签) */}
-          {allTags.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-                <Tag className="w-4 h-4" />
-                <span>按场景标签筛选</span>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3">
-                <button
-                  onClick={() => handleTagChange('')}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
-                    !selectedTag
-                      ? 'bg-tech-primary/10 border-tech-primary/50 text-tech-primary shadow-[0_0_15px_-3px_rgba(56,189,248,0.2)]'
-                      : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  全部标签
-                </button>
-                {allTags.map(tag => (
-                  <button
-                    key={tag}
-                    onClick={() => handleTagChange(tag)}
-                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
-                      selectedTag === tag
-                        ? 'bg-tech-primary/10 border-tech-primary/50 text-tech-primary shadow-[0_0_15px_-3px_rgba(56,189,248,0.2)]'
-                        : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          <SearchBox value={searchTerm} onChange={handleSearchChange} />
+          <CategoryFilter
+            categories={allCategories}
+            selected={selectedCategory}
+            onSelect={handleCategoryChange}
+          />
+          <ModelTagFilter
+            modelTags={allModelTags}
+            selected={selectedModelTag}
+            onSelect={handleModelTagChange}
+          />
+          <TagFilter tags={allTags} selected={selectedTag} onSelect={handleTagChange} />
         </div>
 
-        {/* Loading State */}
-        {loading && (
-          <div className="flex justify-center py-20">
-            <LoadingSpinner />
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!loading && filteredPrompts.length === 0 && (
-          <div className="text-center py-20">
-            <EmptyState
-              icon={<FileQuestion className="w-20 h-20 text-gray-600" />}
-              title="暂无提示词数据"
-              description="尝试其他搜索词或前往管理后台添加"
-            />
-          </div>
-        )}
-
         {/* Prompts Grid */}
-        {!loading && pagination.paginatedItems.length > 0 && (
-          <div className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pagination.paginatedItems.map((prompt, index) => (
-                <div 
-                  key={prompt.id} 
-                  className="animate-float" 
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <PromptCard prompt={prompt} />
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            <div className="flex justify-center pt-8 border-t border-white/5">
-              <Pagination
-                currentPage={pagination.currentPage}
-                totalPages={pagination.totalPages}
-                totalItems={pagination.totalItems}
-                pageSize={pagination.pageSize}
-                onPageChange={pagination.goToPage}
-                onPageSizeChange={pagination.changePageSize}
-                hasNextPage={pagination.hasNextPage}
-                hasPreviousPage={pagination.hasPreviousPage}
-              />
-            </div>
-          </div>
-        )}
+        <PromptGrid loading={loading} filteredPrompts={filteredPrompts} pagination={pagination} />
       </main>
     </div>
   );

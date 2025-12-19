@@ -1,56 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { readPrompts, createPrompt } from '@/lib/storage';
-import { CreatePromptRequest } from '@/types';
+/**
+ * Prompts API Route
+ * GET /api/prompts - Get all prompts
+ * POST /api/prompts - Create a new prompt
+ */
+
+import { NextRequest } from 'next/server';
+import { promptRepository } from '@/repositories';
+import {
+  successResponse,
+  errorResponse,
+  badRequestResponse,
+  validateBody,
+  handleApiRoute,
+  createPromptSchema,
+} from '@/lib/api-utils';
 
 // GET all prompts
 export async function GET() {
-  try {
-    const prompts = await readPrompts();
-    return NextResponse.json({
-      success: true,
-      data: prompts,
-    });
-  } catch (error) {
-    console.error('GET /api/prompts error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch prompts' },
-      { status: 500 }
-    );
-  }
+  return handleApiRoute(async () => {
+    const prompts = await promptRepository.findAll();
+    return successResponse(prompts);
+  });
 }
 
 // POST create new prompt
 export async function POST(request: NextRequest) {
-  try {
-    const body: CreatePromptRequest = await request.json();
-    
-    // Validation - only effect and prompt are required
-    if (!body.effect || !body.prompt) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields (effect, prompt)' },
-        { status: 400 }
-      );
+  return handleApiRoute(async () => {
+    const validation = await validateBody(request, createPromptSchema);
+
+    if ('error' in validation) {
+      return badRequestResponse(validation.error);
     }
-    
-    const newPrompt = await createPrompt({
-      effect: body.effect,
-      description: body.description || '',
-      tags: body.tags || [],
-      prompt: body.prompt,
-      source: body.source || 'unknown',
-      imageUrl: body.imageUrl,
-      category: body.category, // Will default to '文生图' in storage layer
+
+    const { data } = validation;
+
+    // Validation - only effect and prompt are required
+    if (!data.effect || !data.prompt) {
+      return badRequestResponse('Missing required fields (effect, prompt)');
+    }
+
+    const newPrompt = await promptRepository.create({
+      effect: data.effect,
+      description: data.description || '',
+      tags: data.tags || [],
+      modelTags: data.modelTags,
+      prompt: data.prompt,
+      source: data.source || 'unknown',
+      imageUrl: data.imageUrl,
+      category: data.category,
     });
-    
-    return NextResponse.json({
-      success: true,
-      data: newPrompt,
-    });
-  } catch (error) {
-    console.error('POST /api/prompts error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to create prompt' },
-      { status: 500 }
-    );
-  }
+
+    return successResponse(newPrompt, 201);
+  });
 }

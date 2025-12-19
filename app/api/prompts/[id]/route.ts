@@ -1,89 +1,69 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getPromptById, updatePrompt, deletePrompt } from '@/lib/storage';
-import { UpdatePromptRequest } from '@/types';
+/**
+ * Single Prompt API Route
+ * GET /api/prompts/[id] - Get a single prompt
+ * PUT /api/prompts/[id] - Update a prompt
+ * DELETE /api/prompts/[id] - Delete a prompt
+ */
 
-// GET single prompt
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const prompt = await getPromptById(params.id);
-    
+import { NextRequest } from 'next/server';
+import { promptRepository } from '@/repositories';
+import {
+  successResponse,
+  notFoundResponse,
+  badRequestResponse,
+  validateBody,
+  handleApiRoute,
+  updatePromptSchema,
+} from '@/lib/api-utils';
+
+interface RouteParams {
+  params: Promise<{ id: string }>;
+}
+
+// GET single prompt by ID
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  return handleApiRoute(async () => {
+    const { id } = await params;
+    const prompt = await promptRepository.findById(id);
+
     if (!prompt) {
-      return NextResponse.json(
-        { success: false, error: 'Prompt not found' },
-        { status: 404 }
-      );
+      return notFoundResponse('Prompt not found');
     }
-    
-    return NextResponse.json({
-      success: true,
-      data: prompt,
-    });
-  } catch (error) {
-    console.error(`GET /api/prompts/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch prompt' },
-      { status: 500 }
-    );
-  }
+
+    return successResponse(prompt);
+  });
 }
 
 // PUT update prompt
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const body: UpdatePromptRequest = await request.json();
-    
-    const updatedPrompt = await updatePrompt(params.id, body);
-    
-    if (!updatedPrompt) {
-      return NextResponse.json(
-        { success: false, error: 'Prompt not found' },
-        { status: 404 }
-      );
+export async function PUT(request: NextRequest, { params }: RouteParams) {
+  return handleApiRoute(async () => {
+    const { id } = await params;
+    const validation = await validateBody(request, updatePromptSchema);
+
+    if ('error' in validation) {
+      return badRequestResponse(validation.error);
     }
-    
-    return NextResponse.json({
-      success: true,
-      data: updatedPrompt,
-    });
-  } catch (error) {
-    console.error(`PUT /api/prompts/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to update prompt' },
-      { status: 500 }
-    );
-  }
+
+    const updatedPrompt = await promptRepository.update(id, validation.data);
+
+    if (!updatedPrompt) {
+      return notFoundResponse('Prompt not found');
+    }
+
+    return successResponse(updatedPrompt);
+  });
 }
 
 // DELETE prompt
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const success = await deletePrompt(params.id);
-    
-    if (!success) {
-      return NextResponse.json(
-        { success: false, error: 'Prompt not found' },
-        { status: 404 }
-      );
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  return handleApiRoute(async () => {
+    const { id } = await params;
+    const deleted = await promptRepository.delete(id);
+
+    if (!deleted) {
+      return notFoundResponse('Prompt not found');
     }
-    
-    return NextResponse.json({
-      success: true,
-      data: { id: params.id },
-    });
-  } catch (error) {
-    console.error(`DELETE /api/prompts/${params.id} error:`, error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to delete prompt' },
-      { status: 500 }
-    );
-  }
+
+    return successResponse({ id, deleted: true });
+  });
 }

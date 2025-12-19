@@ -1,6 +1,15 @@
 /**
  * Storage Layer
  * Handles all prompt data persistence using database
+ * 
+ * @deprecated This module is deprecated. Use the new Repository pattern instead:
+ * - promptRepository from '@/repositories'
+ * - tagRepository from '@/repositories'
+ * - categoryRepository from '@/repositories'
+ * - modelTagRepository from '@/repositories'
+ * 
+ * This file is kept for backward compatibility during migration.
+ * It will be removed in a future version.
  */
 
 import { PromptItem } from '@/types';

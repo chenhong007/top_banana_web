@@ -1,0 +1,377 @@
+/**
+ * Prompt Repository
+ * Handles all database operations for Prompt model
+ */
+
+import { Prompt, Tag, Category, ModelTag } from '@prisma/client';
+import { BaseRepository, PaginatedResult, PaginationOptions, calculatePagination } from './base.repository';
+import { DEFAULT_CATEGORY } from '@/lib/constants';
+
+// Full Prompt with relations from Prisma
+type PromptWithRelations = Prompt & {
+  tags: Tag[];
+  category: Category | null;
+  modelTags: ModelTag[];
+};
+
+// DTO for API responses
+export interface PromptDTO {
+  id: string;
+  effect: string;
+  description: string;
+  tags: string[];
+  modelTags: string[];
+  prompt: string;
+  source: string;
+  imageUrl?: string;
+  category?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Create prompt input
+export interface CreatePromptInput {
+  effect: string;
+  description: string;
+  tags: string[];
+  modelTags?: string[];
+  prompt: string;
+  source: string;
+  imageUrl?: string;
+  category?: string;
+}
+
+// Update prompt input
+export interface UpdatePromptInput extends Partial<CreatePromptInput> {}
+
+class PromptRepository extends BaseRepository<
+  PromptWithRelations,
+  CreatePromptInput,
+  UpdatePromptInput,
+  PromptDTO
+> {
+  /**
+   * Convert Prisma model to DTO
+   */
+  protected toDTO(prompt: PromptWithRelations): PromptDTO {
+    return {
+      id: prompt.id,
+      effect: prompt.effect,
+      description: prompt.description,
+      tags: prompt.tags.map((t) => t.name),
+      modelTags: prompt.modelTags.map((m) => m.name),
+      prompt: prompt.prompt,
+      source: prompt.source,
+      imageUrl: prompt.imageUrl || undefined,
+      category: prompt.category?.name || undefined,
+      createdAt: prompt.createdAt.toISOString(),
+      updatedAt: prompt.updatedAt.toISOString(),
+    };
+  }
+
+  /**
+   * Find all prompts
+   */
+  async findAll(): Promise<PromptDTO[]> {
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return prompts.map((p) => this.toDTO(p));
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findAll');
+    }
+  }
+
+  /**
+   * Find prompts with pagination
+   */
+  async findPaginated(options: PaginationOptions): Promise<PaginatedResult<PromptDTO>> {
+    try {
+      const total = await this.prisma.prompt.count();
+      const { skip, take, page, pageSize, totalPages } = calculatePagination(options, total);
+
+      const prompts = await this.prisma.prompt.findMany({
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take,
+      });
+
+      return {
+        data: prompts.map((p) => this.toDTO(p)),
+        total,
+        page,
+        pageSize,
+        totalPages,
+      };
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findPaginated');
+    }
+  }
+
+  /**
+   * Find a single prompt by ID
+   */
+  async findById(id: string): Promise<PromptDTO | null> {
+    try {
+      const prompt = await this.prisma.prompt.findUnique({
+        where: { id },
+        include: { tags: true, category: true, modelTags: true },
+      });
+
+      return prompt ? this.toDTO(prompt) : null;
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findById');
+    }
+  }
+
+  /**
+   * Create a new prompt
+   */
+  async create(data: CreatePromptInput): Promise<PromptDTO> {
+    try {
+      const categoryName = data.category || DEFAULT_CATEGORY;
+
+      const prompt = await this.prisma.prompt.create({
+        data: {
+          effect: data.effect,
+          description: data.description,
+          prompt: data.prompt,
+          source: data.source,
+          imageUrl: data.imageUrl || null,
+          tags: {
+            connectOrCreate: data.tags.map((name) => ({
+              where: { name },
+              create: { name },
+            })),
+          },
+          modelTags:
+            data.modelTags && data.modelTags.length > 0
+              ? {
+                  connectOrCreate: data.modelTags.map((name) => ({
+                    where: { name },
+                    create: { name },
+                  })),
+                }
+              : undefined,
+          category: {
+            connectOrCreate: {
+              where: { name: categoryName },
+              create: { name: categoryName },
+            },
+          },
+        },
+        include: { tags: true, category: true, modelTags: true },
+      });
+
+      return this.toDTO(prompt);
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.create');
+    }
+  }
+
+  /**
+   * Update an existing prompt
+   */
+  async update(id: string, data: UpdatePromptInput): Promise<PromptDTO | null> {
+    try {
+      // First disconnect existing tags/modelTags if they are being updated
+      if (data.tags || data.modelTags) {
+        await this.prisma.prompt.update({
+          where: { id },
+          data: {
+            ...(data.tags && { tags: { set: [] } }),
+            ...(data.modelTags && { modelTags: { set: [] } }),
+          },
+        });
+      }
+
+      const prompt = await this.prisma.prompt.update({
+        where: { id },
+        data: {
+          ...(data.effect !== undefined && { effect: data.effect }),
+          ...(data.description !== undefined && { description: data.description }),
+          ...(data.prompt !== undefined && { prompt: data.prompt }),
+          ...(data.source !== undefined && { source: data.source }),
+          ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl || null }),
+          ...(data.tags && {
+            tags: {
+              connectOrCreate: data.tags.map((name) => ({
+                where: { name },
+                create: { name },
+              })),
+            },
+          }),
+          ...(data.modelTags && {
+            modelTags: {
+              connectOrCreate: data.modelTags.map((name) => ({
+                where: { name },
+                create: { name },
+              })),
+            },
+          }),
+          ...(data.category !== undefined && {
+            category: {
+              connectOrCreate: {
+                where: { name: data.category },
+                create: { name: data.category },
+              },
+            },
+          }),
+        },
+        include: { tags: true, category: true, modelTags: true },
+      });
+
+      return this.toDTO(prompt);
+    } catch (error) {
+      console.error('Error updating prompt:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Delete a prompt by ID
+   */
+  async delete(id: string): Promise<boolean> {
+    try {
+      await this.prisma.prompt.delete({ where: { id } });
+      return true;
+    } catch (error) {
+      console.error('Error deleting prompt:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Bulk create prompts (optimized with transaction)
+   */
+  async bulkCreate(items: CreatePromptInput[]): Promise<{ success: number; failed: number }> {
+    let success = 0;
+    let failed = 0;
+
+    // Use transaction for batch operations
+    await this.withTransaction(async (tx) => {
+      for (const item of items) {
+        try {
+          const categoryName = item.category || DEFAULT_CATEGORY;
+
+          await tx.prompt.create({
+            data: {
+              effect: item.effect,
+              description: item.description,
+              prompt: item.prompt,
+              source: item.source,
+              imageUrl: item.imageUrl || null,
+              tags: {
+                connectOrCreate: item.tags.map((name) => ({
+                  where: { name },
+                  create: { name },
+                })),
+              },
+              modelTags:
+                item.modelTags && item.modelTags.length > 0
+                  ? {
+                      connectOrCreate: item.modelTags.map((name) => ({
+                        where: { name },
+                        create: { name },
+                      })),
+                    }
+                  : undefined,
+              category: {
+                connectOrCreate: {
+                  where: { name: categoryName },
+                  create: { name: categoryName },
+                },
+              },
+            },
+          });
+          success++;
+        } catch (error) {
+          console.error(`Failed to import prompt "${item.effect}":`, error);
+          failed++;
+        }
+      }
+    });
+
+    return { success, failed };
+  }
+
+  /**
+   * Count total prompts
+   */
+  async count(): Promise<number> {
+    try {
+      return await this.prisma.prompt.count();
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.count');
+    }
+  }
+
+  /**
+   * Get prompts by tag name
+   */
+  async findByTag(tagName: string): Promise<PromptDTO[]> {
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        where: {
+          tags: {
+            some: { name: tagName },
+          },
+        },
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return prompts.map((p) => this.toDTO(p));
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findByTag');
+    }
+  }
+
+  /**
+   * Get prompts by category name
+   */
+  async findByCategory(categoryName: string): Promise<PromptDTO[]> {
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        where: {
+          category: { name: categoryName },
+        },
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return prompts.map((p) => this.toDTO(p));
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findByCategory');
+    }
+  }
+
+  /**
+   * Get prompts by model tag name
+   */
+  async findByModelTag(modelTagName: string): Promise<PromptDTO[]> {
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        where: {
+          modelTags: {
+            some: { name: modelTagName },
+          },
+        },
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return prompts.map((p) => this.toDTO(p));
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findByModelTag');
+    }
+  }
+}
+
+// Export singleton instance
+export const promptRepository = new PromptRepository();
+

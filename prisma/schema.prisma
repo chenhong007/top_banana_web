@@ -9,17 +9,18 @@ datasource db {
 
 model Prompt {
   id          String     @id @default(uuid())
-  effect      String
-  description String
-  prompt      String
-  source      String
-  imageUrl    String?
+  effect      String     // Effect/title description
+  description String     // Detailed description
+  prompt      String     // The actual prompt content
+  source      String     // Source URL
+  imageUrl    String?    // Primary image URL (legacy field)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-  categoryId  String?
+  categoryId  String?    // Foreign key to Category
   category    Category?  @relation(fields: [categoryId], references: [id])
   modelTags   ModelTag[] @relation("ModelTagToPrompt")
   tags        Tag[]      @relation("PromptToTag")
+  images      Image[]    // Related images stored in R2
 }
 
 model Tag {
@@ -47,14 +48,15 @@ model ModelTag {
 
 model Image {
   id          String   @id @default(uuid())
-  key         String   @unique
-  originalUrl String?
-  url         String
-  fileName    String?
-  contentType String?
-  size        Int?
-  promptId    String?
-  status      String   @default("active")
+  key         String   @unique    // R2 storage key (e.g., images/xxx.jpg)
+  originalUrl String?             // Original URL before migration
+  url         String              // Current access URL
+  fileName    String?             // Original filename
+  contentType String?             // MIME type
+  size        Int?                // File size in bytes
+  promptId    String?             // Foreign key to Prompt (optional)
+  prompt      Prompt?  @relation(fields: [promptId], references: [id], onDelete: SetNull)
+  status      String   @default("active")  // Status: active, deleted, pending
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
