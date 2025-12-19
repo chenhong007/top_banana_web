@@ -219,6 +219,9 @@ TopAI 是一个现代化的 AI 提示词收集与管理平台，旨在为用户�
 | 接口 | 方法 | 描述 |
 |------|------|------|
 | `/api/tags` | GET | 获取所有场景/用途标签列表 |
+| `/api/tags` | POST | 创建新标签（body: `{ name: string }`） |
+| `/api/tags` | PUT | 更新标签名称（body: `{ oldName: string, newName: string }`） |
+| `/api/tags` | DELETE | 删除标签（query: `?name=标签名`） |
 | `/api/model-tags` | GET | 获取所有 AI 模型标签列表 |
 | `/api/categories` | GET | 获取所有生成类型类别列表 |
 | `/api/init-categories` | POST | 初始化默认类别 |
