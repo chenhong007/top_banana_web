@@ -10,6 +10,15 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'AI 提示词库',
   description: '优质 AI 提示词收集与管理平台',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.svg',
+  },
+  openGraph: {
+    title: 'AI 提示词库',
+    description: '优质 AI 提示词收集与管理平台',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
