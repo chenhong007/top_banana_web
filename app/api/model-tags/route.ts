@@ -9,7 +9,8 @@ import { successResponse, handleApiRoute } from '@/lib/api-utils';
 // GET all model tags
 export async function GET() {
   return handleApiRoute(async () => {
-    const modelTags = await modelTagRepository.findAll();
+    // 返回完整的模型标签信息，包括 id、name、color、type 等
+    const modelTags = await modelTagRepository.findAllWithDetails();
     return successResponse(modelTags);
   });
 }
