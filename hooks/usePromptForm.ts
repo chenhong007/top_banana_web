@@ -74,7 +74,9 @@ export function usePromptForm(onSuccess?: () => void) {
   };
 
   const handleCreate = async (): Promise<PromptItem | null> => {
-    if (!formData.effect || !formData.description || !formData.prompt || !formData.source) {
+    if (!formData.effect || !formData.description || !formData.prompt || !formData.source || 
+        !formData.tags || formData.tags.length === 0 || 
+        !formData.modelTags || formData.modelTags.length === 0) {
       toast.showWarning('请填写所有必填字段');
       return null;
     }

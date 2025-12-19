@@ -26,9 +26,11 @@ interface ModelTagInputProps {
   selectedTags: string[];
   onChange: (tags: string[]) => void;
   disabled?: boolean;
+  required?: boolean;
+  hasError?: boolean;
 }
 
-export default function ModelTagInput({ selectedTags, onChange, disabled }: ModelTagInputProps) {
+export default function ModelTagInput({ selectedTags, onChange, disabled, required, hasError }: ModelTagInputProps) {
   const [allModelTags, setAllModelTags] = useState<ModelTagItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -106,16 +108,21 @@ export default function ModelTagInput({ selectedTags, onChange, disabled }: Mode
     return tag?.color || MODEL_TAG_COLORS[tagName] || '#6B7280';
   };
 
+  // 输入框样式
+  const inputClassName = `${INPUT_STYLES.base} min-h-[42px] h-auto flex flex-wrap gap-2 p-2 cursor-pointer ${
+    disabled ? 'opacity-50 cursor-not-allowed' : ''
+  } ${hasError ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' : ''}`;
+
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className={LABEL_STYLES.base}>
+      <label className={required ? LABEL_STYLES.required : LABEL_STYLES.base}>
         <Cpu className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
-        AI 模型标签（可选）
+        AI 模型标签
       </label>
       
       {/* Selected Tags Display */}
       <div 
-        className={`${INPUT_STYLES.base} min-h-[42px] h-auto flex flex-wrap gap-2 p-2 cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={inputClassName}
         onClick={() => !disabled && setIsOpen(true)}
       >
         {selectedTags.map(tagName => {

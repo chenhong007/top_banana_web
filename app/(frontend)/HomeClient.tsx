@@ -21,6 +21,7 @@ import {
   PromptGrid,
   Sidebar,
 } from './components/home';
+import { Footer } from './components/Footer';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -240,6 +241,9 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
           </div>
         </div>
       </main>
+
+      {/* Footer 免责声明 */}
+      <Footer />
     </div>
   );
 }

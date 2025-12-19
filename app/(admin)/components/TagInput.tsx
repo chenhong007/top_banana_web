@@ -17,9 +17,11 @@ interface TagInputProps {
   selectedTags: string[];
   onChange: (tags: string[]) => void;
   disabled?: boolean;
+  required?: boolean;
+  hasError?: boolean;
 }
 
-export default function TagInput({ selectedTags, onChange, disabled }: TagInputProps) {
+export default function TagInput({ selectedTags, onChange, disabled, required, hasError }: TagInputProps) {
   const [allTags, setAllTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -185,12 +187,17 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
 
   const showCreateOption = inputValue.trim() && !allTags.includes(inputValue.trim());
 
+  // 输入框样式
+  const inputClassName = `${INPUT_STYLES.base} min-h-[42px] h-auto flex flex-wrap gap-2 p-2 cursor-pointer ${
+    disabled ? 'opacity-50 cursor-not-allowed' : ''
+  } ${hasError ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' : ''}`;
+
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className={LABEL_STYLES.base}>标签</label>
+      <label className={required ? LABEL_STYLES.required : LABEL_STYLES.base}>标签</label>
       
       {/* Selected Tags Display */}
-      <div className={`${INPUT_STYLES.base} min-h-[42px] h-auto flex flex-wrap gap-2 p-2 cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      <div className={inputClassName}
         onClick={() => !disabled && setIsOpen(true)}
       >
         {selectedTags.map(tag => (

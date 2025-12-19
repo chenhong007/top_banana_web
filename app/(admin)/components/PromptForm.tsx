@@ -34,8 +34,10 @@ const REQUIRED_FIELDS: RequiredField[] = [
   { key: 'effect', label: '卡片标题' },
   { key: 'source', label: '来源' },
   { key: 'category', label: '生成类型' },
+  { key: 'modelTags', label: 'AI 模型标签' },
   { key: 'description', label: '详细描述' },
   { key: 'prompt', label: '提示词内容' },
+  { key: 'tags', label: '标签' },
 ];
 
 export default function PromptForm({
@@ -57,6 +59,9 @@ export default function PromptForm({
     const value = formData[key];
     if (typeof value === 'string') {
       return value.trim().length > 0;
+    }
+    if (Array.isArray(value)) {
+      return value.length > 0;
     }
     return Boolean(value);
   };
@@ -177,8 +182,13 @@ export default function PromptForm({
             selectedTags={formData.modelTags || []}
             onChange={onModelTagsChange}
             disabled={submitting}
+            required={true}
+            hasError={hasAttemptedSubmit && !isFieldValid('modelTags')}
           />
           <p className="text-xs text-gray-400 mt-1.5">选择该提示词适用的 AI 模型（如 Midjourney、DALL-E 等）</p>
+          {hasAttemptedSubmit && !isFieldValid('modelTags') && (
+            <p className="text-xs text-red-500 mt-1.5">请至少选择一个 AI 模型</p>
+          )}
         </div>
 
         {/* Description Field */}
@@ -202,8 +212,13 @@ export default function PromptForm({
             selectedTags={formData.tags}
             onChange={onTagsChange}
             disabled={submitting}
+            required={true}
+            hasError={hasAttemptedSubmit && !isFieldValid('tags')}
           />
           <p className="text-xs text-gray-400 mt-1.5">选择已有标签或输入新标签名创建</p>
+          {hasAttemptedSubmit && !isFieldValid('tags') && (
+            <p className="text-xs text-red-500 mt-1.5">请至少选择一个标签</p>
+          )}
         </div>
 
         {/* Prompt Field */}
