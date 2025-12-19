@@ -6,7 +6,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { Upload, Link, X, Loader2, Image as ImageIcon, Check } from 'lucide-react';
+import { Upload, Link, X, Loader2, Check } from 'lucide-react';
 
 interface ImageUploadProps {
   value?: string;
@@ -136,13 +136,6 @@ export default function ImageUpload({
     }
   }, [onChange]);
 
-  // 直接使用 URL（不上传到 R2）
-  const handleUseDirectUrl = useCallback(() => {
-    if (urlInput.trim()) {
-      onChange(urlInput.trim());
-      setUrlInput('');
-    }
-  }, [urlInput, onChange]);
 
   return (
     <div className={`space-y-3 ${className}`}>
@@ -242,14 +235,9 @@ export default function ImageUpload({
               上传到 R2
             </button>
           </div>
-          <button
-            type="button"
-            onClick={handleUseDirectUrl}
-            disabled={disabled || uploading || !urlInput.trim()}
-            className="text-xs text-gray-500 hover:text-gray-700 underline"
-          >
-            或者：直接使用此 URL（不上传到 R2）
-          </button>
+          <p className="text-xs text-gray-400">
+            图片将下载并上传到 R2 存储
+          </p>
         </div>
       )}
 

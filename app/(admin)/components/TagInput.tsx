@@ -10,16 +10,8 @@ import { X, Plus, Tag, ChevronDown, Check, Edit2, Trash2 } from 'lucide-react';
 import { API_ENDPOINTS } from '@/lib/constants';
 import { INPUT_STYLES, LABEL_STYLES, BADGE_STYLES } from '@/lib/styles';
 
-// 根据标签名获取对应的样式（与列表保持一致）
-const getTagStyle = (tag: string) => {
-  const styles = [
-    BADGE_STYLES.primary,
-    BADGE_STYLES.success,
-    BADGE_STYLES.warning,
-    BADGE_STYLES.neutral
-  ];
-  return styles[tag.length % styles.length];
-};
+// 统一的标签样式 - 所有标签使用一致的蓝色主题
+const TAG_STYLE = BADGE_STYLES.primary;
 
 interface TagInputProps {
   selectedTags: string[];
@@ -204,7 +196,7 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
         {selectedTags.map(tag => (
           <span
             key={tag}
-            className={`${getTagStyle(tag)} gap-1`}
+            className={`${TAG_STYLE} gap-1`}
           >
             {tag}
             {!disabled && (
@@ -308,7 +300,7 @@ export default function TagInput({ selectedTags, onChange, disabled }: TagInputP
                                 <Check className="w-3 h-3 text-white" />
                               )}
                             </div>
-                            <span className={getTagStyle(tag)}>
+                            <span className={TAG_STYLE}>
                               {tag}
                             </span>
                           </div>
