@@ -1,15 +1,19 @@
 import { NextResponse } from 'next/server';
-import { clearAuthCookie } from '@/lib/auth';
+import { cookies } from 'next/headers';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
+const TOKEN_NAME = 'admin_token';
+
 export async function POST() {
-  const response = NextResponse.json({
+  // 使用 next/headers 的 cookies() 来删除 Cookie
+  const cookieStore = await cookies();
+  cookieStore.delete(TOKEN_NAME);
+
+  return NextResponse.json({
     success: true,
     message: '已退出登录',
   });
-
-  return clearAuthCookie(response);
 }
 

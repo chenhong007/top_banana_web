@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateCredentials, generateToken, setAuthCookie } from '@/lib/auth';
+import { cookies } from 'next/headers';
+import { validateCredentials, generateToken } from '@/lib/auth';
 import { 
   checkRateLimit, 
   recordLoginAttempt, 
@@ -9,6 +10,9 @@ import {
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
+
+const TOKEN_NAME = 'admin_token';
+const TOKEN_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,12 +68,21 @@ export async function POST(request: NextRequest) {
     clearRateLimit(clientId);
 
     const token = generateToken(username);
-    const response = NextResponse.json({
+    
+    // 使用 next/headers 的 cookies() 来设置 Cookie
+    const cookieStore = await cookies();
+    cookieStore.set(TOKEN_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: TOKEN_MAX_AGE,
+      path: '/',
+    });
+
+    return NextResponse.json({
       success: true,
       message: '登录成功',
     });
-
-    return setAuthCookie(response, token);
   } catch (error) {
     console.error('Login error:', error);
     // 返回更详细的错误信息用于调试
