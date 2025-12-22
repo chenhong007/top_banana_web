@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Lock, User, LogIn, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,13 +19,14 @@ export default function LoginPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
+        credentials: 'include', // 确保 Cookie 被正确接收和发送
       });
 
       const data = await res.json();
 
       if (data.success) {
-        router.push('/admin');
-        router.refresh();
+        // 使用硬刷新确保 Cookie 生效，避免客户端路由缓存问题
+        window.location.href = '/admin';
       } else {
         setError(data.error || '登录失败');
       }

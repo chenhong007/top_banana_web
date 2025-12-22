@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { validateCredentials, generateToken } from '@/lib/auth';
 import { 
   checkRateLimit, 
@@ -69,20 +68,26 @@ export async function POST(request: NextRequest) {
 
     const token = generateToken(username);
     
-    // 使用 next/headers 的 cookies() 来设置 Cookie
-    const cookieStore = await cookies();
-    cookieStore.set(TOKEN_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: TOKEN_MAX_AGE,
-      path: '/',
-    });
-
-    return NextResponse.json({
+    // 创建响应对象
+    const response = NextResponse.json({
       success: true,
       message: '登录成功',
     });
+    
+    // 直接通过 headers 设置 Cookie（更可靠的方式，适用于 Vercel Serverless）
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieValue = [
+      `${TOKEN_NAME}=${token}`,
+      `Path=/`,
+      `Max-Age=${TOKEN_MAX_AGE}`,
+      `HttpOnly`,
+      `SameSite=Lax`,
+      isProduction ? 'Secure' : '',
+    ].filter(Boolean).join('; ');
+    
+    response.headers.set('Set-Cookie', cookieValue);
+    
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     // 返回更详细的错误信息用于调试
