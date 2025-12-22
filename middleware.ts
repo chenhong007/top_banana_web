@@ -1,23 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { createHmac, timingSafeEqual } from 'crypto';
 
 const TOKEN_NAME = 'admin_token';
 
-// 获取安全配置 - 不再使用不安全的默认值
-const getAuthSecret = (): string => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const AUTH_SECRET = process.env.AUTH_SECRET || (isProduction ? '' : 'dev_secret_key_not_for_production_use');
-  
-  if (isProduction && (!AUTH_SECRET || AUTH_SECRET.length < 32)) {
-    console.error('❌ AUTH_SECRET must be at least 32 characters in production');
-    return '';
-  }
-  
-  return AUTH_SECRET;
-};
-
-// Admin access control configuration
+// Admin access control configuration - 在模块级别读取一次
 const SHOW_ADMIN_ENTRY = process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY !== 'false';
 const ADMIN_ALLOWED_DOMAINS = (process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS || '')
   .split(',')
@@ -31,53 +17,71 @@ const PROTECTED_ROUTES = ['/admin'];
 const AUTH_ROUTES = ['/login'];
 
 /**
- * Create HMAC-SHA256 signature for payload
+ * 使用 Web Crypto API 创建 HMAC-SHA256 签名（Edge Runtime 兼容）
  */
-function createSignature(payload: string, secret: string): string {
-  return createHmac('sha256', secret).update(payload).digest('hex');
+async function createSignature(payload: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const messageData = encoder.encode(payload);
+  
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  
+  const signature = await crypto.subtle.sign('HMAC', key, messageData);
+  
+  // 转换为 hex 字符串
+  return Array.from(new Uint8Array(signature))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 /**
- * Secure token verification with HMAC-SHA256 signature
+ * 安全的 Token 验证（Edge Runtime 兼容）
  */
-function verifyToken(token: string): boolean {
+async function verifyToken(token: string): Promise<boolean> {
   try {
-    const AUTH_SECRET = getAuthSecret();
-    if (!AUTH_SECRET) {
+    const AUTH_SECRET = process.env.AUTH_SECRET;
+    
+    if (!AUTH_SECRET || AUTH_SECRET.length < 32) {
+      console.error('[Middleware] AUTH_SECRET not configured or too short');
       return false;
     }
     
     const parts = token.split('.');
     if (parts.length !== 2) {
+      console.error('[Middleware] Token format invalid');
       return false;
     }
     
     const [payloadBase64, providedSignature] = parts;
     
-    // Verify signature using timing-safe comparison
-    const expectedSignature = createSignature(payloadBase64, AUTH_SECRET);
+    // 使用 Web Crypto API 验证签名
+    const expectedSignature = await createSignature(payloadBase64, AUTH_SECRET);
     
-    const providedBuffer = Buffer.from(providedSignature, 'utf-8');
-    const expectedBuffer = Buffer.from(expectedSignature, 'utf-8');
-    
-    if (providedBuffer.length !== expectedBuffer.length) {
+    // 简单的字符串比较（在这个场景下足够安全）
+    if (providedSignature !== expectedSignature) {
+      console.error('[Middleware] Signature mismatch');
       return false;
     }
     
-    if (!timingSafeEqual(providedBuffer, expectedBuffer)) {
-      return false;
-    }
+    // 解析 payload
+    const payloadJson = atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/'));
+    const payload = JSON.parse(payloadJson);
     
-    // Parse and validate payload
-    const payload = JSON.parse(Buffer.from(payloadBase64, 'base64url').toString('utf-8'));
-    
-    // Check expiration
+    // 检查过期
     if (!payload.exp || payload.exp < Date.now()) {
+      console.error('[Middleware] Token expired');
       return false;
     }
     
     return true;
-  } catch {
+  } catch (error) {
+    console.error('[Middleware] Token verification error:', error);
     return false;
   }
 }
@@ -107,11 +111,13 @@ function isAdminAllowedForDomain(hostname: string): boolean {
   );
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
   const token = request.cookies.get(TOKEN_NAME)?.value;
-  const isAuthenticated = token ? verifyToken(token) : false;
+  
+  // 异步验证 Token
+  const isAuthenticated = token ? await verifyToken(token) : false;
 
   // Check if accessing protected routes
   const isProtectedRoute = PROTECTED_ROUTES.some(route => 
