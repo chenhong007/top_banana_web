@@ -14,6 +14,7 @@ const TOKEN_NAME = 'admin_token';
 export async function GET(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === 'production';
   const existingToken = request.cookies.get(TOKEN_NAME)?.value;
+  const hostname = request.headers.get('host') || '';
   
   // 检查环境变量
   const envCheck = {
@@ -35,6 +36,26 @@ export async function GET(request: NextRequest) {
       minLength: 32,
       meetsMinLength: (process.env.AUTH_SECRET?.length || 0) >= 32,
     },
+  };
+
+  // 检查域名访问控制
+  const SHOW_ADMIN_ENTRY = process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY !== 'false';
+  const ADMIN_ALLOWED_DOMAINS = (process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS || '')
+    .split(',')
+    .map(d => d.trim().toLowerCase())
+    .filter(Boolean);
+  
+  const domainCheck = {
+    currentHost: hostname,
+    showAdminEntry: SHOW_ADMIN_ENTRY,
+    showAdminEntryEnvValue: process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY || '(not set)',
+    allowedDomains: ADMIN_ALLOWED_DOMAINS.length > 0 ? ADMIN_ALLOWED_DOMAINS : '(all domains allowed)',
+    allowedDomainsEnvValue: process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS || '(not set)',
+    isCurrentDomainAllowed: ADMIN_ALLOWED_DOMAINS.length === 0 || ADMIN_ALLOWED_DOMAINS.some(domain => 
+      hostname.toLowerCase() === domain || 
+      hostname.toLowerCase().endsWith(`.${domain}`) ||
+      (domain.includes('vercel.app') && hostname.includes('vercel.app'))
+    ),
   };
 
   // 检查现有 Cookie
@@ -70,9 +91,19 @@ export async function GET(request: NextRequest) {
     issues.push('⚠️ 存在无效的 admin_token Cookie（可能过期或签名不匹配）');
   }
 
+  // 域名访问控制问题
+  if (!domainCheck.showAdminEntry) {
+    issues.push('❌ NEXT_PUBLIC_SHOW_ADMIN_ENTRY 设置为 false，后台入口已禁用');
+  }
+  
+  if (!domainCheck.isCurrentDomainAllowed) {
+    issues.push(`❌ 当前域名 ${hostname} 不在允许列表中，无法访问后台`);
+  }
+
   return NextResponse.json({
     timestamp: new Date().toISOString(),
     envCheck,
+    domainCheck,
     cookieCheck,
     issues,
     allConfigured: issues.filter(i => i.startsWith('❌')).length === 0,
