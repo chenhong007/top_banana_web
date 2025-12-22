@@ -143,13 +143,18 @@ export function isAuthenticated(request: NextRequest): boolean {
  * Create response with auth cookie
  */
 export function setAuthCookie(response: NextResponse, token: string): NextResponse {
-  response.cookies.set(TOKEN_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict', // 更严格的 CSRF 保护
-    maxAge: TOKEN_MAX_AGE,
-    path: '/',
-  });
+  // 使用 headers 直接设置 Set-Cookie，确保在 Vercel 上正常工作
+  const isProduction = process.env.NODE_ENV === 'production';
+  const cookieValue = [
+    `${TOKEN_NAME}=${token}`,
+    `Path=/`,
+    `Max-Age=${TOKEN_MAX_AGE}`,
+    `HttpOnly`,
+    `SameSite=Lax`, // 使用 Lax 而不是 Strict，以支持从登录页跳转
+    isProduction ? 'Secure' : '',
+  ].filter(Boolean).join('; ');
+  
+  response.headers.set('Set-Cookie', cookieValue);
   return response;
 }
 
@@ -157,7 +162,15 @@ export function setAuthCookie(response: NextResponse, token: string): NextRespon
  * Create response that clears auth cookie
  */
 export function clearAuthCookie(response: NextResponse): NextResponse {
-  response.cookies.delete(TOKEN_NAME);
+  // 使用 headers 直接清除 Cookie
+  const cookieValue = [
+    `${TOKEN_NAME}=`,
+    `Path=/`,
+    `Max-Age=0`,
+    `HttpOnly`,
+  ].join('; ');
+  
+  response.headers.set('Set-Cookie', cookieValue);
   return response;
 }
 
