@@ -21,7 +21,6 @@ import {
   PromptGrid,
   Sidebar,
 } from './components/home';
-import { Footer } from './components/Footer';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -134,15 +133,7 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
   };
 
   return (
-    <div className="min-h-screen bg-dark-900 text-white bg-tech-grid bg-fixed">
-      {/* Background Decoration */}
-      <div className="fixed inset-0 bg-subtle-gradient pointer-events-none z-0" />
-      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-tech-primary/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow" />
-      <div
-        className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-tech-accent/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow"
-        style={{ animationDelay: '3s' }}
-      />
-
+    <>
       {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-white/5 shadow-lg shadow-black/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -241,9 +232,6 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
           </div>
         </div>
       </main>
-
-      {/* Footer 免责声明 */}
-      <Footer />
-    </div>
+    </>
   );
 }
