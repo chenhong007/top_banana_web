@@ -12,6 +12,7 @@ interface OptimizedImageProps {
   height?: number;
   priority?: boolean;
   sizes?: string;
+  objectFit?: 'cover' | 'contain';
   onError?: () => void;
 }
 
@@ -31,6 +32,7 @@ export default function OptimizedImage({
   height,
   priority = false,
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+  objectFit = 'cover',
   onError,
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -157,7 +159,7 @@ export default function OptimizedImage({
             priority={priority}
             className={`transition-opacity duration-500 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
-            } object-cover`}
+            } ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`}
             onLoad={handleLoad}
             onError={handleError}
             loading={priority ? 'eager' : 'lazy'}
@@ -168,9 +170,9 @@ export default function OptimizedImage({
           <img
             src={optimizedSrc}
             alt={alt}
-            className={`w-full h-full object-cover transition-opacity duration-500 ${
+            className={`w-full h-full transition-opacity duration-500 ${
               isLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            } ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`}
             loading={priority ? 'eager' : 'lazy'}
             referrerPolicy="no-referrer"
             onLoad={handleLoad}

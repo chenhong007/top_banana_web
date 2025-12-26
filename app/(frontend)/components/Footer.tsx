@@ -39,13 +39,14 @@ export function Footer() {
           {/* 右侧：公众号/联系方式 */}
           <div className="flex flex-col items-center md:items-end space-y-3">
             <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">关注公众号 / 联系我</span>
-            <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 group">
+            <div className="relative w-64 h-24 rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 group bg-dark-900/50">
               <OptimizedImage 
                 src="/api/images/static/contact.png" 
                 alt="联系方式" 
                 fill 
-                sizes="128px"
-                className="transition-transform duration-500 group-hover:scale-110"
+                sizes="256px"
+                objectFit="contain"
+                className="transition-transform duration-500 group-hover:scale-105"
               />
             </div>
           </div>
