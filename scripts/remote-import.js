@@ -32,6 +32,7 @@ async function runImport() {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({
+          secret: SECRET, // 通过 body 传递 token 作为备选
           limit: BATCH_SIZE,
           offset: offset,
           skipR2: false
