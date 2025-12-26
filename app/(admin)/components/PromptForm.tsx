@@ -10,7 +10,7 @@ import { UI_TEXT, MESSAGES, DEFAULT_CATEGORIES } from '@/lib/constants';
 import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
 import TagInput from './TagInput';
 import ModelTagInput from './ModelTagInput';
-import ImageUpload from './ImageUpload';
+import MultiImageUpload from './MultiImageUpload';
 
 interface PromptFormProps {
   formData: CreatePromptRequest;
@@ -241,16 +241,21 @@ export default function PromptForm({
           )}
         </div>
 
-        {/* Image Upload Field */}
+        {/* Multi Image Upload Field */}
         <div>
           <label className={LABEL_STYLES.base}>
             <ImageIcon className="w-4 h-4 inline-block mr-1.5 -mt-0.5" />
-            图片（可选）
+            图片（可选，最多 6 张，第一张为封面）
           </label>
-          <ImageUpload
-            value={formData.imageUrl}
-            onChange={(url) => onChange({ ...formData, imageUrl: url })}
+          <MultiImageUpload
+            value={formData.imageUrls || (formData.imageUrl ? [formData.imageUrl] : [])}
+            onChange={(urls) => onChange({ 
+              ...formData, 
+              imageUrls: urls,
+              imageUrl: urls.length > 0 ? urls[0] : '' // 保持向后兼容
+            })}
             disabled={submitting}
+            maxImages={6}
           />
         </div>
 

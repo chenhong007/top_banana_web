@@ -10,7 +10,8 @@ export interface PromptItem {
   modelTags?: string[]; // AI模型标签（Midjourney、DALL-E等）
   prompt: string; // The prompt content
   source: string; // Prompt source
-  imageUrl?: string; // Optional image URL
+  imageUrl?: string; // Optional image URL (第一张图作为封面，向后兼容)
+  imageUrls?: string[]; // 多图 URL 数组 (所有图片)
   category?: string; // 生成类型类别 (文生图、文生视频、文生音频、其他)
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string

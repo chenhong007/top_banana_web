@@ -17,6 +17,7 @@ const initialFormData: CreatePromptRequest = {
   prompt: '',
   source: '',
   imageUrl: '',
+  imageUrls: [],
   category: '',
 };
 
@@ -48,6 +49,10 @@ export function usePromptForm(onSuccess?: () => void) {
 
   const startEdit = (prompt: PromptItem) => {
     setEditingId(prompt.id);
+    // 处理 imageUrls：优先使用 imageUrls，否则回退到 imageUrl
+    const imageUrls = prompt.imageUrls && prompt.imageUrls.length > 0 
+      ? prompt.imageUrls 
+      : (prompt.imageUrl ? [prompt.imageUrl] : []);
     setFormData({
       effect: prompt.effect || '',
       description: prompt.description || '',
@@ -55,7 +60,8 @@ export function usePromptForm(onSuccess?: () => void) {
       modelTags: prompt.modelTags || [],
       prompt: prompt.prompt || '',
       source: prompt.source || '',
-      imageUrl: prompt.imageUrl || '',
+      imageUrl: imageUrls.length > 0 ? imageUrls[0] : '',
+      imageUrls: imageUrls,
       category: prompt.category || '',
     });
     setIsCreating(false);

@@ -13,7 +13,8 @@ model Prompt {
   description String     // Detailed description
   prompt      String     // The actual prompt content
   source      String     // Source URL
-  imageUrl    String?    // Primary image URL (legacy field)
+  imageUrl    String?    // Primary image URL (legacy field, first image for cover)
+  imageUrls   String[]   // Multiple image URLs array
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   categoryId  String?    // Foreign key to Category

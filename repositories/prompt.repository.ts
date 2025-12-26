@@ -23,7 +23,8 @@ export interface PromptDTO {
   modelTags: string[];
   prompt: string;
   source: string;
-  imageUrl?: string;
+  imageUrl?: string; // 第一张图作为封面（向后兼容）
+  imageUrls?: string[]; // 所有图片 URL 数组
   category?: string;
   createdAt: string;
   updatedAt: string;
@@ -37,7 +38,8 @@ export interface CreatePromptInput {
   modelTags?: string[];
   prompt: string;
   source: string;
-  imageUrl?: string;
+  imageUrl?: string; // 单图 URL（向后兼容）
+  imageUrls?: string[]; // 多图 URL 数组
   category?: string;
 }
 
@@ -54,6 +56,10 @@ class PromptRepository extends BaseRepository<
    * Convert Prisma model to DTO
    */
   protected toDTO(prompt: PromptWithRelations): PromptDTO {
+    // 处理 imageUrls：优先使用数据库的 imageUrls，否则回退到 imageUrl
+    const imageUrls = (prompt as { imageUrls?: string[] }).imageUrls || [];
+    const primaryImageUrl = imageUrls.length > 0 ? imageUrls[0] : (prompt.imageUrl || undefined);
+    
     return {
       id: prompt.id,
       effect: prompt.effect,
@@ -62,7 +68,8 @@ class PromptRepository extends BaseRepository<
       modelTags: prompt.modelTags.map((m) => m.name),
       prompt: prompt.prompt,
       source: prompt.source,
-      imageUrl: prompt.imageUrl || undefined,
+      imageUrl: primaryImageUrl, // 第一张图作为封面
+      imageUrls: imageUrls.length > 0 ? imageUrls : (prompt.imageUrl ? [prompt.imageUrl] : undefined),
       category: prompt.category?.name || undefined,
       createdAt: prompt.createdAt.toISOString(),
       updatedAt: prompt.updatedAt.toISOString(),
@@ -134,6 +141,12 @@ class PromptRepository extends BaseRepository<
   async create(data: CreatePromptInput): Promise<PromptDTO> {
     try {
       const categoryName = data.category || DEFAULT_CATEGORY;
+      
+      // 处理图片：优先使用 imageUrls，否则回退到 imageUrl
+      const imageUrls = data.imageUrls && data.imageUrls.length > 0 
+        ? data.imageUrls 
+        : (data.imageUrl ? [data.imageUrl] : []);
+      const primaryImageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
       const prompt = await this.prisma.prompt.create({
         data: {
@@ -141,7 +154,8 @@ class PromptRepository extends BaseRepository<
           description: data.description,
           prompt: data.prompt,
           source: data.source,
-          imageUrl: data.imageUrl || null,
+          imageUrl: primaryImageUrl, // 第一张图作为封面（向后兼容）
+          imageUrls: imageUrls, // 存储所有图片
           tags: {
             connectOrCreate: data.tags.map((name) => ({
               where: { name },
@@ -189,6 +203,18 @@ class PromptRepository extends BaseRepository<
         });
       }
 
+      // 处理图片更新
+      let imageUpdateData: { imageUrl?: string | null; imageUrls?: string[] } = {};
+      if (data.imageUrls !== undefined) {
+        // 如果提供了 imageUrls，使用它
+        imageUpdateData.imageUrls = data.imageUrls;
+        imageUpdateData.imageUrl = data.imageUrls.length > 0 ? data.imageUrls[0] : null;
+      } else if (data.imageUrl !== undefined) {
+        // 如果只提供了 imageUrl（向后兼容）
+        imageUpdateData.imageUrl = data.imageUrl || null;
+        imageUpdateData.imageUrls = data.imageUrl ? [data.imageUrl] : [];
+      }
+
       const prompt = await this.prisma.prompt.update({
         where: { id },
         data: {
@@ -196,7 +222,7 @@ class PromptRepository extends BaseRepository<
           ...(data.description !== undefined && { description: data.description }),
           ...(data.prompt !== undefined && { prompt: data.prompt }),
           ...(data.source !== undefined && { source: data.source }),
-          ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl || null }),
+          ...imageUpdateData,
           ...(data.tags && {
             tags: {
               connectOrCreate: data.tags.map((name) => ({
@@ -257,6 +283,12 @@ class PromptRepository extends BaseRepository<
       for (const item of items) {
         try {
           const categoryName = item.category || DEFAULT_CATEGORY;
+          
+          // 处理图片：优先使用 imageUrls，否则回退到 imageUrl
+          const imageUrls = item.imageUrls && item.imageUrls.length > 0 
+            ? item.imageUrls 
+            : (item.imageUrl ? [item.imageUrl] : []);
+          const primaryImageUrl = imageUrls.length > 0 ? imageUrls[0] : null;
 
           await tx.prompt.create({
             data: {
@@ -264,7 +296,8 @@ class PromptRepository extends BaseRepository<
               description: item.description,
               prompt: item.prompt,
               source: item.source,
-              imageUrl: item.imageUrl || null,
+              imageUrl: primaryImageUrl,
+              imageUrls: imageUrls,
               tags: {
                 connectOrCreate: item.tags.map((name) => ({
                   where: { name },
