@@ -1,5 +1,8 @@
+'use client';
+
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DEFAULTS } from '@/lib/constants';
+import { useTranslations } from 'next-intl';
 
 interface PaginationProps {
   currentPage: number;
@@ -24,6 +27,8 @@ export default function Pagination({
   hasNextPage,
   hasPreviousPage,
 }: PaginationProps) {
+  const t = useTranslations('pagination');
+
   // Generate page numbers to display
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
@@ -69,7 +74,7 @@ export default function Pagination({
     <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-dark-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
       {/* Page Size Selector */}
       <div className="flex items-center gap-3 text-sm text-gray-400">
-        <span>每页显示</span>
+        <span>{t('perPage')}</span>
         <div className="relative group">
           <select
             value={pageSize}
@@ -84,9 +89,9 @@ export default function Pagination({
             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
           </div>
         </div>
-        <span>条</span>
+        <span>{t('items')}</span>
         <span className="ml-2 px-3 py-1 bg-white/5 rounded-full text-gray-400 border border-white/5">
-          共 {totalItems} 条
+          {t('total', { count: totalItems })}
         </span>
       </div>
 
@@ -101,7 +106,7 @@ export default function Pagination({
               ? 'bg-dark-900 text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 hover:border-white/20'
               : 'bg-dark-900/50 text-gray-600 cursor-not-allowed border border-transparent'
           }`}
-          title="上一页"
+          title={t('previous')}
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -135,7 +140,7 @@ export default function Pagination({
               ? 'bg-dark-900 text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 hover:border-white/20'
               : 'bg-dark-900/50 text-gray-600 cursor-not-allowed border border-transparent'
           }`}
-          title="下一页"
+          title={t('next')}
         >
           <ChevronRight className="w-5 h-5" />
         </button>

@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "title": "AI Prompt Library",
+    "description": "Quality AI prompt collection and management platform"
+  },
+  "header": {
+    "title": "Top AI Prompts Collection",
+    "subtitle": "top ai prompts",
+    "admin": "Admin Panel",
+    "logout": "Logout"
+  },
+  "hero": {
+    "title": "Explore Unlimited Creativity",
+    "description": "Curated AI prompts to inspire your creative journey"
+  },
+  "search": {
+    "placeholder": "Search prompts, effects, or descriptions..."
+  },
+  "filter": {
+    "all": "All",
+    "categories": "Categories",
+    "models": "Models",
+    "tags": "Tags"
+  },
+  "sidebar": {
+    "categories": "Generation Type",
+    "models": "AI Models"
+  },
+  "pagination": {
+    "perPage": "Per page",
+    "items": "items",
+    "total": "{count} total",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "card": {
+    "copy": "Copy prompt",
+    "copied": "Copied",
+    "source": "Source",
+    "like": "Like",
+    "heart": "Heart (Copy)",
+    "noDate": "No date",
+    "aiArt": "AI Art"
+  },
+  "footer": {
+    "disclaimer": "Disclaimer",
+    "disclaimerText1": "Most of the prompt examples collected on this site come from the internet and are for learning and communication purposes only. All examples have been attributed to their original sources whenever possible. Please contact us if any attribution is missing.",
+    "disclaimerText2Part1": "The content on this site is ",
+    "disclaimerText2Part2": ". If you believe your rights have been infringed, please contact us to remove the relevant content.",
+    "noCommercial": "prohibited for commercial use",
+    "copyright": "© {year} AI Prompt Library · For learning purposes only",
+    "contact": "Follow us / Contact",
+    "contactAlt": "Contact information"
+  },
+  "empty": {
+    "noResults": "No matching prompts found",
+    "tryOther": "Try different search criteria"
+  },
+  "loading": {
+    "text": "Loading..."
+  }
+}
+

@@ -1,8 +1,11 @@
+'use client';
+
 import { PromptItem } from '@/types';
 import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart } from 'lucide-react';
 import { useState } from 'react';
 import OptimizedImage from './OptimizedImage';
 import { useInteractPromptMutation } from '@/hooks/queries/usePromptsQuery';
+import { useTranslations, useLocale } from 'next-intl';
 
 // AI模型标签颜色映射 - 使用更暗淡的颜色
 const MODEL_TAG_COLORS: Record<string, string> = {
@@ -28,6 +31,8 @@ interface PromptCardProps {
 }
 
 export default function PromptCard({ prompt }: PromptCardProps) {
+  const t = useTranslations('card');
+  const locale = useLocale();
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
   const interactMutation = useInteractPromptMutation();
@@ -54,6 +59,14 @@ export default function PromptCard({ prompt }: PromptCardProps) {
     e.preventDefault();
     e.stopPropagation();
     interactMutation.mutate({ id: prompt.id, type: 'heart' });
+  };
+
+  // Format date based on locale
+  const formatDate = (dateString: string | Date | undefined) => {
+    if (!dateString || isNaN(new Date(dateString).getTime())) {
+      return t('noDate');
+    }
+    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US');
   };
 
   return (
@@ -95,9 +108,9 @@ export default function PromptCard({ prompt }: PromptCardProps) {
         </p>
 
         {/* Tags - 颜色调整为更冷淡的青色/天蓝 */}
-        {(prompt.tags || []).filter(t => t).length > 0 && (
+        {(prompt.tags || []).filter(tag => tag).length > 0 && (
           <div className="flex flex-wrap gap-2 mb-5">
-            {(prompt.tags || []).filter(t => t).slice(0, 3).map((tag, idx) => (
+            {(prompt.tags || []).filter(tag => tag).slice(0, 3).map((tag, idx) => (
               <span
                 key={tag || idx}
                 className="inline-flex items-center px-2.5 py-1 bg-tech-primary/5 text-tech-primary/90 rounded-md text-xs font-medium border border-tech-primary/20 hover:bg-tech-primary/10 transition-colors"
@@ -106,9 +119,9 @@ export default function PromptCard({ prompt }: PromptCardProps) {
                 {tag}
               </span>
             ))}
-            {(prompt.tags || []).filter(t => t).length > 3 && (
+            {(prompt.tags || []).filter(tag => tag).length > 3 && (
               <span className="inline-flex items-center px-2 py-1 text-xs text-gray-500 border border-transparent">
-                +{(prompt.tags || []).filter(t => t).length - 3}
+                +{(prompt.tags || []).filter(tag => tag).length - 3}
               </span>
             )}
           </div>
@@ -124,7 +137,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
             <button
               onClick={copyPrompt}
               className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-all duration-200 backdrop-blur-sm opacity-0 group-hover/code:opacity-100"
-              title={copied ? '已复制' : '复制提示词'}
+              title={copied ? t('copied') : t('copy')}
             >
               {copied ? (
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -162,7 +175,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
           {(!prompt.modelTags || prompt.modelTags.length === 0) && (
             <div className="px-2 py-0.5 bg-dark-700/50 border border-white/5 rounded-md text-xs font-medium text-gray-400 flex items-center gap-1">
               <div className="w-1.5 h-1.5 rounded-full bg-gray-500" />
-              AI Art
+              {t('aiArt')}
             </div>
           )}
           
@@ -182,7 +195,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
               <button
                 onClick={handleLike}
                 className="flex items-center gap-1.5 text-gray-400 hover:text-tech-primary transition-colors group/btn"
-                title="点赞"
+                title={t('like')}
               >
                 <ThumbsUp className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                 <span className="text-xs font-medium">{prompt.likes || 0}</span>
@@ -190,7 +203,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
               <button
                 onClick={handleHeart}
                 className="flex items-center gap-1.5 text-gray-400 hover:text-rose-500 transition-colors group/btn"
-                title="爱心 (复制)"
+                title={t('heart')}
               >
                 <Heart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
                 <span className="text-xs font-medium">{prompt.hearts || 0}</span>
@@ -199,9 +212,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
             
             <div className="flex items-center text-xs text-gray-500">
               <Calendar className="w-3.5 h-3.5 mr-1.5 opacity-70" />
-              {prompt.updatedAt && !isNaN(new Date(prompt.updatedAt).getTime()) 
-                ? new Date(prompt.updatedAt).toLocaleDateString('zh-CN')
-                : '暂无日期'}
+              {formatDate(prompt.updatedAt)}
             </div>
           </div>
 
@@ -214,7 +225,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
                 className="flex items-center text-xs text-gray-500 hover:text-tech-primary transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5 mr-1.5 opacity-70" />
-                来源
+                {t('source')}
               </a>
             </div>
           )}

@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+const createNextIntlPlugin = require('next-intl/plugin');
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 // Deployment mode: 'frontend' for static export, 'full' for complete app with admin
 const deployMode = process.env.DEPLOY_MODE || 'full';
@@ -77,4 +80,4 @@ const nextConfig = deployMode === 'frontend' ? frontendConfig : fullConfig;
 
 console.log(`📦 Building in ${deployMode.toUpperCase()} mode`);
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

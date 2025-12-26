@@ -6,6 +6,7 @@
  */
 
 import { FolderOpen } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface CategoryFilterProps {
   categories: string[];
@@ -14,13 +15,15 @@ interface CategoryFilterProps {
 }
 
 export default function CategoryFilter({ categories, selected, onSelect }: CategoryFilterProps) {
+  const t = useTranslations('filter');
+
   if (categories.length === 0) return null;
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
         <FolderOpen className="w-4 h-4" />
-        <span>按生成类型筛选</span>
+        <span>{t('categories')}</span>
       </div>
       <div className="flex flex-wrap justify-center gap-3">
         <button
@@ -31,7 +34,7 @@ export default function CategoryFilter({ categories, selected, onSelect }: Categ
               : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
           }`}
         >
-          全部类型
+          {t('all')}
         </button>
         {categories.map((category) => (
           <button
@@ -50,4 +53,3 @@ export default function CategoryFilter({ categories, selected, onSelect }: Categ
     </div>
   );
 }
-

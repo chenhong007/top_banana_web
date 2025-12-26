@@ -10,6 +10,7 @@ import { Sparkles, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 // Sub-components
 import {
@@ -21,6 +22,7 @@ import {
   PromptGrid,
   Sidebar,
 } from './components/home';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -37,6 +39,8 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ initialPrompts }: HomeClientProps) {
+  const t = useTranslations('header');
+
   // Use React Query with initial data from server
   const { data: prompts = initialPrompts, isLoading: promptsLoading } = usePromptsQuery(initialPrompts);
   const { data: serverTags = [] } = useTagsQuery();
@@ -145,42 +149,48 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white tracking-tight">
-                  全球最热门banana玩法大全
+                  {t('title')}
                 </h1>
                 <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">
-                  top ai prompts
+                  {t('subtitle')}
                 </p>
               </div>
             </div>
-            {/* Auth buttons - only show if admin entry is enabled for this domain */}
-            {showAdminEntry && (
-              <div className="flex items-center gap-3">
-                {authLoading ? (
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-gray-500/30 border-t-gray-400 rounded-full animate-spin" />
-                  </div>
-                ) : (
-                  <>
-                    <Link
-                      href="/admin"
-                      className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
-                    >
-                      <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
-                      <span>管理后台</span>
-                    </Link>
-                    {isAuthenticated && (
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
-                        title="退出登录"
+            {/* Right side controls */}
+            <div className="flex items-center gap-3">
+              {/* Language Switcher */}
+              <LanguageSwitcher />
+              
+              {/* Auth buttons - only show if admin entry is enabled for this domain */}
+              {showAdminEntry && (
+                <>
+                  {authLoading ? (
+                    <div className="w-8 h-8 flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-gray-500/30 border-t-gray-400 rounded-full animate-spin" />
+                    </div>
+                  ) : (
+                    <>
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
                       >
-                        <LogOut className="w-4 h-4" />
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
+                        <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
+                        <span>{t('admin')}</span>
+                      </Link>
+                      {isAuthenticated && (
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
+                          title={t('logout')}
+                        >
+                          <LogOut className="w-4 h-4" />
+                        </button>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </header>

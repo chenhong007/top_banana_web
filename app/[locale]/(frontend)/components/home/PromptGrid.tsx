@@ -11,6 +11,7 @@ import Pagination from '../Pagination';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import EmptyState from '@/components/shared/EmptyState';
 import { PromptItem } from '@/types';
+import { useTranslations } from 'next-intl';
 
 interface PaginationData {
   currentPage: number;
@@ -31,6 +32,9 @@ interface PromptGridProps {
 }
 
 export default function PromptGrid({ loading, filteredPrompts, pagination }: PromptGridProps) {
+  const t = useTranslations('empty');
+  const tLoading = useTranslations('loading');
+
   // Loading State
   if (loading) {
     return (
@@ -46,8 +50,8 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
       <div className="text-center py-20">
         <EmptyState
           icon={<FileQuestion className="w-20 h-20 text-gray-600" />}
-          title="暂无提示词数据"
-          description="尝试其他搜索词或前往管理后台添加"
+          title={t('noResults')}
+          description={t('tryOther')}
         />
       </div>
     );
@@ -84,4 +88,3 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
     </div>
   );
 }
-

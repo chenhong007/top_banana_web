@@ -7,6 +7,7 @@
 
 import { Cpu } from 'lucide-react';
 import { getModelTagColor } from '@/config/theme';
+import { useTranslations } from 'next-intl';
 
 interface ModelTagFilterProps {
   modelTags: string[];
@@ -15,13 +16,15 @@ interface ModelTagFilterProps {
 }
 
 export default function ModelTagFilter({ modelTags, selected, onSelect }: ModelTagFilterProps) {
+  const t = useTranslations('filter');
+
   if (modelTags.length === 0) return null;
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
         <Cpu className="w-4 h-4" />
-        <span>按 AI 模型筛选</span>
+        <span>{t('models')}</span>
       </div>
       <div className="flex flex-wrap justify-center gap-3">
         <button
@@ -32,7 +35,7 @@ export default function ModelTagFilter({ modelTags, selected, onSelect }: ModelT
               : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
           }`}
         >
-          全部模型
+          {t('all')}
         </button>
         {modelTags.map((modelTag) => {
           const color = getModelTagColor(modelTag);
@@ -65,4 +68,3 @@ export default function ModelTagFilter({ modelTags, selected, onSelect }: ModelT
     </div>
   );
 }
-

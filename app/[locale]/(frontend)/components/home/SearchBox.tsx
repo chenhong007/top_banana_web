@@ -6,6 +6,7 @@
  */
 
 import { Search } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SearchBoxProps {
   value: string;
@@ -13,6 +14,8 @@ interface SearchBoxProps {
 }
 
 export default function SearchBox({ value, onChange }: SearchBoxProps) {
+  const t = useTranslations('search');
+
   return (
     <div className="relative w-full group">
       {/* Search box glow effect */}
@@ -21,7 +24,7 @@ export default function SearchBox({ value, onChange }: SearchBoxProps) {
         <Search className="absolute left-6 text-gray-500 w-6 h-6 group-focus-within:text-tech-primary transition-colors" />
         <input
           type="text"
-          placeholder="搜索提示词、效果或描述..."
+          placeholder={t('placeholder')}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="w-full pl-16 pr-6 py-5 bg-transparent text-white placeholder-gray-500 rounded-2xl focus:outline-none text-lg"
@@ -30,4 +33,3 @@ export default function SearchBox({ value, onChange }: SearchBoxProps) {
     </div>
   );
 }
-

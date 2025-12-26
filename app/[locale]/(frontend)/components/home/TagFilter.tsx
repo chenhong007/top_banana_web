@@ -6,6 +6,7 @@
  */
 
 import { Tag } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface TagFilterProps {
   tags: string[];
@@ -14,13 +15,15 @@ interface TagFilterProps {
 }
 
 export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) {
+  const t = useTranslations('filter');
+
   if (tags.length === 0) return null;
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
         <Tag className="w-4 h-4" />
-        <span>按场景标签筛选</span>
+        <span>{t('tags')}</span>
       </div>
       <div className="flex flex-wrap justify-center gap-3">
         <button
@@ -31,9 +34,9 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
               : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
           }`}
         >
-          全部标签
+          {t('all')}
         </button>
-        {tags.filter(t => t).map((tag, idx) => (
+        {tags.filter(tag => tag).map((tag, idx) => (
           <button
             key={tag || idx}
             onClick={() => onSelect(tag)}
@@ -50,4 +53,3 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
     </div>
   );
 }
-

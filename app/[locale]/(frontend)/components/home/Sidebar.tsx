@@ -8,6 +8,7 @@
 import { FolderOpen, Cpu, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { getModelTagColor } from '@/config/theme';
+import { useTranslations } from 'next-intl';
 
 interface SidebarProps {
   // 生成类型
@@ -28,6 +29,8 @@ export default function Sidebar({
   selectedModelTag,
   onModelTagSelect,
 }: SidebarProps) {
+  const t = useTranslations('sidebar');
+  const tFilter = useTranslations('filter');
   const [categoryExpanded, setCategoryExpanded] = useState(true);
   const [modelExpanded, setModelExpanded] = useState(true);
 
@@ -43,7 +46,7 @@ export default function Sidebar({
             >
               <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
                 <FolderOpen className="w-4 h-4 text-amber-400" />
-                <span>生成类型</span>
+                <span>{t('categories')}</span>
               </div>
               {categoryExpanded ? (
                 <ChevronUp className="w-4 h-4 text-gray-500" />
@@ -61,7 +64,7 @@ export default function Sidebar({
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  全部类型
+                  {tFilter('all')}
                 </button>
                 {categories.map((category) => (
                   <button
@@ -90,7 +93,7 @@ export default function Sidebar({
             >
               <div className="flex items-center gap-2 text-sm font-medium text-gray-300">
                 <Cpu className="w-4 h-4 text-purple-400" />
-                <span>AI 模型</span>
+                <span>{t('models')}</span>
               </div>
               {modelExpanded ? (
                 <ChevronUp className="w-4 h-4 text-gray-500" />
@@ -109,7 +112,7 @@ export default function Sidebar({
                   }`}
                 >
                   <Cpu className="w-3.5 h-3.5" />
-                  全部模型
+                  {tFilter('all')}
                 </button>
                 {modelTags.map((modelTag) => {
                   const color = getModelTagColor(modelTag);
@@ -147,4 +150,3 @@ export default function Sidebar({
     </aside>
   );
 }
-

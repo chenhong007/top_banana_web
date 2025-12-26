@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
 
 const TOKEN_NAME = 'admin_token';
 
@@ -15,6 +17,9 @@ const PROTECTED_ROUTES = ['/admin'];
 
 // Routes that should redirect to admin if already logged in
 const AUTH_ROUTES = ['/login'];
+
+// Create next-intl middleware
+const intlMiddleware = createMiddleware(routing);
 
 /**
  * 使用 Web Crypto API 创建 HMAC-SHA256 签名（Edge Runtime 兼容）
@@ -115,45 +120,57 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
   const token = request.cookies.get(TOKEN_NAME)?.value;
-  
-  // 异步验证 Token
-  const isAuthenticated = token ? await verifyToken(token) : false;
 
-  // Check if accessing protected routes
-  const isProtectedRoute = PROTECTED_ROUTES.some(route => 
-    pathname.startsWith(route) && !pathname.startsWith('/login')
-  );
+  // Skip i18n middleware for admin routes, API routes, and static files
+  const isAdminPath = pathname.startsWith('/admin') || pathname.startsWith('/login');
+  const isApiPath = pathname.startsWith('/api');
+  const isStaticPath = pathname.startsWith('/_next') || 
+                       pathname.startsWith('/favicon') ||
+                       pathname.includes('.');
 
-  // Check if accessing auth routes (login page)
-  const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
+  // Handle admin authentication
+  if (isAdminPath) {
+    const isAuthenticated = token ? await verifyToken(token) : false;
+    
+    const isProtectedRoute = PROTECTED_ROUTES.some(route => 
+      pathname.startsWith(route) && !pathname.startsWith('/login')
+    );
+    const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
 
-  // Check domain-level admin access control
-  if ((isProtectedRoute || isAuthRoute) && !isAdminAllowedForDomain(hostname)) {
-    // Redirect to home page if admin access is not allowed for this domain
-    return NextResponse.redirect(new URL('/', request.url));
+    // Check domain-level admin access control
+    if ((isProtectedRoute || isAuthRoute) && !isAdminAllowedForDomain(hostname)) {
+      return NextResponse.redirect(new URL('/zh', request.url));
+    }
+
+    // Redirect to login if accessing protected route without auth
+    if (isProtectedRoute && !isAuthenticated) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Redirect to admin if accessing login page while already authenticated
+    if (isAuthRoute && isAuthenticated) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+
+    return NextResponse.next();
   }
 
-  // Redirect to login if accessing protected route without auth
-  if (isProtectedRoute && !isAuthenticated) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
+  // Skip i18n for API and static paths
+  if (isApiPath || isStaticPath) {
+    return NextResponse.next();
   }
 
-  // Redirect to admin if accessing login page while already authenticated
-  if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL('/admin', request.url));
-  }
-
-  return NextResponse.next();
+  // Apply i18n middleware for frontend routes
+  return intlMiddleware(request);
 }
 
 export const config = {
   matcher: [
-    // Match admin routes
-    '/admin/:path*',
-    '/login',
-    // Skip static files and API routes
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    // Match all paths except static files and API routes that don't need i18n
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+    // Include root path
+    '/',
   ],
 };

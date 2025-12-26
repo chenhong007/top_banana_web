@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { ToastProvider } from '@/components/shared/ToastContainer'
-import { QueryProvider } from '@/lib/query-client'
-import { Analytics } from '@vercel/analytics/next'
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { ToastProvider } from '@/components/shared/ToastContainer';
+import { QueryProvider } from '@/lib/query-client';
+import { Analytics } from '@vercel/analytics/next';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'AI 提示词库',
@@ -19,15 +19,15 @@ export const metadata: Metadata = {
     description: '优质 AI 提示词收集与管理平台',
     type: 'website',
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body className={inter.className}>
         <QueryProvider>
           <ToastProvider>{children}</ToastProvider>
@@ -35,6 +35,5 @@ export default function RootLayout({
         <Analytics debug={true} />
       </body>
     </html>
-  )
+  );
 }
-
