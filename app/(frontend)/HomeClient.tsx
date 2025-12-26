@@ -136,7 +136,7 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
     <>
       {/* Header */}
       <header className="sticky top-0 z-50 glass border-b border-white/5 shadow-lg shadow-black/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               {/* Logo */}

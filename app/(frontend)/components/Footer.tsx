@@ -10,7 +10,7 @@ import OptimizedImage from './OptimizedImage';
 export function Footer() {
   return (
     <footer className="relative z-10 border-t border-white/5 bg-dark-800/50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           {/* 左侧：免责声明与版权信息 */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4">
