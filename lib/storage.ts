@@ -35,6 +35,9 @@ export async function readPrompts(): Promise<PromptItem[]> {
       prompt: p.prompt,
       source: p.source,
       imageUrl: p.imageUrl || undefined,
+      imageUrls: p.imageUrls,
+      likes: p.likes,
+      hearts: p.hearts,
       category: p.category?.name || undefined,
       createdAt: p.createdAt.toISOString(),
       updatedAt: p.updatedAt.toISOString(),
@@ -66,6 +69,9 @@ export async function getPromptById(id: string): Promise<PromptItem | null> {
       prompt: prompt.prompt,
       source: prompt.source,
       imageUrl: prompt.imageUrl || undefined,
+      imageUrls: prompt.imageUrls,
+      likes: prompt.likes,
+      hearts: prompt.hearts,
       category: prompt.category?.name || undefined,
       createdAt: prompt.createdAt.toISOString(),
       updatedAt: prompt.updatedAt.toISOString(),
@@ -92,6 +98,9 @@ export async function createPrompt(
       prompt: data.prompt,
       source: data.source,
       imageUrl: data.imageUrl || null,
+      imageUrls: data.imageUrls || [],
+      likes: data.likes || 0,
+      hearts: data.hearts || 0,
       tags: {
         connectOrCreate: data.tags.map((name) => ({
           where: { name },
@@ -123,6 +132,9 @@ export async function createPrompt(
     prompt: prompt.prompt,
     source: prompt.source,
     imageUrl: prompt.imageUrl || undefined,
+    imageUrls: prompt.imageUrls,
+    likes: prompt.likes,
+    hearts: prompt.hearts,
     category: prompt.category?.name || undefined,
     createdAt: prompt.createdAt.toISOString(),
     updatedAt: prompt.updatedAt.toISOString(),
@@ -156,6 +168,9 @@ export async function updatePrompt(
         ...(data.prompt !== undefined && { prompt: data.prompt }),
         ...(data.source !== undefined && { source: data.source }),
         ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl || null }),
+        ...(data.imageUrls !== undefined && { imageUrls: data.imageUrls }),
+        ...(data.likes !== undefined && { likes: data.likes }),
+        ...(data.hearts !== undefined && { hearts: data.hearts }),
         ...(data.tags && {
           tags: {
             connectOrCreate: data.tags.map((name) => ({
@@ -193,6 +208,9 @@ export async function updatePrompt(
       prompt: prompt.prompt,
       source: prompt.source,
       imageUrl: prompt.imageUrl || undefined,
+      imageUrls: prompt.imageUrls,
+      likes: prompt.likes,
+      hearts: prompt.hearts,
       category: prompt.category?.name || undefined,
       createdAt: prompt.createdAt.toISOString(),
       updatedAt: prompt.updatedAt.toISOString(),
@@ -235,6 +253,9 @@ export async function bulkCreatePrompts(
           prompt: item.prompt,
           source: item.source,
           imageUrl: item.imageUrl || null,
+          imageUrls: item.imageUrls || [],
+          likes: item.likes || 0,
+          hearts: item.hearts || 0,
           tags: {
             connectOrCreate: item.tags.map((name) => ({
               where: { name },

@@ -99,6 +99,10 @@ export default function OptimizedImage({
 
   // 判断是否可以使用 Next.js Image 优化
   const canUseNextImage = (url: string): boolean => {
+    // 本地图片可以直接优化
+    if (url.startsWith('/') && !url.startsWith('//')) {
+      return true;
+    }
     // 本地 API 代理的图片无法直接用 next/image 优化
     // 但 R2 公开 URL 可以
     if (url.includes('.r2.dev') || url.includes('.r2.cloudflarestorage.com')) {

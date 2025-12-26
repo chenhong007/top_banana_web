@@ -41,9 +41,10 @@ export function Footer() {
             <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">关注公众号 / 联系我</span>
             <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 group">
               <OptimizedImage 
-                src="/contact.png" 
+                src="/api/images/static/contact.png" 
                 alt="联系方式" 
                 fill 
+                sizes="128px"
                 className="transition-transform duration-500 group-hover:scale-110"
               />
             </div>
