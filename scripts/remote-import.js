@@ -5,7 +5,7 @@
 
 const API_URL = 'https://topai.ink/api/import/json';
 const SECRET = 'my-super-secret-key-2024';
-const BATCH_SIZE = 50; // 每次处理 50 条，防止超时
+const BATCH_SIZE = 20; // 减小批次大小到 20 条，避免超时（每批大约需要 60-120 秒）
 
 async function runImport() {
   console.log('🚀 开始远程导入任务...');

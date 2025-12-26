@@ -20,6 +20,7 @@ import promptsData from '@/data/prompts.json';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // Vercel Pro: 最大 300 秒
+export const revalidate = 0; // 禁用缓存
 
 // 版本标记
 const API_VERSION = 'v1.1';
@@ -178,13 +179,17 @@ function generateDescription(title: string, prompt: string): string {
 }
 
 /**
- * 检查相似度
+ * 检查相似度（优化版：限制检查数量，避免超时）
  */
 function checkSimilarity(
   promptText: string,
   existingPrompts: Array<{ id: string; prompt: string }>
 ): { isSimilar: boolean; similarity: number } {
-  for (const existing of existingPrompts) {
+  // 优化1：只检查最近的 100 条记录（假设新数据更可能与近期数据重复）
+  const maxCheck = Math.min(100, existingPrompts.length);
+  const promptsToCheck = existingPrompts.slice(-maxCheck);
+  
+  for (const existing of promptsToCheck) {
     const result = checkPromptSimilarity(promptText, existing.prompt, SIMILARITY_THRESHOLD);
     if (result.isSimilar) {
       return { isSimilar: true, similarity: result.similarity };
@@ -194,7 +199,7 @@ function checkSimilarity(
 }
 
 /**
- * 处理图片
+ * 处理图片（优化版：并行上传）
  */
 async function processImages(images: string[], skipR2: boolean): Promise<{ urls: string[]; successCount: number; failedCount: number }> {
   const urls: string[] = [];
@@ -208,19 +213,28 @@ async function processImages(images: string[], skipR2: boolean): Promise<{ urls:
     return { urls, successCount: 0, failedCount: 0 };
   }
 
-  for (const image of images) {
+  // 优化：并行上传所有图片
+  const uploadPromises = images.map(async (image) => {
     const fullUrl = IMAGE_URL_PREFIX + image;
     try {
       const result = await uploadImageFromUrl(fullUrl);
       if (result.success && result.url) {
-        urls.push(result.url);
-        successCount++;
+        return { url: result.url, success: true };
       } else {
-        urls.push(fullUrl);
-        failedCount++;
+        return { url: fullUrl, success: false };
       }
     } catch {
-      urls.push(fullUrl);
+      return { url: fullUrl, success: false };
+    }
+  });
+
+  const results = await Promise.all(uploadPromises);
+  
+  for (const result of results) {
+    urls.push(result.url);
+    if (result.success) {
+      successCount++;
+    } else {
       failedCount++;
     }
   }
@@ -328,9 +342,11 @@ export async function POST(request: NextRequest) {
     console.log(`[API ${API_VERSION}] 准备处理 ${itemsToProcess.length} 条数据`);
 
     // 获取现有数据
+    const startTime = Date.now();
     const existingSources = await getExistingSources();
     const existingPrompts = await getExistingPrompts();
     const existingTags = await getExistingTags();
+    console.log(`[API ${API_VERSION}] 数据加载完成，耗时: ${Date.now() - startTime}ms`);
 
     // 批内去重跟踪
     const batchSources = new Set<string>();
@@ -339,6 +355,7 @@ export async function POST(request: NextRequest) {
     // 处理每条数据
     for (const item of itemsToProcess) {
       stats.processed++;
+      const itemStartTime = Date.now();
 
       try {
         // 检查 URL 重复
@@ -385,6 +402,15 @@ export async function POST(request: NextRequest) {
         }
 
         stats.success++;
+        
+        // 每处理5条输出一次进度（避免日志过多）
+        if (stats.processed % 5 === 0) {
+          const elapsed = Date.now() - startTime;
+          const avgTime = elapsed / stats.processed;
+          const remaining = itemsToProcess.length - stats.processed;
+          const eta = Math.round((avgTime * remaining) / 1000);
+          console.log(`[API ${API_VERSION}] 进度: ${stats.processed}/${itemsToProcess.length}, 成功=${stats.success}, 预计剩余=${eta}秒`);
+        }
 
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);

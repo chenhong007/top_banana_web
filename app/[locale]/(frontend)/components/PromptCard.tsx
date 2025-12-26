@@ -2,8 +2,9 @@
 
 import { PromptItem } from '@/types';
 import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import OptimizedImage from './OptimizedImage';
+import ImagePreview from './ImagePreview';
 import { useInteractPromptMutation } from '@/hooks/queries/usePromptsQuery';
 import { useTranslations, useLocale } from 'next-intl';
 
@@ -35,6 +36,10 @@ export default function PromptCard({ prompt }: PromptCardProps) {
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
+  const imageRef = useRef<HTMLDivElement>(null);
   const interactMutation = useInteractPromptMutation();
 
   const copyPrompt = async () => {
@@ -61,6 +66,32 @@ export default function PromptCard({ prompt }: PromptCardProps) {
     interactMutation.mutate({ id: prompt.id, type: 'heart' });
   };
 
+  const handleImageMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!prompt.imageUrl || imageError) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoverPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
+    setIsHovering(true);
+  };
+
+  const handleImageMouseLeave = () => {
+    setIsHovering(false);
+  };
+
+  const handleImageClick = (e: React.MouseEvent) => {
+    if (!prompt.imageUrl || imageError) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setIsHovering(false);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   // Format date based on locale
   const formatDate = (dateString: string | Date | undefined) => {
     if (!dateString || isNaN(new Date(dateString).getTime())) {
@@ -76,7 +107,13 @@ export default function PromptCard({ prompt }: PromptCardProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       {/* Image - 使用优化的图片组件 */}
-      <div className="relative aspect-video bg-dark-900 overflow-hidden border-b border-white/5">
+      <div 
+        ref={imageRef}
+        className="relative aspect-video bg-dark-900 overflow-hidden border-b border-white/5 cursor-pointer"
+        onMouseEnter={handleImageMouseEnter}
+        onMouseLeave={handleImageMouseLeave}
+        onClick={handleImageClick}
+      >
         {prompt.imageUrl && !imageError ? (
           <>
             <OptimizedImage
@@ -88,6 +125,12 @@ export default function PromptCard({ prompt }: PromptCardProps) {
               onError={() => setImageError(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-800 to-transparent opacity-60 pointer-events-none" />
+            {/* Hover hint */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none">
+              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
+                <p className="text-white text-sm font-medium">点击查看大图</p>
+              </div>
+            </div>
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-dark-400 bg-dark-900/50">
@@ -231,6 +274,18 @@ export default function PromptCard({ prompt }: PromptCardProps) {
           )}
         </div>
       </div>
+
+      {/* Image Preview Component */}
+      {prompt.imageUrl && !imageError && (
+        <ImagePreview
+          src={prompt.imageUrl}
+          alt={prompt.effect}
+          isHovering={isHovering}
+          isModalOpen={isModalOpen}
+          onCloseModal={handleCloseModal}
+          hoverPosition={hoverPosition}
+        />
+      )}
     </div>
   );
 }
