@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
     'cdn.jsdelivr.net',
     'raw.githubusercontent.com',
     'avatars.githubusercontent.com',
+    'opennana.com',
   ];
 
   // Check if domain is allowed or if it's a general image host
