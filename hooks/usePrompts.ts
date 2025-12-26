@@ -1,6 +1,12 @@
 /**
  * usePrompts Hook
- * Manages prompt data fetching and state
+ * @deprecated This hook uses traditional useState pattern.
+ * Please use one of the following React Query based alternatives:
+ * - `usePromptsQuery` for simple data fetching
+ * - `usePromptsWithOptimisticUpdates` for frontend pages with interactions
+ * - `useAdminPrompts` for admin pages with full CRUD operations
+ * 
+ * This file is kept for backward compatibility and will be removed in a future version.
  */
 
 import { useState, useEffect } from 'react';
@@ -9,6 +15,9 @@ import { promptService } from '@/services/prompt.service';
 import { useToast } from '@/components/shared/ToastContainer';
 import { formatErrorMessage } from '@/lib/error-handler';
 
+/**
+ * @deprecated Use `usePromptsQuery`, `usePromptsWithOptimisticUpdates`, or `useAdminPrompts` instead.
+ */
 export function usePrompts() {
   const toast = useToast();
   const [prompts, setPrompts] = useState<PromptItem[]>([]);
@@ -38,4 +47,3 @@ export function usePrompts() {
     setPrompts,
   };
 }
-

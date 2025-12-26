@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { FolderOpen } from 'lucide-react';
+import { useState } from 'react';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import EmptyState from '@/components/shared/EmptyState';
 import ImportModal from '../components/ImportModal';
@@ -9,70 +9,32 @@ import AdminHeader from '../components/AdminHeader';
 import PromptForm from '../components/PromptForm';
 import PromptTable from '../components/PromptTable';
 import DashboardStats from '../components/DashboardStats';
-import { usePrompts } from '@/hooks/usePrompts';
-import { usePromptForm } from '@/hooks/usePromptForm';
-import { UI_TEXT, API_ENDPOINTS } from '@/lib/constants';
+import { useAdminPrompts } from '@/hooks/useAdminPrompts';
+import { useCategoriesQuery } from '@/hooks/queries';
+import { UI_TEXT } from '@/lib/constants';
 import { CONTAINER_STYLES } from '@/lib/styles';
 
 export default function AdminPage() {
-  const { prompts, loading, refetch, setPrompts } = usePrompts();
   const {
+    prompts,
+    loading,
+    refetch,
     formData,
     setFormData,
-    editingId,
     isCreating,
     submitting,
     isEditing,
     startCreate,
     startEdit,
     cancelEdit,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
+    onSubmit,
+    onDelete,
     handleTagsChange,
     handleModelTagsChange,
-  } = usePromptForm(refetch);
+  } = useAdminPrompts();
 
   const [showImportModal, setShowImportModal] = useState(false);
-  const [categories, setCategories] = useState<string[]>([]);
-
-  // Fetch categories on mount
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(API_ENDPOINTS.CATEGORIES);
-        const result = await response.json();
-        if (result.success && result.data) {
-          setCategories(result.data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch categories:', error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  const onSubmit = async () => {
-    if (isCreating) {
-      const newPrompt = await handleCreate();
-      if (newPrompt) {
-        setPrompts([newPrompt, ...prompts]);
-      }
-    } else {
-      if (!editingId) return;
-      const updatedPrompt = await handleUpdate();
-      if (updatedPrompt) {
-        setPrompts(prompts.map(p => p.id === editingId ? updatedPrompt : p));
-      }
-    }
-  };
-
-  const onDelete = async (id: string) => {
-    const deleted = await handleDelete(id);
-    if (deleted) {
-      setPrompts(prompts.filter(p => p.id !== id));
-    }
-  };
+  const { data: categories = [] } = useCategoriesQuery();
 
   return (
     <div className={CONTAINER_STYLES.page}>

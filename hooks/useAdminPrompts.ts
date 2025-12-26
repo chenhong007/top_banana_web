@@ -1,16 +1,21 @@
 /**
- * usePromptForm Hook
- * @deprecated This hook uses traditional useState pattern and is now integrated into `useAdminPrompts`.
- * Please use `useAdminPrompts` instead, which combines prompts data fetching and form management.
- * 
- * This file is kept for backward compatibility and will be removed in a future version.
+ * useAdminPrompts Hook
+ * React Query based hook for Admin page prompt management
+ * Replaces the legacy usePrompts + usePromptForm combination
  */
+
+'use client';
 
 import { useState } from 'react';
 import { PromptItem, CreatePromptRequest } from '@/types';
-import { promptService } from '@/services/prompt.service';
 import { useToast } from '@/components/shared/ToastContainer';
 import { formatErrorMessage } from '@/lib/error-handler';
+import {
+  usePromptsQuery,
+  useCreatePromptMutation,
+  useUpdatePromptMutation,
+  useDeletePromptMutation,
+} from '@/hooks/queries';
 
 const initialFormData: CreatePromptRequest = {
   effect: '',
@@ -25,14 +30,25 @@ const initialFormData: CreatePromptRequest = {
 };
 
 /**
- * @deprecated Use `useAdminPrompts` instead.
+ * Hook combining prompts data fetching and form management for Admin page
+ * Uses React Query for data fetching and mutations
  */
-export function usePromptForm(onSuccess?: () => void) {
+export function useAdminPrompts() {
   const toast = useToast();
+  
+  // React Query hooks
+  const { data: prompts = [], isLoading, refetch } = usePromptsQuery();
+  const createMutation = useCreatePromptMutation();
+  const updateMutation = useUpdatePromptMutation();
+  const deleteMutation = useDeletePromptMutation();
+
+  // Form state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState<CreatePromptRequest>(initialFormData);
-  const [submitting, setSubmitting] = useState(false);
+
+  const isEditing = editingId !== null || isCreating;
+  const submitting = createMutation.isPending || updateMutation.isPending;
 
   const resetForm = () => {
     setFormData(initialFormData);
@@ -40,11 +56,7 @@ export function usePromptForm(onSuccess?: () => void) {
     setIsCreating(false);
   };
 
-  const startCreate = () => {
-    resetForm();
-    setIsCreating(true);
-    
-    // Scroll to form after state update
+  const scrollToForm = () => {
     setTimeout(() => {
       const formElement = document.getElementById('prompt-form');
       if (formElement) {
@@ -53,9 +65,14 @@ export function usePromptForm(onSuccess?: () => void) {
     }, 100);
   };
 
+  const startCreate = () => {
+    resetForm();
+    setIsCreating(true);
+    scrollToForm();
+  };
+
   const startEdit = (prompt: PromptItem) => {
     setEditingId(prompt.id);
-    // 处理 imageUrls：优先使用 imageUrls，否则回退到 imageUrl
     const imageUrls = prompt.imageUrls && prompt.imageUrls.length > 0 
       ? prompt.imageUrls 
       : (prompt.imageUrl ? [prompt.imageUrl] : []);
@@ -71,14 +88,7 @@ export function usePromptForm(onSuccess?: () => void) {
       category: prompt.category || '',
     });
     setIsCreating(false);
-    
-    // Scroll to form after state update
-    setTimeout(() => {
-      const formElement = document.getElementById('prompt-form');
-      if (formElement) {
-        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+    scrollToForm();
   };
 
   const cancelEdit = () => {
@@ -94,18 +104,14 @@ export function usePromptForm(onSuccess?: () => void) {
     }
 
     try {
-      setSubmitting(true);
-      const newPrompt = await promptService.create(formData);
+      const newPrompt = await createMutation.mutateAsync(formData);
       toast.showSuccess('创建成功');
       resetForm();
-      onSuccess?.();
       return newPrompt;
     } catch (error) {
       console.error('Failed to create prompt:', error);
       toast.showError('创建失败：' + formatErrorMessage(error));
       return null;
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -113,18 +119,17 @@ export function usePromptForm(onSuccess?: () => void) {
     if (!editingId) return null;
 
     try {
-      setSubmitting(true);
-      const updatedPrompt = await promptService.update(editingId, formData);
+      const updatedPrompt = await updateMutation.mutateAsync({ 
+        id: editingId, 
+        data: formData 
+      });
       toast.showSuccess('更新成功');
       resetForm();
-      onSuccess?.();
       return updatedPrompt;
     } catch (error) {
       console.error('Failed to update prompt:', error);
       toast.showError('更新失败：' + formatErrorMessage(error));
       return null;
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -134,9 +139,8 @@ export function usePromptForm(onSuccess?: () => void) {
     }
 
     try {
-      await promptService.delete(id);
+      await deleteMutation.mutateAsync(id);
       toast.showSuccess('删除成功');
-      onSuccess?.();
       return true;
     } catch (error) {
       console.error('Failed to delete prompt:', error);
@@ -153,23 +157,34 @@ export function usePromptForm(onSuccess?: () => void) {
     setFormData({ ...formData, modelTags });
   };
 
+  const onSubmit = async () => {
+    if (isCreating) {
+      await handleCreate();
+    } else {
+      await handleUpdate();
+    }
+  };
+
   return {
-    // State
+    // Data
+    prompts,
+    loading: isLoading,
+    refetch,
+
+    // Form state
     formData,
+    setFormData,
     editingId,
     isCreating,
     submitting,
-    isEditing: editingId !== null || isCreating,
+    isEditing,
 
-    // Actions
-    setFormData,
-    resetForm,
+    // Form actions
     startCreate,
     startEdit,
     cancelEdit,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
+    onSubmit,
+    onDelete: handleDelete,
     handleTagsChange,
     handleModelTagsChange,
   };
