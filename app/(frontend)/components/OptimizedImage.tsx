@@ -99,6 +99,10 @@ export default function OptimizedImage({
 
   // 判断是否可以使用 Next.js Image 优化
   const canUseNextImage = (url: string): boolean => {
+    // 排除 API 代理路径，这些路径不应该由 next/image 二次处理，直接由浏览器加载更稳定
+    if (url.startsWith('/api/')) {
+      return false;
+    }
     // 本地图片可以直接优化
     if (url.startsWith('/') && !url.startsWith('//')) {
       return true;
