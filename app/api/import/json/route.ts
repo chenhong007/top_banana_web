@@ -93,7 +93,7 @@ function verifyAuth(request: NextRequest, body?: any): { success: boolean; error
     console.log(`[Auth ${API_VERSION}] Body 内容:`, JSON.stringify(body, null, 2));
     if (body.secret && typeof body.secret === 'string') {
       token = body.secret;
-      console.log(`[Auth ${API_VERSION}] ✓ 从 Body 获取到 secret，长度: ${token.length}`);
+      console.log(`[Auth ${API_VERSION}] ✓ 从 Body 获取到 secret，长度: ${body.secret.length}`);
     } else {
       console.log(`[Auth ${API_VERSION}] Body 中没有 secret 字段`);
     }
