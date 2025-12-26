@@ -91,7 +91,7 @@ function verifyAuth(request: NextRequest, body?: any): { success: boolean; error
   // 2. 如果 Header 没有，尝试从 Body 获取
   if (!token && body) {
     console.log(`[Auth ${API_VERSION}] Body 内容:`, JSON.stringify(body, null, 2));
-    if (body.secret) {
+    if (body.secret && typeof body.secret === 'string') {
       token = body.secret;
       console.log(`[Auth ${API_VERSION}] ✓ 从 Body 获取到 secret，长度: ${token.length}`);
     } else {
