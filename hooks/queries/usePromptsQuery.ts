@@ -24,7 +24,7 @@ export const promptKeys = {
  */
 export function usePromptsQuery(initialData?: PromptItem[]) {
   return useQuery({
-    queryKey: promptKeys.all,
+    queryKey: promptKeys.lists(),
     queryFn: () => promptService.getAll(),
     initialData,
     // If initial data is provided, don't refetch immediately
@@ -94,6 +94,31 @@ export function useDeletePromptMutation() {
 }
 
 /**
+ * Hook to interact with a prompt (like or heart)
+ */
+export function useInteractPromptMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, type }: { id: string; type: 'like' | 'heart' }) =>
+      promptService.interact(id, type),
+    onSuccess: (updatedPrompt) => {
+      // Update the specific prompt in cache
+      queryClient.setQueryData(promptKeys.detail(updatedPrompt.id), updatedPrompt);
+      
+      // Update the list cache to reflect changes without a full refetch
+      queryClient.setQueriesData<PromptItem[]>(
+        { queryKey: promptKeys.all },
+        (oldData) => {
+          if (!oldData) return oldData;
+          return oldData.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p));
+        }
+      );
+    },
+  });
+}
+
+/**
  * Hook to get prompts with optimistic updates support
  */
 export function usePromptsWithOptimisticUpdates() {
@@ -103,6 +128,7 @@ export function usePromptsWithOptimisticUpdates() {
   const createMutation = useCreatePromptMutation();
   const updateMutation = useUpdatePromptMutation();
   const deleteMutation = useDeletePromptMutation();
+  const interactMutation = useInteractPromptMutation();
 
   return {
     prompts,
@@ -113,9 +139,12 @@ export function usePromptsWithOptimisticUpdates() {
     update: (id: string, data: Partial<CreatePromptRequest>) =>
       updateMutation.mutateAsync({ id, data }),
     delete: deleteMutation.mutateAsync,
+    interact: (id: string, type: 'like' | 'heart') =>
+      interactMutation.mutateAsync({ id, type }),
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
+    isInteracting: interactMutation.isPending,
   };
 }
 

@@ -1,7 +1,8 @@
 import { PromptItem } from '@/types';
-import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu } from 'lucide-react';
+import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart } from 'lucide-react';
 import { useState } from 'react';
 import OptimizedImage from './OptimizedImage';
+import { useInteractPromptMutation } from '@/hooks/queries/usePromptsQuery';
 
 // AI模型标签颜色映射 - 使用更暗淡的颜色
 const MODEL_TAG_COLORS: Record<string, string> = {
@@ -29,15 +30,30 @@ interface PromptCardProps {
 export default function PromptCard({ prompt }: PromptCardProps) {
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const interactMutation = useInteractPromptMutation();
 
   const copyPrompt = async () => {
     try {
       await navigator.clipboard.writeText(prompt.prompt);
       setCopied(true);
+      // 增加爱心数 (复制次数)
+      interactMutation.mutate({ id: prompt.id, type: 'heart' });
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Failed to copy:', error);
     }
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    interactMutation.mutate({ id: prompt.id, type: 'like' });
+  };
+
+  const handleHeart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    interactMutation.mutate({ id: prompt.id, type: 'heart' });
   };
 
   return (
@@ -160,23 +176,47 @@ export default function PromptCard({ prompt }: PromptCardProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between text-xs text-gray-500 pt-5 border-t border-white/5 mt-5">
-          <div className="flex items-center">
-            <Calendar className="w-3.5 h-3.5 mr-1.5 opacity-70" />
-            {prompt.updatedAt && !isNaN(new Date(prompt.updatedAt).getTime()) 
-              ? new Date(prompt.updatedAt).toLocaleDateString('zh-CN')
-              : '暂无日期'}
+        <div className="flex flex-col gap-4 pt-5 border-t border-white/5 mt-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleLike}
+                className="flex items-center gap-1.5 text-gray-400 hover:text-tech-primary transition-colors group/btn"
+                title="点赞"
+              >
+                <ThumbsUp className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                <span className="text-xs font-medium">{prompt.likes || 0}</span>
+              </button>
+              <button
+                onClick={handleHeart}
+                className="flex items-center gap-1.5 text-gray-400 hover:text-rose-500 transition-colors group/btn"
+                title="爱心 (复制)"
+              >
+                <Heart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                <span className="text-xs font-medium">{prompt.hearts || 0}</span>
+              </button>
+            </div>
+            
+            <div className="flex items-center text-xs text-gray-500">
+              <Calendar className="w-3.5 h-3.5 mr-1.5 opacity-70" />
+              {prompt.updatedAt && !isNaN(new Date(prompt.updatedAt).getTime()) 
+                ? new Date(prompt.updatedAt).toLocaleDateString('zh-CN')
+                : '暂无日期'}
+            </div>
           </div>
+
           {prompt.source && prompt.source !== 'unknown' && (
-            <a
-              href={prompt.source}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-500 hover:text-tech-primary transition-colors"
-            >
-              <ExternalLink className="w-3.5 h-3.5 mr-1.5 opacity-70" />
-              来源
-            </a>
+            <div className="flex justify-end">
+              <a
+                href={prompt.source}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-xs text-gray-500 hover:text-tech-primary transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5 mr-1.5 opacity-70" />
+                来源
+              </a>
+            </div>
           )}
         </div>
       </div>

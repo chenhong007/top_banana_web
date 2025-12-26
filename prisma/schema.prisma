@@ -15,6 +15,8 @@ model Prompt {
   source      String     // Source URL
   imageUrl    String?    // Primary image URL (legacy field, first image for cover)
   imageUrls   String[]   // Multiple image URLs array
+  likes       Int        @default(0) // Likes count
+  hearts      Int        @default(0) // Copy count (Hearts)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   categoryId  String?    // Foreign key to Category

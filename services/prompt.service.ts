@@ -101,6 +101,29 @@ class PromptService {
       throw new Error(result.error || 'Failed to delete prompt');
     }
   }
+
+  /**
+   * Interact with a prompt (like or heart)
+   */
+  async interact(id: string, type: 'like' | 'heart'): Promise<PromptItem> {
+    const response = await fetch(`${this.baseUrl}/${id}/interactions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type }),
+    });
+
+    const result: ApiResponse<PromptItem> = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || `Failed to ${type} prompt`);
+    }
+
+    if (!result.data) {
+      throw new Error('No data returned');
+    }
+
+    return result.data;
+  }
 }
 
 // Export singleton instance

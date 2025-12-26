@@ -26,6 +26,8 @@ export interface PromptDTO {
   imageUrl?: string; // 第一张图作为封面（向后兼容）
   imageUrls?: string[]; // 所有图片 URL 数组
   category?: string;
+  likes: number;
+  hearts: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -71,9 +73,45 @@ class PromptRepository extends BaseRepository<
       imageUrl: primaryImageUrl, // 第一张图作为封面
       imageUrls: imageUrls.length > 0 ? imageUrls : (prompt.imageUrl ? [prompt.imageUrl] : undefined),
       category: prompt.category?.name || undefined,
+      likes: prompt.likes || 0,
+      hearts: prompt.hearts || 0,
       createdAt: prompt.createdAt.toISOString(),
       updatedAt: prompt.updatedAt.toISOString(),
     };
+  }
+
+  /**
+   * Increment likes count
+   */
+  async incrementLikes(id: string): Promise<PromptDTO | null> {
+    try {
+      const prompt = await this.prisma.prompt.update({
+        where: { id },
+        data: { likes: { increment: 1 } },
+        include: { tags: true, category: true, modelTags: true },
+      });
+      return this.toDTO(prompt);
+    } catch (error) {
+      console.error('Error incrementing likes:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Increment hearts count (copies)
+   */
+  async incrementHearts(id: string): Promise<PromptDTO | null> {
+    try {
+      const prompt = await this.prisma.prompt.update({
+        where: { id },
+        data: { hearts: { increment: 1 } },
+        include: { tags: true, category: true, modelTags: true },
+      });
+      return this.toDTO(prompt);
+    } catch (error) {
+      console.error('Error incrementing hearts:', error);
+      return null;
+    }
   }
 
   /**
