@@ -59,22 +59,26 @@ interface ImportStats {
 /**
  * 验证授权
  */
-function verifyAuth(request: NextRequest): boolean {
+function verifyAuth(request: NextRequest): { success: boolean; error?: string } {
   const importSecret = process.env.IMPORT_SECRET;
   
   // 如果没有设置 IMPORT_SECRET，拒绝所有请求
   if (!importSecret) {
     console.warn('IMPORT_SECRET 未设置，拒绝导入请求');
-    return false;
+    return { success: false, error: '服务端未配置 IMPORT_SECRET 环境变量 (请检查 Vercel 设置)' };
   }
   
   const authHeader = request.headers.get('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return false;
+    return { success: false, error: '缺少 Authorization 头或格式错误' };
   }
   
   const token = authHeader.substring(7);
-  return token === importSecret;
+  if (token !== importSecret) {
+    return { success: false, error: 'Token 不匹配 (请检查脚本中的 SECRET 是否与服务器一致)' };
+  }
+
+  return { success: true };
 }
 
 /**
@@ -231,9 +235,10 @@ async function createPrompt(
 
 export async function POST(request: NextRequest) {
   // 验证授权
-  if (!verifyAuth(request)) {
+  const auth = verifyAuth(request);
+  if (!auth.success) {
     return NextResponse.json(
-      { success: false, error: '未授权访问。请在请求头中添加 Authorization: Bearer YOUR_IMPORT_SECRET' },
+      { success: false, error: `认证失败: ${auth.error}` },
       { status: 401 }
     );
   }
@@ -366,9 +371,10 @@ export async function POST(request: NextRequest) {
 
 // GET 方法用于查看状态
 export async function GET(request: NextRequest) {
-  if (!verifyAuth(request)) {
+  const auth = verifyAuth(request);
+  if (!auth.success) {
     return NextResponse.json(
-      { success: false, error: '未授权' },
+      { success: false, error: `认证失败: ${auth.error}` },
       { status: 401 }
     );
   }
@@ -394,4 +400,3 @@ export async function GET(request: NextRequest) {
     },
   });
 }
-
