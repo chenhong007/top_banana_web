@@ -1,12 +1,11 @@
 /**
- * JSON Import API Route
+ * JSON Import API Route - v1.1
  * POST /api/import/json - 从 prompts.json 导入数据到数据库
  * 
  * 使用方式:
  * curl -X POST https://your-domain.com/api/import/json \
  *   -H "Content-Type: application/json" \
- *   -H "Authorization: Bearer YOUR_IMPORT_SECRET" \
- *   -d '{"skipR2": false, "limit": 10}'
+ *   -d '{"secret": "YOUR_SECRET", "skipR2": false, "limit": 10}'
  * 
  * 安全: 需要在环境变量中设置 IMPORT_SECRET
  */
@@ -21,6 +20,9 @@ import promptsData from '@/data/prompts.json';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // Vercel Pro: 最大 300 秒
+
+// 版本标记
+const API_VERSION = 'v1.1';
 
 // 配置常量
 const IMAGE_URL_PREFIX = 'https://opennana.com/awesome-prompt-gallery/';
@@ -57,35 +59,61 @@ interface ImportStats {
 }
 
 /**
- * 验证授权
+ * 验证授权 - v1.1
+ * 支持从 Header 或 Body 读取 token
  */
-function verifyAuth(request: NextRequest): { success: boolean; error?: string } {
+function verifyAuth(request: NextRequest, body?: any): { success: boolean; error?: string } {
+  console.log(`[Auth ${API_VERSION}] ===== 开始验证 =====`);
+  
   const importSecret = process.env.IMPORT_SECRET;
   
   if (!importSecret) {
-    return { success: false, error: '服务端未配置 IMPORT_SECRET' };
+    console.error(`[Auth ${API_VERSION}] IMPORT_SECRET 未配置`);
+    return { success: false, error: `[${API_VERSION}] 服务端未配置 IMPORT_SECRET` };
   }
   
-  // 打印调试信息（Vercel Logs 中可见）
-  console.log('[Auth Debug] Headers:', Object.fromEntries(request.headers.entries()));
+  console.log(`[Auth ${API_VERSION}] IMPORT_SECRET 已配置，长度: ${importSecret.length}`);
   
-  // 尝试多种方式获取 header
-  const authHeader = request.headers.get('Authorization') || 
-                     request.headers.get('authorization');
+  // 打印所有 Headers（调试用）
+  const headers = Object.fromEntries(request.headers.entries());
+  console.log(`[Auth ${API_VERSION}] 收到的 Headers:`, JSON.stringify(headers, null, 2));
+  
+  // 1. 尝试从 Header 获取
+  let token = request.headers.get('Authorization')?.replace('Bearer ', '') || 
+              request.headers.get('authorization')?.replace('Bearer ', '');
+  
+  if (token) {
+    console.log(`[Auth ${API_VERSION}] 从 Header 获取到 token，长度: ${token.length}`);
+  } else {
+    console.log(`[Auth ${API_VERSION}] Header 中没有 Authorization`);
+  }
+  
+  // 2. 如果 Header 没有，尝试从 Body 获取
+  if (!token && body) {
+    console.log(`[Auth ${API_VERSION}] Body 内容:`, JSON.stringify(body, null, 2));
+    if (body.secret) {
+      token = body.secret;
+      console.log(`[Auth ${API_VERSION}] ✓ 从 Body 获取到 secret，长度: ${token.length}`);
+    } else {
+      console.log(`[Auth ${API_VERSION}] Body 中没有 secret 字段`);
+    }
+  }
 
-  if (!authHeader) {
-    return { success: false, error: '缺少 Authorization 头' };
+  if (!token) {
+    console.error(`[Auth ${API_VERSION}] 最终未找到 token`);
+    return { success: false, error: `[${API_VERSION}] 缺少 Authorization 头或 secret 参数` };
   }
   
-  if (!authHeader.startsWith('Bearer ')) {
-    return { success: false, error: 'Authorization 格式错误 (应为 Bearer <token>)' };
-  }
-  
-  const token = authHeader.substring(7);
+  // 3. 验证 token
+  console.log(`[Auth ${API_VERSION}] 开始比对 token...`);
   if (token !== importSecret) {
-    return { success: false, error: 'Token 不匹配' };
+    console.error(`[Auth ${API_VERSION}] Token 不匹配！`);
+    console.error(`[Auth ${API_VERSION}] 期望: ${importSecret.substring(0, 10)}...`);
+    console.error(`[Auth ${API_VERSION}] 实际: ${token.substring(0, 10)}...`);
+    return { success: false, error: `[${API_VERSION}] Token 不匹配` };
   }
 
+  console.log(`[Auth ${API_VERSION}] ✓ 验证通过`);
   return { success: true };
 }
 
@@ -242,17 +270,25 @@ async function createPrompt(
 }
 
 export async function POST(request: NextRequest) {
-  // 验证授权
-  const auth = verifyAuth(request);
-  if (!auth.success) {
-    return NextResponse.json(
-      { success: false, error: `认证失败: ${auth.error}` },
-      { status: 401 }
-    );
-  }
-
+  console.log(`[API ${API_VERSION}] ===== 收到 POST 请求 =====`);
+  
   try {
+    // 先解析 body
     const body = await request.json().catch(() => ({}));
+    console.log(`[API ${API_VERSION}] Body 解析完成`);
+    
+    // 验证授权 (传入 body)
+    const auth = verifyAuth(request, body);
+    if (!auth.success) {
+      console.error(`[API ${API_VERSION}] 认证失败: ${auth.error}`);
+      return NextResponse.json(
+        { success: false, error: `认证失败: ${auth.error}` },
+        { status: 401 }
+      );
+    }
+
+    console.log(`[API ${API_VERSION}] ✓ 认证通过，开始处理导入`);
+
     const { skipR2 = false, limit = 0, offset = 0 } = body as { 
       skipR2?: boolean; 
       limit?: number;
@@ -282,6 +318,8 @@ export async function POST(request: NextRequest) {
     if (limit > 0) {
       itemsToProcess = itemsToProcess.slice(0, limit);
     }
+
+    console.log(`[API ${API_VERSION}] 准备处理 ${itemsToProcess.length} 条数据`);
 
     // 获取现有数据
     const existingSources = await getExistingSources();
@@ -348,9 +386,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log(`[API ${API_VERSION}] ✓ 处理完成: 成功=${stats.success}, 跳过=${stats.skippedByUrl + stats.skippedBySimilarity}`);
+
     return NextResponse.json({
       success: true,
       data: {
+        version: API_VERSION,
         message: '导入完成',
         stats: {
           总数据量: stats.total,
@@ -369,7 +410,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('导入错误:', error);
+    console.error(`[API ${API_VERSION}] 导入错误:`, error);
     return NextResponse.json(
       { success: false, error: error instanceof Error ? error.message : '导入失败' },
       { status: 500 }
@@ -379,32 +420,44 @@ export async function POST(request: NextRequest) {
 
 // GET 方法用于查看状态
 export async function GET(request: NextRequest) {
-  const auth = verifyAuth(request);
-  if (!auth.success) {
-    return NextResponse.json(
-      { success: false, error: `认证失败: ${auth.error}` },
-      { status: 401 }
-    );
-  }
+  console.log(`[API ${API_VERSION}] ===== 收到 GET 请求 =====`);
+  
+  try {
+    const body = undefined; // GET 没有 body
+    const auth = verifyAuth(request, body);
+    if (!auth.success) {
+      return NextResponse.json(
+        { success: false, error: `认证失败: ${auth.error}` },
+        { status: 401 }
+      );
+    }
 
-  const items = (promptsData as { items: JsonPromptItem[] }).items;
-  const existingCount = await prisma.prompt.count();
+    const items = (promptsData as { items: JsonPromptItem[] }).items;
+    const existingCount = await prisma.prompt.count();
 
-  return NextResponse.json({
-    success: true,
-    data: {
-      jsonTotal: items.length,
-      existingInDb: existingCount,
-      r2Configured: isR2Configured(),
-      usage: {
-        POST: '/api/import/json',
-        headers: { 'Authorization': 'Bearer YOUR_IMPORT_SECRET' },
-        body: {
-          skipR2: '是否跳过 R2 上传 (默认: false)',
-          limit: '限制处理数量 (默认: 0 = 全部)',
-          offset: '从第几条开始 (默认: 0)',
+    return NextResponse.json({
+      success: true,
+      data: {
+        version: API_VERSION,
+        jsonTotal: items.length,
+        existingInDb: existingCount,
+        r2Configured: isR2Configured(),
+        usage: {
+          POST: '/api/import/json',
+          body: {
+            secret: 'YOUR_IMPORT_SECRET (必填)',
+            skipR2: '是否跳过 R2 上传 (默认: false)',
+            limit: '限制处理数量 (默认: 0 = 全部)',
+            offset: '从第几条开始 (默认: 0)',
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error(`[API ${API_VERSION}] GET 错误:`, error);
+    return NextResponse.json(
+      { success: false, error: error instanceof Error ? error.message : '查询失败' },
+      { status: 500 }
+    );
+  }
 }
