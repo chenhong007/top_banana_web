@@ -62,20 +62,28 @@ interface ImportStats {
 function verifyAuth(request: NextRequest): { success: boolean; error?: string } {
   const importSecret = process.env.IMPORT_SECRET;
   
-  // 如果没有设置 IMPORT_SECRET，拒绝所有请求
   if (!importSecret) {
-    console.warn('IMPORT_SECRET 未设置，拒绝导入请求');
-    return { success: false, error: '服务端未配置 IMPORT_SECRET 环境变量 (请检查 Vercel 设置)' };
+    return { success: false, error: '服务端未配置 IMPORT_SECRET' };
   }
   
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return { success: false, error: '缺少 Authorization 头或格式错误' };
+  // 打印调试信息（Vercel Logs 中可见）
+  console.log('[Auth Debug] Headers:', Object.fromEntries(request.headers.entries()));
+  
+  // 尝试多种方式获取 header
+  const authHeader = request.headers.get('Authorization') || 
+                     request.headers.get('authorization');
+
+  if (!authHeader) {
+    return { success: false, error: '缺少 Authorization 头' };
+  }
+  
+  if (!authHeader.startsWith('Bearer ')) {
+    return { success: false, error: 'Authorization 格式错误 (应为 Bearer <token>)' };
   }
   
   const token = authHeader.substring(7);
   if (token !== importSecret) {
-    return { success: false, error: 'Token 不匹配 (请检查脚本中的 SECRET 是否与服务器一致)' };
+    return { success: false, error: 'Token 不匹配' };
   }
 
   return { success: true };

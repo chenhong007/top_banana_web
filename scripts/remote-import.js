@@ -20,12 +20,17 @@ async function runImport() {
     console.log(`\n📦 正在处理批次: offset=${offset}, limit=${BATCH_SIZE}`);
     
     try {
+      console.log(`   -> 发送请求到 ${API_URL}`);
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SECRET}`
+      };
+      
+      console.log('   -> Request Headers:', headers);
+
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SECRET}`
-        },
+        headers: headers,
         body: JSON.stringify({
           limit: BATCH_SIZE,
           offset: offset,
@@ -33,7 +38,14 @@ async function runImport() {
         })
       });
 
-      const result = await response.json();
+      // 尝试解析 JSON
+      let result;
+      const text = await response.text();
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`无法解析服务器响应: ${text.substring(0, 100)}...`);
+      }
       
       if (!response.ok) {
         throw new Error(result.error || `HTTP ${response.status}`);
