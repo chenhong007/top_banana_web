@@ -234,7 +234,8 @@ async function processImages(images: string[], skipR2: boolean): Promise<{ urls:
 async function createPrompt(
   item: JsonPromptItem,
   imageUrls: string[],
-  tags: string[]
+  tags: string[],
+  createdAt?: Date
 ): Promise<void> {
   const promptText = item.prompts[0] || '';
   const description = generateDescription(item.title, promptText);
@@ -265,6 +266,7 @@ async function createPrompt(
           create: { name: DEFAULT_CATEGORY },
         },
       },
+      createdAt: createdAt || new Date(),
     },
   });
 }
@@ -289,11 +291,15 @@ export async function POST(request: NextRequest) {
 
     console.log(`[API ${API_VERSION}] ✓ 认证通过，开始处理导入`);
 
-    const { skipR2 = false, limit = 0, offset = 0 } = body as { 
+    const { skipR2 = false, limit = 0, offset = 0, createdAt } = body as { 
       skipR2?: boolean; 
       limit?: number;
       offset?: number;
+      createdAt?: string;
     };
+
+    // 解析创建时间，如果提供的话
+    const parsedCreatedAt = createdAt ? new Date(createdAt) : undefined;
 
     const stats: ImportStats = {
       total: 0,
@@ -368,7 +374,7 @@ export async function POST(request: NextRequest) {
         const matchedTags = matchTags(item.tags, existingTags);
 
         // 创建记录
-        await createPrompt(item, imageResult.urls, matchedTags);
+        await createPrompt(item, imageResult.urls, matchedTags, parsedCreatedAt);
 
         // 添加到批次跟踪
         if (item.source.url && item.source.url !== 'unknown') {

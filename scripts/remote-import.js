@@ -11,6 +11,11 @@ async function runImport() {
   console.log('🚀 开始远程导入任务...');
   console.log(`目标地址: ${API_URL}`);
   
+  // 计算一个月前的时间
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  console.log(`📅 设置创建时间为: ${oneMonthAgo.toISOString()}`);
+  
   let offset = 0;
   let hasMore = true;
   let totalSuccess = 0;
@@ -35,7 +40,8 @@ async function runImport() {
           secret: SECRET, // 通过 body 传递 token 作为备选
           limit: BATCH_SIZE,
           offset: offset,
-          skipR2: false
+          skipR2: false,
+          createdAt: oneMonthAgo.toISOString() // 设置创建时间为一个月前
         })
       });
 
