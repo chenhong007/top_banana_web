@@ -441,6 +441,97 @@ class PromptRepository extends BaseRepository<
       this.handleError(error, 'PromptRepository.findByModelTag');
     }
   }
+
+  // ==================== Duplicate Detection Methods ====================
+
+  /**
+   * Find prompts by primary image URL (first image in imageUrls array or legacy imageUrl)
+   * Used for duplicate detection
+   */
+  async findByImageUrl(imageUrl: string): Promise<{ id: string; effect: string } | null> {
+    if (!imageUrl || imageUrl.trim() === '') {
+      return null;
+    }
+
+    try {
+      // Check both imageUrl (legacy) and imageUrls array (first element)
+      const prompt = await this.prisma.prompt.findFirst({
+        where: {
+          OR: [
+            { imageUrl: imageUrl },
+            { imageUrls: { has: imageUrl } },
+          ],
+        },
+        select: { id: true, effect: true },
+      });
+
+      return prompt;
+    } catch (error) {
+      console.error('Error finding prompt by imageUrl:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Find prompts by source URL
+   * Used for duplicate detection
+   */
+  async findBySource(source: string): Promise<{ id: string; effect: string } | null> {
+    if (!source || source.trim() === '' || source === 'unknown') {
+      return null;
+    }
+
+    try {
+      const prompt = await this.prisma.prompt.findFirst({
+        where: { source: source },
+        select: { id: true, effect: true },
+      });
+
+      return prompt;
+    } catch (error) {
+      console.error('Error finding prompt by source:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Find prompts by exact effect (title) match
+   * Used for duplicate detection
+   */
+  async findByEffect(effect: string): Promise<{ id: string; effect: string } | null> {
+    if (!effect || effect.trim() === '') {
+      return null;
+    }
+
+    try {
+      const prompt = await this.prisma.prompt.findFirst({
+        where: { effect: effect },
+        select: { id: true, effect: true },
+      });
+
+      return prompt;
+    } catch (error) {
+      console.error('Error finding prompt by effect:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get all prompts with only id and prompt fields for similarity checking
+   * Optimized for memory efficiency - only fetches necessary fields
+   */
+  async findAllForSimilarityCheck(): Promise<Array<{ id: string; prompt: string }>> {
+    try {
+      const prompts = await this.prisma.prompt.findMany({
+        select: { id: true, prompt: true },
+      });
+
+      return prompts;
+    } catch (error) {
+      console.error('Error fetching prompts for similarity check:', error);
+      return [];
+    }
+  }
 }
 
 // Export singleton instance

@@ -12,6 +12,7 @@ import {
   badRequestResponse,
   handleApiRoute,
 } from '@/lib/api-utils';
+import { filterDuplicates, DuplicateType } from '@/lib/duplicate-checker';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -79,22 +80,62 @@ export async function POST(request: NextRequest) {
     }
 
     let importedCount = 0;
+    let duplicateStats: Record<DuplicateType, number> | undefined;
 
     if (mode === 'replace') {
       // Delete all existing data first
       await prisma.prompt.deleteMany();
       // Also clean up orphaned tags
       await prisma.tag.deleteMany({ where: { prompts: { none: {} } } });
-      // Import new data using repository
-      const result = await promptRepository.bulkCreate(newPrompts);
+      
+      // For replace mode, we still want to avoid internal batch duplicates
+      // Use a simple effect-based dedup within the batch (faster than full similarity check)
+      const seenEffects = new Set<string>();
+      const seenImageUrls = new Set<string>();
+      const seenSources = new Set<string>();
+      
+      const uniqueInBatch = newPrompts.filter((p) => {
+        // Check effect
+        if (seenEffects.has(p.effect)) return false;
+        seenEffects.add(p.effect);
+        
+        // Check imageUrl
+        if (p.imageUrl && seenImageUrls.has(p.imageUrl)) return false;
+        if (p.imageUrl) seenImageUrls.add(p.imageUrl);
+        
+        // Check source (skip 'unknown')
+        if (p.source && p.source !== 'unknown' && seenSources.has(p.source)) return false;
+        if (p.source && p.source !== 'unknown') seenSources.add(p.source);
+        
+        return true;
+      });
+      
+      const result = await promptRepository.bulkCreate(uniqueInBatch);
       importedCount = result.success;
+      
+      const totalDuplicates = newPrompts.length - uniqueInBatch.length;
+      if (totalDuplicates > 0) {
+        duplicateStats = {
+          imageUrl: 0,
+          source: 0,
+          effect: totalDuplicates, // Simplified - count all as effect duplicates
+          prompt_similarity: 0,
+        };
+      }
     } else {
-      // Merge with existing data (avoid duplicates by checking effect)
-      const existingPrompts = await promptRepository.findAll();
-      const existingEffects = new Set(existingPrompts.map((p) => p.effect));
-      const uniqueNewPrompts = newPrompts.filter((p) => !existingEffects.has(p.effect));
-      const result = await promptRepository.bulkCreate(uniqueNewPrompts);
+      // Merge with existing data - full duplicate detection
+      // Checks: imageUrl, source, effect (exact match), prompt similarity (>90%)
+      const { uniqueItems, stats } = await filterDuplicates(newPrompts, {
+        checkImageUrl: true,
+        checkSource: true,
+        checkEffect: true,
+        checkPromptSimilarity: true,
+        similarityThreshold: 0.9,
+      });
+
+      const result = await promptRepository.bulkCreate(uniqueItems);
       importedCount = result.success;
+      duplicateStats = stats.duplicatesByType;
     }
 
     const totalCount = await promptRepository.count();
@@ -103,6 +144,13 @@ export async function POST(request: NextRequest) {
       imported: importedCount,
       total: totalCount,
       mode,
+      duplicatesFiltered: duplicateStats ? {
+        byImageUrl: duplicateStats.imageUrl,
+        bySource: duplicateStats.source,
+        byEffect: duplicateStats.effect,
+        byPromptSimilarity: duplicateStats.prompt_similarity,
+        total: Object.values(duplicateStats).reduce((a, b) => a + b, 0),
+      } : undefined,
     });
   });
 }

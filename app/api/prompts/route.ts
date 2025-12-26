@@ -4,7 +4,7 @@
  * POST /api/prompts - Create a new prompt
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { promptRepository } from '@/repositories';
 import {
   successResponse,
@@ -13,6 +13,7 @@ import {
   handleApiRoute,
   createPromptSchema,
 } from '@/lib/api-utils';
+import { checkDuplicate } from '@/lib/duplicate-checker';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -41,7 +42,8 @@ export async function POST(request: NextRequest) {
       return badRequestResponse('Missing required fields (effect, prompt)');
     }
 
-    const newPrompt = await promptRepository.create({
+    // Prepare the prompt input
+    const promptInput = {
       effect: data.effect,
       description: data.description || '',
       tags: data.tags || [],
@@ -50,7 +52,26 @@ export async function POST(request: NextRequest) {
       source: data.source || 'unknown',
       imageUrl: data.imageUrl,
       category: data.category,
-    });
+    };
+
+    // Check for duplicates before creating
+    const duplicateCheck = await checkDuplicate(promptInput);
+    
+    if (duplicateCheck.isDuplicate) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: duplicateCheck.message || '检测到重复提示词',
+          duplicateType: duplicateCheck.duplicateType,
+          existingPromptId: duplicateCheck.existingPromptId,
+          existingPromptEffect: duplicateCheck.existingPromptEffect,
+          similarityScore: duplicateCheck.similarityScore,
+        },
+        { status: 409 } // Conflict status code
+      );
+    }
+
+    const newPrompt = await promptRepository.create(promptInput);
 
     return successResponse(newPrompt, 201);
   });
