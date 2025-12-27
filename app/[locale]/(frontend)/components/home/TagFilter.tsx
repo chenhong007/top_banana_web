@@ -28,6 +28,20 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
         <Tag className="h-4 w-4" />
         {t('tags')}:
       </span>
+      
+      {/* "All" button */}
+      <button
+        onClick={() => onSelect('')}
+        className={cn(
+          "tag-badge transition-all",
+          selected === ''
+            ? "tag-badge-primary"
+            : "hover:bg-primary/10 hover:text-primary"
+        )}
+      >
+        {t('all')}
+      </button>
+
       {tags.slice(0, 12).map((tag) => (
         <button
           key={tag}

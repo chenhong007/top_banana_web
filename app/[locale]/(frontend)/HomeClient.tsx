@@ -229,8 +229,8 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
 
           {/* 右侧内容区 */}
           <div className="flex-1 min-w-0">
-            {/* 场景标签筛选 */}
-            <div className="mb-8">
+            {/* 场景标签筛选 - Sticky Header */}
+            <div className="sticky top-16 z-40 mb-8 -mx-4 px-4 py-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40">
               <TagFilter tags={allTags} selected={selectedTag} onSelect={handleTagChange} />
             </div>
 
