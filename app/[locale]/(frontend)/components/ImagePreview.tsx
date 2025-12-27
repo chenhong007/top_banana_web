@@ -95,18 +95,18 @@ export default function ImagePreview({
 
           {/* Image container */}
           <div
-            className="relative max-w-[1200px] max-h-[90vh] w-[80vw] animate-scale-in"
+            className="relative max-w-[95vw] max-h-[95vh] animate-scale-in flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative bg-dark-800 rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
-              <div className="relative w-full h-full">
+            <div className="relative bg-dark-800 rounded-2xl shadow-2xl border border-white/10 overflow-hidden max-w-full max-h-full">
+              <div className="relative w-full h-full flex items-center justify-center">
                 <OptimizedImage
                   src={src}
                   alt={alt}
-                  width={1200}
-                  height={800}
-                  className="w-full h-auto max-h-[85vh] object-contain"
-                  sizes="80vw"
+                  width={1920}
+                  height={1080}
+                  className="w-auto h-auto max-w-[95vw] max-h-[90vh] object-contain"
+                  sizes="95vw"
                   priority
                 />
               </div>
