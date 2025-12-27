@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2, AlertTriangle, CheckCircle, XCircle, Database, ArrowRight, Calendar } from 'lucide-react';
 
 interface DateUpdateResult {
@@ -71,9 +71,10 @@ interface MigrationResult {
 }
 
 export default function MigrateTagsPage() {
-  const [secret, setSecret] = useState('');
+  // 直接写死密钥，用完删除
+  const [secret, setSecret] = useState('my-super-secret-key-2024');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<'input' | 'status' | 'preview' | 'confirm' | 'result'>('input');
+  const [step, setStep] = useState<'input' | 'status' | 'preview' | 'confirm' | 'result'>('status'); // 直接跳到状态页
   const [status, setStatus] = useState<TagStatus | null>(null);
   const [plan, setPlan] = useState<MigrationPlan | null>(null);
   const [result, setResult] = useState<MigrationResult | null>(null);
@@ -82,6 +83,12 @@ export default function MigrateTagsPage() {
   // 日期更新相关状态
   const [dateUpdateResult, setDateUpdateResult] = useState<DateUpdateResult | null>(null);
   const [showDateUpdate, setShowDateUpdate] = useState(false);
+
+  // 页面加载时自动获取状态
+  useEffect(() => {
+    handleGetStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const resetState = () => {
     setStep('input');
