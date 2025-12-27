@@ -93,7 +93,13 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {pagination.paginatedItems.map((prompt, index) => (
-          <PromptCard key={prompt.id} prompt={prompt} index={index} />
+          <PromptCard 
+            key={prompt.id} 
+            prompt={prompt} 
+            index={index}
+            // 首屏前6张图片优先加载（仅第一页）
+            priority={pagination.currentPage === 1 && index < 6}
+          />
         ))}
       </div>
 

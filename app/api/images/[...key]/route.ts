@@ -59,7 +59,11 @@ export async function GET(
     return new NextResponse(new Uint8Array(imageBuffer), {
       headers: {
         'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        // 1年强缓存，immutable 表示内容不会变化
+        'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable',
+        // 支持 CDN 缓存
+        'CDN-Cache-Control': 'public, max-age=31536000',
+        'Cloudflare-CDN-Cache-Control': 'public, max-age=31536000',
       },
     });
   } catch (error) {

@@ -29,6 +29,11 @@ const baseConfig = {
         protocol: 'https',
         hostname: '*.r2.cloudflarestorage.com',
       },
+      // 自定义 R2 CDN 域名（NEXT_PUBLIC_R2_CDN_URL，用于前端加速）
+      ...(process.env.NEXT_PUBLIC_R2_CDN_URL ? [{
+        protocol: 'https',
+        hostname: new URL(process.env.NEXT_PUBLIC_R2_CDN_URL).hostname,
+      }] : []),
       // 自定义 CDN 域名（如果配置了 CLOUDFLARE_R2_PUBLIC_URL）
       ...(process.env.CLOUDFLARE_R2_PUBLIC_URL ? [{
         protocol: 'https',

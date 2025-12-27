@@ -30,9 +30,11 @@ const MODEL_TAG_COLORS: Record<string, string> = {
 interface PromptCardProps {
   prompt: PromptItem;
   index?: number;
+  /** 是否优先加载图片（首屏图片应设为 true） */
+  priority?: boolean;
 }
 
-export default function PromptCard({ prompt, index = 0 }: PromptCardProps) {
+export default function PromptCard({ prompt, index = 0, priority = false }: PromptCardProps) {
   const t = useTranslations('card');
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
@@ -182,8 +184,9 @@ export default function PromptCard({ prompt, index = 0 }: PromptCardProps) {
               src={prompt.imageUrl}
               alt={prompt.effect}
               fill
+              priority={priority}
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
               onError={() => setImageError(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />

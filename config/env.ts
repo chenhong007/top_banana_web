@@ -55,6 +55,8 @@ const clientEnvSchema = z.object({
   NEXT_PUBLIC_SHOW_ADMIN_ENTRY: z.string().optional().transform((val) => val !== 'false'),
   NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS: commaSeparatedArray,
   NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS: optionalBooleanString,
+  // R2 CDN 直连 URL（可选，用于加速图片加载）
+  NEXT_PUBLIC_R2_CDN_URL: z.string().url().optional().or(z.literal('')).or(z.undefined()),
 });
 
 // Combined schema for full validation
@@ -91,6 +93,7 @@ function parseClientEnv(): ClientEnv {
     NEXT_PUBLIC_SHOW_ADMIN_ENTRY: process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY,
     NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS: process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS,
     NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS: process.env.NEXT_PUBLIC_ENABLE_VERCEL_ANALYTICS,
+    NEXT_PUBLIC_R2_CDN_URL: process.env.NEXT_PUBLIC_R2_CDN_URL,
   });
 
   if (!parsed.success) {

@@ -16,6 +16,9 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
+// R2 CDN URL（客户端环境变量）
+const R2_CDN_URL = process.env.NEXT_PUBLIC_R2_CDN_URL || '';
+
 /**
  * 优化的图片组件
  * - 支持懒加载和占位符
@@ -75,12 +78,17 @@ export default function OptimizedImage({
     
     // 如果是 R2 存储的图片（/api/images/ 开头）
     if (url.startsWith('/api/images/')) {
-      // 检查 URL 是否被错误编码
-      if (url.includes('%2F') || url.includes('%2f')) {
-        const key = decodeURIComponent(url.replace('/api/images/', ''));
-        return `/api/images/${key}`;
+      // 解码 URL 获取 key
+      let key = url.replace('/api/images/', '');
+      if (key.includes('%2F') || key.includes('%2f')) {
+        key = decodeURIComponent(key);
       }
-      return url;
+      
+      // 优先使用 R2 CDN 直连（更快）
+      if (R2_CDN_URL) {
+        return `${R2_CDN_URL}/${key}`;
+      }
+      return `/api/images/${key}`;
     }
     
     // 如果是 R2 公开 URL，直接返回（CDN 加速）
@@ -109,8 +117,11 @@ export default function OptimizedImage({
     if (url.startsWith('/') && !url.startsWith('//')) {
       return true;
     }
-    // 本地 API 代理的图片无法直接用 next/image 优化
-    // 但 R2 公开 URL 可以
+    // R2 CDN 直连可以使用 next/image 优化
+    if (R2_CDN_URL && url.startsWith(R2_CDN_URL)) {
+      return true;
+    }
+    // R2 公开 URL 可以
     if (url.includes('.r2.dev') || url.includes('.r2.cloudflarestorage.com')) {
       return true;
     }
