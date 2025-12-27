@@ -151,7 +151,13 @@ export async function GET(request: NextRequest) {
       throw e;
     }
 
-    const proxied = new NextResponse(imageBuffer, {
+    // NextResponse expects a BodyInit; convert Uint8Array to an exact ArrayBuffer view.
+    const body = imageBuffer.buffer.slice(
+      imageBuffer.byteOffset,
+      imageBuffer.byteOffset + imageBuffer.byteLength
+    );
+
+    const proxied = new NextResponse(body, {
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
