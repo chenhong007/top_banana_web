@@ -146,12 +146,18 @@ function verifyAuth(request: NextRequest, body?: any): { success: boolean; error
     return { success: false, error: '服务端未配置 IMPORT_SECRET' };
   }
   
-  // 从 Header 或 Body 获取 token
+  // 从多个来源获取 token：Header、Body、Query String
   let token = request.headers.get('Authorization')?.replace('Bearer ', '') || 
               request.headers.get('authorization')?.replace('Bearer ', '');
   
   if (!token && body?.secret) {
     token = body.secret;
+  }
+
+  // 从 query string 获取
+  if (!token) {
+    const url = new URL(request.url);
+    token = url.searchParams.get('secret') || undefined;
   }
 
   if (!token) {
@@ -248,16 +254,16 @@ export async function POST(request: NextRequest) {
           action: 'keep',
         });
       } else {
-        // 未在映射表中的标签，尝试智能映射或删除
-        console.log(`[MigrateTags] 警告: 标签 "${tag.name}" 未在映射表中，将被删除`);
+        // 未在映射表中的标签，映射到"创意"类别
+        console.log(`[MigrateTags] 警告: 标签 "${tag.name}" 未在映射表中，将映射到"创意"`);
         migrationPlan.push({
           oldTag: tag.name,
-          newTag: '其他',
+          newTag: '创意',
           promptCount: tag._count.prompts,
           action: 'merge',
         });
         tagsToDelete.add(tag.name);
-        targetTagsNeeded.add('其他');
+        targetTagsNeeded.add('创意');
       }
     }
 
@@ -468,7 +474,7 @@ export async function GET(request: NextRequest) {
         currentTags: allTags.map(t => ({
           name: t.name,
           promptCount: t._count.prompts,
-          willMapTo: TAG_MAPPING[t.name] || (CORE_TAGS.includes(t.name) ? t.name : '其他'),
+          willMapTo: TAG_MAPPING[t.name] || (CORE_TAGS.includes(t.name) ? t.name : '创意'),
         })),
         coreTagsTarget: CORE_TAGS,
         usage: {

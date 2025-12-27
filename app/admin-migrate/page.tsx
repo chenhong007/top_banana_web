@@ -72,32 +72,39 @@ interface MigrationResult {
 
 export default function MigrateTagsPage() {
   // 直接写死密钥，用完删除
-  const [secret, setSecret] = useState('my-super-secret-key-2024');
+  const [secret] = useState('my-super-secret-key-2024');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'input' | 'status' | 'preview' | 'confirm' | 'result'>('status'); // 直接跳到状态页
   const [status, setStatus] = useState<TagStatus | null>(null);
   const [plan, setPlan] = useState<MigrationPlan | null>(null);
   const [result, setResult] = useState<MigrationResult | null>(null);
   const [error, setError] = useState<string>('');
+  const [initialized, setInitialized] = useState(false);
   
   // 日期更新相关状态
   const [dateUpdateResult, setDateUpdateResult] = useState<DateUpdateResult | null>(null);
   const [showDateUpdate, setShowDateUpdate] = useState(false);
 
-  // 页面加载时自动获取状态
+  // 页面加载时自动获取状态（只执行一次）
   useEffect(() => {
-    handleGetStatus();
+    if (!initialized) {
+      handleGetStatus();
+      setInitialized(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const resetState = () => {
-    setStep('input');
+    setStep('status');  // 重置到状态页而不是输入页
     setStatus(null);
     setPlan(null);
     setResult(null);
     setError('');
     setDateUpdateResult(null);
     setShowDateUpdate(false);
+    setInitialized(false);
+    // 重新获取状态
+    setTimeout(() => handleGetStatus(), 100);
   };
 
   const handleUpdateDates = async () => {
@@ -131,20 +138,13 @@ export default function MigrateTagsPage() {
   };
 
   const handleGetStatus = async () => {
-    if (!secret.trim()) {
-      setError('请输入 IMPORT_SECRET');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/api/migrate-tags', {
+      // 使用 query string 传递 secret，更可靠
+      const response = await fetch(`/api/migrate-tags?secret=${encodeURIComponent(secret)}`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${secret}`,
-        },
       });
 
       const data = await response.json();
@@ -461,8 +461,11 @@ export default function MigrateTagsPage() {
               <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
               <div>
                 <h3 className="font-semibold text-yellow-800 mb-1">⚠️ 重要提示</h3>
-                <p className="text-yellow-700 text-sm">
-                  此操作将永久修改数据库，删除旧标签并合并到新标签。请确认无误后再执行。
+                <p className="text-yellow-700 text-sm mb-2">
+                  此操作将永久修改数据库，删除旧标签并合并到新标签。
+                </p>
+                <p className="text-yellow-700 text-sm font-bold">
+                  ⚠️ 此操作不可逆，没有回滚机制！请务必确认后再执行！
                 </p>
               </div>
             </div>
