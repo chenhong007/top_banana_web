@@ -48,7 +48,7 @@ export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
               <span className="hidden sm:inline">返回首页</span>
             </Link>
             <div className="h-6 w-px bg-gray-200 mx-1" />
-            <Link href="/admin/migrate-tags" className={BUTTON_STYLES.ghost} title="标签迁移">
+            <Link href="/admin-migrate" className={BUTTON_STYLES.ghost} title="标签迁移">
               <Tags className="w-4 h-4" />
               <span className="hidden sm:inline">标签迁移</span>
             </Link>
