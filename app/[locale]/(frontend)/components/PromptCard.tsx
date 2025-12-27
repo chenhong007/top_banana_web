@@ -1,43 +1,45 @@
 'use client';
 
 import { PromptItem } from '@/types';
-import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart } from 'lucide-react';
+import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState, useRef } from 'react';
 import OptimizedImage from './OptimizedImage';
 import ImagePreview from './ImagePreview';
 import { useInteractPromptMutation } from '@/hooks/queries/usePromptsQuery';
 import { useTranslations, useLocale } from 'next-intl';
 
-// AI模型标签颜色映射 - 使用更暗淡的颜色
+// AI模型标签颜色映射 - 使用新的配色方案
 const MODEL_TAG_COLORS: Record<string, string> = {
-  'Midjourney': '#4752C4',
-  'DALL-E 3': '#0D8A6A',
-  'Stable Diffusion': '#8B44DB',
-  'Flux': '#C93A7A',
-  'Leonardo.AI': '#D4610F',
-  'ComfyUI': '#1A9A4A',
-  'Runway': '#2D6BC4',
-  'Sora': '#3D3D3D',
-  'Pika': '#7249C9',
-  'Kling': '#D45A2D',
-  'Suno': '#D4AF0F',
-  'Udio': '#059AAD',
-  'DeepSeek': '#1E4FC4',
-  'Banana': '#D49F1F',
-  '其他模型': '#52565E',
+  'Midjourney': 'hsl(43, 96%, 56%)', // Gold
+  'DALL-E 3': 'hsl(217, 91%, 60%)', // Blue
+  'Stable Diffusion': 'hsl(280, 100%, 70%)', // Purple
+  'Flux': 'hsl(0, 84%, 60%)', // Red
+  'Leonardo.AI': 'hsl(28, 100%, 50%)', // Orange
+  'ComfyUI': 'hsl(140, 60%, 50%)', // Green
+  'Runway': 'hsl(200, 80%, 55%)', // Cyan
+  'Sora': 'hsl(260, 70%, 60%)', // Purple-Blue
+  'Pika': 'hsl(310, 80%, 60%)', // Pink
+  'Kling': 'hsl(25, 85%, 55%)', // Coral
+  'Suno': 'hsl(45, 90%, 55%)', // Yellow
+  'Udio': 'hsl(180, 60%, 50%)', // Teal
+  'DeepSeek': 'hsl(220, 90%, 60%)', // Deep Blue
+  'Banana': 'hsl(50, 95%, 55%)', // Banana Yellow
+  '其他模型': 'hsl(0, 0%, 60%)', // Gray
 };
 
 interface PromptCardProps {
   prompt: PromptItem;
+  index?: number;
 }
 
-export default function PromptCard({ prompt }: PromptCardProps) {
+export default function PromptCard({ prompt, index = 0 }: PromptCardProps) {
   const t = useTranslations('card');
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const imageRef = useRef<HTMLDivElement>(null);
   const interactMutation = useInteractPromptMutation();
@@ -92,24 +94,28 @@ export default function PromptCard({ prompt }: PromptCardProps) {
     setIsModalOpen(false);
   };
 
+  const getModelColor = (modelName: string) => {
+    return MODEL_TAG_COLORS[modelName] || 'hsl(0, 0%, 60%)';
+  };
+
   // Format date based on locale
   const formatDate = (dateString: string | Date | undefined) => {
     if (!dateString || isNaN(new Date(dateString).getTime())) {
       return t('noDate');
     }
-    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US');
+    const date = new Date(dateString);
+    return date.toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' });
   };
 
   return (
-    // 修改 Hover 效果：从 tech-blue 调整为 tech-primary，移除紫色阴影
-    <div className="group relative h-full bg-dark-800 rounded-2xl overflow-hidden border border-white/5 hover:border-tech-primary/30 transition-all duration-500 flex flex-col shadow-lg hover:shadow-[0_0_30px_-5px_rgba(56,189,248,0.15)] hover:-translate-y-1">
-      {/* Glow Effect - 保持微弱的白色辉光，增加质感 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-      {/* Image - 使用优化的图片组件 */}
+    <article 
+      className="glass-card glass-card-hover glow-effect group overflow-hidden animate-fade-in-up"
+      style={{ animationDelay: `${index * 0.05}s` }}
+    >
+      {/* Image */}
       <div 
         ref={imageRef}
-        className="relative aspect-video bg-dark-900 overflow-hidden border-b border-white/5 cursor-pointer"
+        className="relative aspect-[4/3] overflow-hidden cursor-pointer"
         onMouseEnter={handleImageMouseEnter}
         onMouseLeave={handleImageMouseLeave}
         onClick={handleImageClick}
@@ -120,158 +126,142 @@ export default function PromptCard({ prompt }: PromptCardProps) {
               src={prompt.imageUrl}
               alt={prompt.effect}
               fill
-              className="w-full h-full transition-transform duration-700 group-hover:scale-110"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               onError={() => setImageError(true)}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-dark-800 to-transparent opacity-60 pointer-events-none" />
-            {/* Hover hint */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none">
-              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
-                <p className="text-white text-sm font-medium">点击查看大图</p>
-              </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+            
+            {/* Category Badge */}
+            <div className="absolute left-3 top-3">
+              {prompt.category && (
+                <span className="inline-flex items-center rounded-full bg-background/80 backdrop-blur-sm px-2.5 py-1 text-xs font-medium">
+                  {prompt.category}
+                </span>
+              )}
+            </div>
+
+            {/* Model Tags */}
+            <div className="absolute right-3 top-3 flex flex-wrap gap-1.5 justify-end max-w-[60%]">
+              {(prompt.modelTags || []).slice(0, 2).map((modelTag) => {
+                const color = getModelColor(modelTag);
+                return (
+                  <span
+                    key={modelTag}
+                    className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium backdrop-blur-sm"
+                    style={{ 
+                      backgroundColor: `${color}20`,
+                      color: color,
+                    }}
+                  >
+                    <span 
+                      className="h-1.5 w-1.5 rounded-full" 
+                      style={{ backgroundColor: color }}
+                    />
+                    {modelTag}
+                  </span>
+                );
+              })}
             </div>
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-dark-400 bg-dark-900/50">
-            <Zap className="w-10 h-10 opacity-20" />
+          <div className="w-full h-full flex items-center justify-center bg-muted">
+            <Zap className="w-10 h-10 text-muted-foreground opacity-20" />
           </div>
         )}
       </div>
 
-      <div className="p-6 flex-1 flex flex-col relative z-10">
-        {/* Effect Title - Hover 颜色调整为 Tech Primary (Sky Blue) */}
-        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-tech-primary transition-colors">
+      {/* Content */}
+      <div className="p-4">
+        {/* Title */}
+        <h3 className="mb-2 text-lg font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
           {prompt.effect}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-400 text-sm mb-4 line-clamp-2 leading-relaxed">
+        <p className="mb-3 text-sm text-muted-foreground line-clamp-2">
           {prompt.description}
         </p>
 
-        {/* Tags - 颜色调整为更冷淡的青色/天蓝 */}
+        {/* Tags */}
         {(prompt.tags || []).filter(tag => tag).length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-5">
+          <div className="mb-4 flex flex-wrap gap-1.5">
             {(prompt.tags || []).filter(tag => tag).slice(0, 3).map((tag, idx) => (
-              <span
-                key={tag || idx}
-                className="inline-flex items-center px-2.5 py-1 bg-tech-primary/5 text-tech-primary/90 rounded-md text-xs font-medium border border-tech-primary/20 hover:bg-tech-primary/10 transition-colors"
-              >
-                <Tag className="w-3 h-3 mr-1.5 opacity-70" />
+              <span key={tag || idx} className="tag-badge text-xs">
                 {tag}
               </span>
             ))}
             {(prompt.tags || []).filter(tag => tag).length > 3 && (
-              <span className="inline-flex items-center px-2 py-1 text-xs text-gray-500 border border-transparent">
-                +{(prompt.tags || []).filter(tag => tag).length - 3}
-              </span>
+              <span className="tag-badge text-xs">+{(prompt.tags || []).filter(tag => tag).length - 3}</span>
             )}
           </div>
         )}
 
-        {/* Prompt Box - 移除紫色渐变，改为青色/冷白微光 */}
-        <div className="relative mt-auto group/code">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-tech-primary/20 to-tech-accent/20 rounded-lg opacity-0 group-hover/code:opacity-100 transition duration-500 blur-sm" />
-          <div className="relative bg-dark-900/80 rounded-lg p-4 border border-white/5 group-hover/code:border-white/10 transition-colors">
-            <p className="text-xs text-gray-300 font-mono line-clamp-3 pr-8 break-all leading-relaxed opacity-80 group-hover/code:opacity-100">
+        {/* Prompt Content */}
+        <div className="mb-4 rounded-lg bg-muted/30 p-3">
+          <div className="flex items-start justify-between gap-2">
+            <code className={`flex-1 text-xs font-mono text-muted-foreground ${expanded ? '' : 'line-clamp-2'}`}>
               {prompt.prompt}
-            </p>
+            </code>
             <button
-              onClick={copyPrompt}
-              className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-all duration-200 backdrop-blur-sm opacity-0 group-hover/code:opacity-100"
-              title={copied ? t('copied') : t('copy')}
+              onClick={() => setExpanded(!expanded)}
+              className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
             >
-              {copied ? (
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
-              ) : (
-                <Copy className="w-3.5 h-3.5 text-white" />
-              )}
+              {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </button>
           </div>
         </div>
 
-        {/* AI Model & Category Tags - 移到提示词下方，暗淡风格 */}
-        <div className="flex flex-wrap items-center gap-2 mt-4">
-          {/* AI Model Tags */}
-          {(prompt.modelTags || []).slice(0, 2).map(modelTag => {
-            const color = MODEL_TAG_COLORS[modelTag] || '#52565E';
-            return (
-              <div
-                key={modelTag}
-                className="px-2 py-0.5 border rounded-md text-xs font-medium text-gray-300 flex items-center gap-1"
-                style={{ 
-                  backgroundColor: `${color}20`,
-                  borderColor: `${color}40`
-                }}
-              >
-                <Cpu className="w-3 h-3 opacity-60" />
-                {modelTag}
-              </div>
-            );
-          })}
-          {(prompt.modelTags || []).length > 2 && (
-            <div className="px-2 py-0.5 bg-dark-700/50 border border-white/5 rounded-md text-xs font-medium text-gray-400">
-              +{(prompt.modelTags || []).length - 2}
-            </div>
-          )}
-          {(!prompt.modelTags || prompt.modelTags.length === 0) && (
-            <div className="px-2 py-0.5 bg-dark-700/50 border border-white/5 rounded-md text-xs font-medium text-gray-400 flex items-center gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-gray-500" />
-              {t('aiArt')}
-            </div>
-          )}
-          
-          {/* Category Badge */}
-          {prompt.category && (
-            <div className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded-md text-xs font-medium text-amber-400/70 flex items-center gap-1">
-              <FolderOpen className="w-3 h-3 opacity-60" />
-              {prompt.category}
-            </div>
-          )}
-        </div>
-
         {/* Footer */}
-        <div className="flex flex-col gap-4 pt-5 border-t border-white/5 mt-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleLike}
-                className="flex items-center gap-1.5 text-gray-400 hover:text-tech-primary transition-colors group/btn"
-                title={t('like')}
-              >
-                <ThumbsUp className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                <span className="text-xs font-medium">{prompt.likes || 0}</span>
-              </button>
-              <button
-                onClick={handleHeart}
-                className="flex items-center gap-1.5 text-gray-400 hover:text-rose-500 transition-colors group/btn"
-                title={t('heart')}
-              >
-                <Heart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                <span className="text-xs font-medium">{prompt.hearts || 0}</span>
-              </button>
-            </div>
-            
-            <div className="flex items-center text-xs text-gray-500">
-              <Calendar className="w-3.5 h-3.5 mr-1.5 opacity-70" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
               {formatDate(prompt.updatedAt)}
-            </div>
-          </div>
-
-          {prompt.source && prompt.source !== 'unknown' && (
-            <div className="flex justify-end">
+            </span>
+            {prompt.source && prompt.source !== 'unknown' && (
               <a
                 href={prompt.source}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-xs text-gray-500 hover:text-tech-primary transition-colors"
+                className="flex items-center gap-1 hover:text-foreground transition-colors"
               >
-                <ExternalLink className="w-3.5 h-3.5 mr-1.5 opacity-70" />
+                <ExternalLink className="h-3 w-3" />
                 {t('source')}
               </a>
-            </div>
-          )}
+            )}
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleLike}
+              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+              title={t('like')}
+            >
+              <ThumbsUp className="h-3.5 w-3.5" />
+              <span>{prompt.likes || 0}</span>
+            </button>
+            <button
+              onClick={copyPrompt}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                copied 
+                  ? 'bg-primary/20 text-primary border border-primary/30' 
+                  : 'bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground border border-transparent'
+              }`}
+            >
+              {copied ? (
+                <>
+                  <Check className="h-3.5 w-3.5" />
+                  {t('copied')}
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5" />
+                  {t('copy')}
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -286,6 +276,6 @@ export default function PromptCard({ prompt }: PromptCardProps) {
           hoverPosition={hoverPosition}
         />
       )}
-    </div>
+    </article>
   );
 }

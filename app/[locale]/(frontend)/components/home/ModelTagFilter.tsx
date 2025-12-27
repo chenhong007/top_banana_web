@@ -3,6 +3,7 @@
 /**
  * ModelTagFilter Component
  * Filter buttons for AI model tags
+ * Enhanced with modern badge styling and colors
  */
 
 import { Cpu } from 'lucide-react';
@@ -22,19 +23,20 @@ export default function ModelTagFilter({ modelTags, selected, onSelect }: ModelT
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Cpu className="w-4 h-4" />
         <span>{t('models')}</span>
       </div>
-      <div className="flex flex-wrap justify-center gap-3">
+      <div className="flex flex-wrap gap-2">
         <button
           onClick={() => onSelect('')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-1.5 ${
             !selected
-              ? 'bg-purple-500/10 border-purple-500/50 text-purple-400 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]'
-              : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
+              ? 'bg-secondary/10 text-secondary border border-secondary/30 shadow-glow'
+              : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent'
           }`}
         >
+          <Cpu className="w-3.5 h-3.5" />
           {t('all')}
         </button>
         {modelTags.map((modelTag) => {
@@ -44,16 +46,17 @@ export default function ModelTagFilter({ modelTags, selected, onSelect }: ModelT
             <button
               key={modelTag}
               onClick={() => onSelect(modelTag)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-1.5 ${
                 isSelected
-                  ? 'shadow-[0_0_15px_-3px_rgba(168,85,247,0.3)]'
-                  : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
+                  ? 'shadow-glow'
+                  : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent'
               }`}
               style={
                 isSelected
                   ? {
                       backgroundColor: `${color}20`,
-                      borderColor: `${color}80`,
+                      borderWidth: '1px',
+                      borderColor: `${color}50`,
                       color: color,
                     }
                   : {}

@@ -71,26 +71,26 @@ export default function Pagination({
   if (totalItems === 0) return null;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-dark-800/50 backdrop-blur-md rounded-2xl p-6 border border-white/5">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 glass-card p-6">
       {/* Page Size Selector */}
-      <div className="flex items-center gap-3 text-sm text-gray-400">
+      <div className="flex items-center gap-3 text-sm text-muted-foreground">
         <span>{t('perPage')}</span>
         <div className="relative group">
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
-            className="appearance-none bg-dark-900 border border-white/10 text-white px-4 py-1.5 rounded-lg focus:outline-none focus:border-tech-blue/50 focus:ring-1 focus:ring-tech-blue/50 transition-all pr-8 cursor-pointer hover:bg-dark-700"
+            className="appearance-none bg-muted border border-border text-foreground px-4 py-1.5 rounded-lg focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-8 cursor-pointer hover:bg-muted/80"
           >
             {PAGE_SIZE_OPTIONS.map(size => (
               <option key={size} value={size}>{size}</option>
             ))}
           </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground">
             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
           </div>
         </div>
         <span>{t('items')}</span>
-        <span className="ml-2 px-3 py-1 bg-white/5 rounded-full text-gray-400 border border-white/5">
+        <span className="ml-2 px-3 py-1 bg-muted rounded-full text-muted-foreground border border-border">
           {t('total', { count: totalItems })}
         </span>
       </div>
@@ -103,8 +103,8 @@ export default function Pagination({
           disabled={!hasPreviousPage}
           className={`p-2.5 rounded-xl transition-all duration-300 ${
             hasPreviousPage
-              ? 'bg-dark-900 text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 hover:border-white/20'
-              : 'bg-dark-900/50 text-gray-600 cursor-not-allowed border border-transparent'
+              ? 'bg-muted text-foreground hover:bg-primary/10 hover:text-primary border border-border hover:border-primary/30'
+              : 'bg-muted/50 text-muted-foreground cursor-not-allowed border border-transparent opacity-50'
           }`}
           title={t('previous')}
         >
@@ -112,7 +112,7 @@ export default function Pagination({
         </button>
 
         {/* Page Numbers */}
-        <div className="flex items-center bg-dark-900 rounded-xl p-1 border border-white/5">
+        <div className="flex items-center bg-muted rounded-xl p-1 border border-border">
           {getPageNumbers().map((page, index) => (
             <button
               key={index}
@@ -120,10 +120,10 @@ export default function Pagination({
               disabled={page === '...'}
               className={`min-w-[40px] h-10 px-3 rounded-lg font-medium transition-all duration-300 ${
                 page === currentPage
-                  ? 'bg-gradient-to-br from-tech-blue to-tech-blue/80 text-dark-900 shadow-lg shadow-tech-blue/20 scale-105'
+                  ? 'bg-primary text-primary-foreground shadow-glow scale-105'
                   : page === '...'
-                  ? 'cursor-default text-gray-600'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  ? 'cursor-default text-muted-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
               }`}
             >
               {page}
@@ -137,8 +137,8 @@ export default function Pagination({
           disabled={!hasNextPage}
           className={`p-2.5 rounded-xl transition-all duration-300 ${
             hasNextPage
-              ? 'bg-dark-900 text-gray-300 hover:text-white hover:bg-white/10 border border-white/5 hover:border-white/20'
-              : 'bg-dark-900/50 text-gray-600 cursor-not-allowed border border-transparent'
+              ? 'bg-muted text-foreground hover:bg-primary/10 hover:text-primary border border-border hover:border-primary/30'
+              : 'bg-muted/50 text-muted-foreground cursor-not-allowed border border-transparent opacity-50'
           }`}
           title={t('next')}
         >

@@ -4,6 +4,7 @@
  * HomeClient Component
  * Main client component for the home page
  * Refactored to use smaller sub-components and React Query
+ * Enhanced with modern glass effects and animations
  */
 
 import { Sparkles, Settings, LogOut } from 'lucide-react';
@@ -23,6 +24,7 @@ import {
   Sidebar,
 } from './components/home';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import { Footer } from './components/Footer';
 
 // Hooks
 import { useSearch } from '@/hooks/useSearch';
@@ -101,7 +103,6 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
   } = useSearch(prompts);
 
   // Prefer server data for filter options, fallback to derived from prompts
-  // Note: Query hooks already return string arrays
   const allTags = serverTags.length > 0 ? serverTags : derivedTags;
   const allCategories = serverCategories.length > 0 ? serverCategories : derivedCategories;
   const allModelTags = serverModelTags.length > 0 ? serverModelTags : derivedModelTags;
@@ -139,67 +140,63 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
   return (
     <>
       {/* Header */}
-      <header className="sticky top-0 z-50 glass border-b border-white/5 shadow-lg shadow-black/20">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              {/* Logo */}
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-tech-primary to-tech-accent flex items-center justify-center shadow-lg shadow-tech-primary/10">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white tracking-tight">
-                  {t('title')}
-                </h1>
-                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">
-                  {t('subtitle')}
-                </p>
-              </div>
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
+        <div className="container flex h-16 items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-gold">
+              <Sparkles className="h-5 w-5 text-primary-foreground" />
             </div>
-            {/* Right side controls */}
-            <div className="flex items-center gap-3">
-              {/* Language Switcher */}
-              <LanguageSwitcher />
-              
-              {/* Auth buttons - only show if admin entry is enabled for this domain */}
-              {showAdminEntry && (
-                <>
-                  {authLoading ? (
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <div className="w-5 h-5 border-2 border-gray-500/30 border-t-gray-400 rounded-full animate-spin" />
-                    </div>
-                  ) : (
-                    <>
-                      <Link
-                        href="/admin"
-                        className="flex items-center gap-2 px-5 py-2.5 bg-tech-primary/10 hover:bg-tech-primary/20 border border-tech-primary/30 text-tech-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
+            <div>
+              <h1 className="text-xl font-bold tracking-tight">
+                <span className="gradient-text">{t('title')}</span>
+              </h1>
+              <p className="text-xs text-muted-foreground">{t('subtitle')}</p>
+            </div>
+          </div>
+          
+          {/* Right side controls */}
+          <div className="flex items-center gap-3">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+            
+            {/* Auth buttons - only show if admin entry is enabled for this domain */}
+            {showAdminEntry && (
+              <>
+                {authLoading ? (
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-muted border-t-foreground rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <>
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md group"
+                    >
+                      <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
+                      <span>{t('admin')}</span>
+                    </Link>
+                    {isAuthenticated && (
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-4 py-2 bg-muted hover:bg-destructive/10 border border-border hover:border-destructive/30 text-muted-foreground hover:text-destructive rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
+                        title={t('logout')}
                       >
-                        <Settings className="w-4 h-4 group-hover:rotate-90 transition-transform duration-500" />
-                        <span>{t('admin')}</span>
-                      </Link>
-                      {isAuthenticated && (
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 text-gray-400 hover:text-red-400 rounded-lg transition-all duration-300 font-medium text-sm backdrop-blur-md"
-                          title={t('logout')}
-                        >
-                          <LogOut className="w-4 h-4" />
-                        </button>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
+                        <LogOut className="w-4 h-4" />
+                      </button>
+                    )}
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
       </header>
 
-      <main className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="container pb-16">
         {/* Hero Section */}
         <HeroSection />
 
-        {/* Search - 全宽与卡片对齐 */}
+        {/* Search */}
         <div className="mb-8">
           <SearchBox value={searchTerm} onChange={handleSearchChange} />
         </div>
@@ -242,6 +239,9 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
     </>
   );
 }

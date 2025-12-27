@@ -3,6 +3,7 @@
 /**
  * CategoryFilter Component
  * Filter buttons for generation type categories
+ * Enhanced with modern badge styling
  */
 
 import { FolderOpen } from 'lucide-react';
@@ -21,17 +22,17 @@ export default function CategoryFilter({ categories, selected, onSelect }: Categ
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <FolderOpen className="w-4 h-4" />
         <span>{t('categories')}</span>
       </div>
-      <div className="flex flex-wrap justify-center gap-3">
+      <div className="flex flex-wrap gap-2">
         <button
           onClick={() => onSelect('')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
             !selected
-              ? 'bg-amber-500/10 border-amber-500/50 text-amber-400 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]'
-              : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
+              ? 'bg-primary/10 text-primary border border-primary/30 shadow-glow'
+              : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent'
           }`}
         >
           {t('all')}
@@ -40,10 +41,10 @@ export default function CategoryFilter({ categories, selected, onSelect }: Categ
           <button
             key={category}
             onClick={() => onSelect(category)}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 border ${
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
               selected === category
-                ? 'bg-amber-500/10 border-amber-500/50 text-amber-400 shadow-[0_0_15px_-3px_rgba(245,158,11,0.2)]'
-                : 'bg-dark-800/50 border-white/5 text-gray-400 hover:border-white/20 hover:text-white hover:bg-white/5'
+                ? 'bg-primary/10 text-primary border border-primary/30 shadow-glow'
+                : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent'
             }`}
           >
             {category}

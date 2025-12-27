@@ -10,8 +10,14 @@
     "logout": "Logout"
   },
   "hero": {
-    "title": "Explore Unlimited Creativity",
-    "description": "Curated AI prompts to inspire your creative journey"
+    "badge": "Explore 1000+ Curated AI Prompts",
+    "titlePart1": "Discover",
+    "titleHighlight": "AI Creation",
+    "titlePart2": "Unlimited Possibilities",
+    "description": "Curated collection of the finest AI prompts covering image generation, video creation, music production and more, empowering your creativity",
+    "category1": "Text to Image",
+    "category2": "Text to Video",
+    "category3": "Text to Audio"
   },
   "search": {
     "placeholder": "Search prompts, effects, or descriptions..."

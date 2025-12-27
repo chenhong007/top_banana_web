@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { Footer } from './components/Footer';
 
 /**
  * Frontend Layout
@@ -7,12 +6,12 @@ import { Footer } from './components/Footer';
  */
 export default function FrontendLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-dark-900 text-white bg-tech-grid bg-fixed flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* 背景装饰 - 移至布局层以确保页面切换时保持一致 */}
-      <div className="fixed inset-0 bg-subtle-gradient pointer-events-none z-0" />
-      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-tech-primary/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow" />
+      <div className="fixed inset-0 bg-gradient-to-b from-background via-background/95 to-background pointer-events-none z-0" />
+      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow" />
       <div
-        className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-tech-accent/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow"
+        className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[120px] pointer-events-none z-0 animate-pulse-slow"
         style={{ animationDelay: '3s' }}
       />
 
@@ -20,9 +19,6 @@ export default function FrontendLayout({ children }: { children: ReactNode }) {
       <div className="relative z-10 flex-grow">
         {children}
       </div>
-
-      {/* 页脚 - 包含版权和联系方式 */}
-      <Footer />
     </div>
   );
 }
