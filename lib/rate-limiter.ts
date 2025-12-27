@@ -182,7 +182,7 @@ export function checkRateLimit(identifier: string): RateLimitResult {
     rateLimitStore.delete(identifier);
     return {
       allowed: true,
-      remaining: MAX_ATTEMPTS - 1,
+      remaining: DEFAULT_LOGIN_MAX_ATTEMPTS - 1,
     };
   }
   

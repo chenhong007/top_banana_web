@@ -151,13 +151,11 @@ export async function GET(request: NextRequest) {
       throw e;
     }
 
-    // NextResponse expects a BodyInit; convert Uint8Array to an exact ArrayBuffer view.
-    const body = imageBuffer.buffer.slice(
-      imageBuffer.byteOffset,
-      imageBuffer.byteOffset + imageBuffer.byteLength
-    );
+    // Some TS libs type Uint8Array as Uint8Array<ArrayBufferLike>, which can break BodyInit/BlobPart checks.
+    // Copy into an ArrayBuffer-backed Uint8Array to keep types (and behavior) consistent.
+    const bytes = new Uint8Array(imageBuffer);
 
-    const proxied = new NextResponse(body, {
+    const proxied = new NextResponse(bytes, {
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
