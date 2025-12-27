@@ -12,7 +12,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // 默认生成类型类别
-const DEFAULT_CATEGORIES = ['文生图', '文生视频', '文生音频', '其他'];
+const DEFAULT_CATEGORIES = ['文生图', '文生视频', '文生音频', '图像修复', '发现更多'];
 
 // 默认AI模型标签及其类型
 const DEFAULT_MODEL_TAGS = [

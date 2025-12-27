@@ -18,7 +18,7 @@ export const API_ENDPOINTS = {
 } as const;
 
 // Default Categories (生成类型)
-export const DEFAULT_CATEGORIES = ['文生图', '文生视频', '文生音频', '其他'] as const;
+export const DEFAULT_CATEGORIES = ['文生图', '文生视频', '文生音频', '图像修复', '发现更多'] as const;
 export const DEFAULT_CATEGORY = '文生图' as const;
 
 // Default AI Model Tags (AI模型标签)

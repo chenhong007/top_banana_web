@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
  * 初始化默认类别数据，部署后调用一次即可
  * 
  * 功能：
- * 1. 创建默认类别（文生图、文生视频、文生音频、其他）
+ * 1. 创建默认类别（文生图、文生视频、文生音频、图像修复、发现更多）
  * 2. 将所有现有的 prompt 关联到"文生图"类别
  */
 export async function POST() {

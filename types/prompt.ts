@@ -12,7 +12,7 @@ export interface PromptItem {
   source: string; // Prompt source
   imageUrl?: string; // Optional image URL (第一张图作为封面，向后兼容)
   imageUrls?: string[]; // 多图 URL 数组 (所有图片)
-  category?: string; // 生成类型类别 (文生图、文生视频、文生音频、其他)
+  category?: string; // 生成类型类别 (文生图、文生视频、文生音频、图像修复、其他)
   likes: number; // 点赞数
   hearts: number; // 爱心数 (复制次数)
   createdAt: string; // ISO date string

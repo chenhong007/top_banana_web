@@ -7,7 +7,7 @@
  */
 
 import { useTranslations } from 'next-intl';
-import { Sparkles, Zap, Palette } from 'lucide-react';
+import { Sparkles, Zap, Palette, Wand2 } from 'lucide-react';
 
 export default function HeroSection() {
   const t = useTranslations('hero');
@@ -47,6 +47,10 @@ export default function HeroSection() {
             <div className="flex items-center gap-2 rounded-full bg-muted/50 px-4 py-2 backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-accent" />
               <span className="text-sm">{t('category3')}</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-full bg-muted/50 px-4 py-2 backdrop-blur-sm">
+              <Wand2 className="h-4 w-4 text-orange-400" />
+              <span className="text-sm">{t('category4')}</span>
             </div>
           </div>
         </div>

@@ -10,14 +10,15 @@
     "logout": "退出登录"
   },
   "hero": {
-    "badge": "探索 1000+ 精选 AI 提示词",
+    "badge": "探索 10000+ 全球精选 AI 提示词",
     "titlePart1": "发现",
     "titleHighlight": "AI 创作",
     "titlePart2": "的无限可能",
     "description": "收集全网最优质的 AI 提示词，涵盖图像生成、视频创作、音乐制作等多个领域，助你释放创意潜能",
     "category1": "文生图",
     "category2": "文生视频",
-    "category3": "文生音频"
+    "category3": "文生音频",
+    "category4": "图像修复"
   },
   "search": {
     "placeholder": "搜索提示词、效果或描述..."

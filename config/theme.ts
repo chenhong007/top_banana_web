@@ -46,6 +46,11 @@ export const CATEGORY_COLORS: Record<string, CategoryColor> = {
     text: 'text-green-400',
     border: 'border-green-500/30',
   },
+  '图像修复': {
+    bg: 'bg-orange-500/10',
+    text: 'text-orange-400',
+    border: 'border-orange-500/30',
+  },
   '其他': {
     bg: 'bg-gray-500/10',
     text: 'text-gray-400',
