@@ -46,7 +46,7 @@ export const DEFAULTS = {
   IMPORT_MODE: 'merge' as const,
   CSV_PREVIEW_LENGTH: 1000,
   PAGE_SIZE: 12, // Default items per page for frontend
-  PAGE_SIZE_OPTIONS: [6, 12, 24, 48], // Available page size options
+  PAGE_SIZE_OPTIONS: [6, 12, 24], // Available page size options
 } as const;
 
 // Messages

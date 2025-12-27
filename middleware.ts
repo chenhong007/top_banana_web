@@ -5,6 +5,84 @@ import { routing } from './i18n/routing';
 
 const TOKEN_NAME = 'admin_token';
 
+// ============================================
+// Bot Detection for Middleware
+// ============================================
+
+/**
+ * Known bot user agents (case-insensitive patterns)
+ */
+const BOT_USER_AGENTS = [
+  /bot/i,
+  /crawler/i,
+  /spider/i,
+  /scraper/i,
+  /curl/i,
+  /wget/i,
+  /python-requests/i,
+  /python-urllib/i,
+  /axios/i,
+  /node-fetch/i,
+  /go-http-client/i,
+  /java\//i,
+  /httpie/i,
+  /postman/i,
+  /insomnia/i,
+  /scrapy/i,
+  /phantomjs/i,
+  /headlesschrome/i,
+  /selenium/i,
+  /puppeteer/i,
+  /playwright/i,
+  /webdriver/i,
+  /httrack/i,
+  /libwww/i,
+  /lwp-/i,
+  /mechanize/i,
+  /aiohttp/i,
+  /httpx/i,
+];
+
+/**
+ * Good bots that should be allowed (search engines)
+ */
+const ALLOWED_BOTS = [
+  /googlebot/i,
+  /bingbot/i,
+  /baiduspider/i,
+  /yandexbot/i,
+  /duckduckbot/i,
+  /slurp/i,
+  /facebookexternalhit/i,
+  /twitterbot/i,
+  /linkedinbot/i,
+  /whatsapp/i,
+  /telegrambot/i,
+];
+
+/**
+ * Check if user agent indicates a malicious bot
+ */
+function isMaliciousBot(userAgent: string | null): boolean {
+  if (!userAgent) return true; // Empty UA is suspicious
+  
+  // Allow good bots (search engines)
+  for (const pattern of ALLOWED_BOTS) {
+    if (pattern.test(userAgent)) {
+      return false;
+    }
+  }
+  
+  // Block known bad bots
+  for (const pattern of BOT_USER_AGENTS) {
+    if (pattern.test(userAgent)) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
 /**
  * Apply security headers to response
  */
@@ -191,6 +269,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
   const token = request.cookies.get(TOKEN_NAME)?.value;
+  const userAgent = request.headers.get('user-agent');
 
   // Skip i18n middleware for admin routes, API routes, and static files
   const isAdminPath = pathname.startsWith('/admin') || pathname.startsWith('/login');
@@ -198,6 +277,13 @@ export async function middleware(request: NextRequest) {
   const isStaticPath = pathname.startsWith('/_next') || 
                        pathname.startsWith('/favicon') ||
                        pathname.includes('.');
+
+  // Bot detection for API routes (block malicious bots from data APIs)
+  if (isApiPath && !pathname.startsWith('/api/auth')) {
+    if (isMaliciousBot(userAgent)) {
+      return new NextResponse('Access denied', { status: 403 });
+    }
+  }
 
   // Handle admin authentication
   if (isAdminPath) {

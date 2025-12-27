@@ -158,6 +158,13 @@ class PromptRepository extends BaseRepository<
   }
 
   /**
+   * Find all prompts with pagination (convenience method)
+   */
+  async findAllPaginated(page: number, pageSize: number): Promise<PaginatedResult<PromptDTO>> {
+    return this.findPaginated({ page, pageSize });
+  }
+
+  /**
    * Find a single prompt by ID
    */
   async findById(id: string): Promise<PromptDTO | null> {

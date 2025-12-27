@@ -1,6 +1,6 @@
 /**
  * Prompts API Route
- * GET /api/prompts - Get all prompts
+ * GET /api/prompts - Get all prompts (with pagination and anti-scraping)
  * POST /api/prompts - Create a new prompt (requires authentication)
  */
 
@@ -15,15 +15,59 @@ import {
 } from '@/lib/api-utils';
 import { checkDuplicate } from '@/lib/duplicate-checker';
 import { requireAuth } from '@/lib/security';
+import { applyApiProtection, addProtectionHeaders } from '@/lib/anti-scraping';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
-// GET all prompts
-export async function GET() {
+// Maximum page size to prevent bulk extraction
+const MAX_PAGE_SIZE = 50;
+const DEFAULT_PAGE_SIZE = 20;
+
+// GET all prompts with anti-scraping protection
+export async function GET(request: NextRequest) {
+  // Apply anti-scraping protection
+  const protection = applyApiProtection(request, 'prompts');
+  if (!protection.allowed && protection.response) {
+    return addProtectionHeaders(protection.response);
+  }
+
   return handleApiRoute(async () => {
+    const searchParams = request.nextUrl.searchParams;
+    
+    // Parse pagination parameters
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const requestedSize = parseInt(searchParams.get('pageSize') || String(DEFAULT_PAGE_SIZE), 10);
+    const pageSize = Math.min(Math.max(1, requestedSize), MAX_PAGE_SIZE);
+    
+    // Check if pagination is requested (for backwards compatibility)
+    const usePagination = searchParams.has('page') || searchParams.has('pageSize');
+    
+    if (usePagination) {
+      // Return paginated results
+      const { data: prompts, total, totalPages } = await promptRepository.findAllPaginated(page, pageSize);
+      
+      const response = NextResponse.json({
+        success: true,
+        data: prompts,
+        pagination: {
+          page,
+          pageSize,
+          total,
+          totalPages,
+          hasNext: page < totalPages,
+          hasPrev: page > 1,
+        },
+      });
+      
+      return addProtectionHeaders(response);
+    }
+    
+    // For backwards compatibility, return all prompts (but log a warning)
+    // Consider deprecating this in the future
     const prompts = await promptRepository.findAll();
-    return successResponse(prompts);
+    const response = successResponse(prompts);
+    return addProtectionHeaders(response);
   });
 }
 

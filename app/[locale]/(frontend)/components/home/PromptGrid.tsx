@@ -7,6 +7,7 @@
  */
 
 import { FileQuestion } from 'lucide-react';
+import { useRef, useCallback } from 'react';
 import PromptCard from '../PromptCard';
 import Pagination from '../Pagination';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -35,6 +36,27 @@ interface PromptGridProps {
 export default function PromptGrid({ loading, filteredPrompts, pagination }: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top of grid when page changes
+  const scrollToTop = useCallback(() => {
+    if (gridRef.current) {
+      gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
+  // Wrap page change handler to scroll to top
+  const handlePageChange = useCallback((page: number) => {
+    pagination.goToPage(page);
+    // Use setTimeout to ensure the DOM has updated before scrolling
+    setTimeout(scrollToTop, 100);
+  }, [pagination, scrollToTop]);
+
+  // Wrap page size change handler to scroll to top
+  const handlePageSizeChange = useCallback((size: number) => {
+    pagination.changePageSize(size);
+    setTimeout(scrollToTop, 100);
+  }, [pagination, scrollToTop]);
 
   // Loading State
   if (loading) {
@@ -60,7 +82,7 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
 
   // Grid with prompts
   return (
-    <div className="space-y-8">
+    <div ref={gridRef} className="space-y-8 scroll-mt-4">
       {/* Results count */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
@@ -83,8 +105,8 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
             totalPages={pagination.totalPages}
             totalItems={pagination.totalItems}
             pageSize={pagination.pageSize}
-            onPageChange={pagination.goToPage}
-            onPageSizeChange={pagination.changePageSize}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
             hasNextPage={pagination.hasNextPage}
             hasPreviousPage={pagination.hasPreviousPage}
           />

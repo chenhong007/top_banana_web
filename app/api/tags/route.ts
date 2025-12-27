@@ -10,15 +10,23 @@ import { NextRequest } from 'next/server';
 import { tagRepository } from '@/repositories';
 import { successResponse, errorResponse, handleApiRoute } from '@/lib/api-utils';
 import { requireAuth } from '@/lib/security';
+import { applyApiProtection, addProtectionHeaders } from '@/lib/anti-scraping';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
-// GET all tags
-export async function GET() {
+// GET all tags with anti-scraping protection
+export async function GET(request: NextRequest) {
+  // Apply anti-scraping protection
+  const protection = applyApiProtection(request, 'tags');
+  if (!protection.allowed && protection.response) {
+    return addProtectionHeaders(protection.response);
+  }
+
   return handleApiRoute(async () => {
     const tags = await tagRepository.findAll();
-    return successResponse(tags);
+    const response = successResponse(tags);
+    return addProtectionHeaders(response);
   });
 }
 
