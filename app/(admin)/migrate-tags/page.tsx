@@ -75,6 +75,10 @@ export default function MigrateTagsPage() {
   const [plan, setPlan] = useState<MigrationPlan | null>(null);
   const [result, setResult] = useState<MigrationResult | null>(null);
   const [error, setError] = useState<string>('');
+  
+  // 日期更新相关状态
+  const [dateUpdateResult, setDateUpdateResult] = useState<DateUpdateResult | null>(null);
+  const [showDateUpdate, setShowDateUpdate] = useState(false);
 
   const resetState = () => {
     setStep('input');
@@ -82,6 +86,38 @@ export default function MigrateTagsPage() {
     setPlan(null);
     setResult(null);
     setError('');
+    setDateUpdateResult(null);
+    setShowDateUpdate(false);
+  };
+
+  const handleUpdateDates = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/update-dates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          secret,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setDateUpdateResult(data.data);
+        setShowDateUpdate(true);
+      } else {
+        setError(data.error || '日期更新失败');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '网络请求失败');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGetStatus = async () => {
@@ -229,6 +265,90 @@ export default function MigrateTagsPage() {
           </div>
         )}
 
+        {/* Date Update Result Modal */}
+        {showDateUpdate && dateUpdateResult && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold flex items-center gap-2">
+                    <Calendar className="w-6 h-6 text-green-600" />
+                    日期更新完成
+                  </h3>
+                  <button
+                    onClick={() => setShowDateUpdate(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <XCircle className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <p className="text-sm text-gray-600 mb-1">找到记录</p>
+                    <p className="text-2xl font-bold text-blue-600">{dateUpdateResult.totalFound}</p>
+                  </div>
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <p className="text-sm text-gray-600 mb-1">更新成功</p>
+                    <p className="text-2xl font-bold text-green-600">{dateUpdateResult.successCount}</p>
+                  </div>
+                  <div className="bg-red-50 rounded-lg p-4">
+                    <p className="text-sm text-gray-600 mb-1">失败</p>
+                    <p className="text-2xl font-bold text-red-600">{dateUpdateResult.errorCount}</p>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <h4 className="font-semibold mb-3">日期范围：</h4>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600">原始范围:</span>
+                      <span className="font-mono text-sm">
+                        {new Date(dateUpdateResult.dateRange.original.from).toLocaleString('zh-CN')}
+                        {' → '}
+                        {new Date(dateUpdateResult.dateRange.original.to).toLocaleString('zh-CN')}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600">更新为:</span>
+                      <span className="font-mono text-sm text-green-600">
+                        {new Date(dateUpdateResult.dateRange.updated.from).toLocaleString('zh-CN')}
+                        {' → '}
+                        {new Date(dateUpdateResult.dateRange.updated.to).toLocaleString('zh-CN')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {dateUpdateResult.samples && dateUpdateResult.samples.length > 0 && (
+                  <div className="mb-6">
+                    <h4 className="font-semibold mb-3">更新示例（前10条）：</h4>
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {dateUpdateResult.samples.map((sample, idx) => (
+                        <div key={idx} className="bg-gray-50 rounded-lg p-3 text-sm">
+                          <p className="font-medium text-gray-900 mb-1">{sample.effect}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-600">
+                            <span>{new Date(sample.oldDate).toLocaleString('zh-CN')}</span>
+                            <ArrowRight className="w-3 h-3" />
+                            <span className="text-green-600">{new Date(sample.newDate).toLocaleString('zh-CN')}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => setShowDateUpdate(false)}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                >
+                  关闭
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Step 2: Show Status */}
         {step === 'status' && status && (
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -268,6 +388,27 @@ export default function MigrateTagsPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  日期更新功能
+                </h4>
+                <p className="text-yellow-700 text-sm mb-3">
+                  将 2025年12月26日 和 27日 添加的所有数据的创建时间往前推 30 天
+                </p>
+                <button
+                  onClick={handleUpdateDates}
+                  disabled={loading}
+                  className="bg-yellow-600 text-white py-2 px-4 rounded-md hover:bg-yellow-700 disabled:bg-gray-300 flex items-center gap-2"
+                >
+                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  <Calendar className="w-4 h-4" />
+                  执行日期更新
+                </button>
               </div>
             </div>
 

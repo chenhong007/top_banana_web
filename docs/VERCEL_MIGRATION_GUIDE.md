@@ -2,7 +2,9 @@
 
 ## 📋 概述
 
-由于本地无法执行迁移，本指南说明如何在 Vercel 生产环境中执行标签迁移。
+由于本地无法执行迁移，本指南说明如何在 Vercel 生产环境中执行：
+1. **标签迁移** - 将英文标签翻译成中文并合并
+2. **日期更新** - 将12月26日和27日的数据时间往前推30天
 
 ## 🌐 访问迁移页面
 
@@ -26,14 +28,17 @@
 
 4. **按步骤操作**
    - 步骤 1: 查看当前标签状态
-   - 步骤 2: 生成迁移计划
-   - 步骤 3: 预览迁移详情
-   - 步骤 4: 最终确认
-   - 步骤 5: 查看迁移结果
+   - 步骤 2: **可选 - 执行日期更新**（新功能）
+   - 步骤 3: 生成迁移计划
+   - 步骤 4: 预览迁移详情
+   - 步骤 5: 最终确认
+   - 步骤 6: 查看迁移结果
 
 ### 方法 2: 使用 API（适合技术用户）
 
-#### 1. 获取 IMPORT_SECRET
+#### 标签迁移 API
+
+##### 1. 获取 IMPORT_SECRET
 
 在 Vercel 项目中查找：
 ```
@@ -42,14 +47,14 @@ Vercel Dashboard → Your Project → Settings → Environment Variables
 
 找到 `IMPORT_SECRET` 的值。
 
-#### 2. 查看当前状态
+##### 2. 查看当前状态
 
 ```bash
 curl -X GET https://your-domain.com/api/migrate-tags \
   -H "Authorization: Bearer YOUR_IMPORT_SECRET"
 ```
 
-#### 3. 预览迁移（推荐先运行）
+##### 3. 预览迁移（推荐先运行）
 
 ```bash
 curl -X POST https://your-domain.com/api/migrate-tags \
@@ -60,7 +65,7 @@ curl -X POST https://your-domain.com/api/migrate-tags \
   }'
 ```
 
-#### 4. 执行迁移
+##### 4. 执行迁移
 
 确认预览结果后：
 
@@ -72,6 +77,31 @@ curl -X POST https://your-domain.com/api/migrate-tags \
     "dryRun": false
   }'
 ```
+
+#### 日期更新 API
+
+##### 1. 预览要更新的数据
+
+```bash
+curl -X GET https://your-domain.com/api/update-dates \
+  -H "Authorization: Bearer YOUR_IMPORT_SECRET"
+```
+
+返回将要更新的数据数量和示例。
+
+##### 2. 执行日期更新
+
+将 2025年12月26日和27日的数据创建时间往前推30天：
+
+```bash
+curl -X POST https://your-domain.com/api/update-dates \
+  -H "Content-Type: application/json" \
+  -d '{
+    "secret": "YOUR_IMPORT_SECRET"
+  }'
+```
+
+**注意**: 此操作不可逆，执行前请确认。
 
 ## 🔒 安全性
 
@@ -104,16 +134,56 @@ openssl rand -hex 32
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
+## 🆕 日期更新功能
+
+### 功能说明
+
+- **目标数据**: 2025年12月26日和27日创建的所有 Prompt
+- **更新方式**: 将创建时间往前推 30 天（1个月）
+- **结果**: 12月26日的数据变为11月26日，12月27日的数据变为11月27日
+
+### 使用场景
+
+1. **数据测试**: 将测试数据时间调整到过去
+2. **内容规划**: 调整内容的时间顺序
+3. **数据迁移**: 从其他系统迁移时需要调整时间
+
+### 在迁移页面使用
+
+1. 访问 `https://your-domain.com/admin/migrate-tags`
+2. 输入 IMPORT_SECRET
+3. 在"步骤 2"页面找到"日期更新功能"
+4. 点击"执行日期更新"
+5. 查看更新结果弹窗
+
+### 独立使用
+
+可以只执行日期更新，不执行标签迁移：
+
+1. 访问迁移页面
+2. 输入密钥，进入"步骤 2"
+3. 点击"执行日期更新"
+4. 完成后点击"返回"退出
+
+**详细文档**: [DATE_UPDATE_FEATURE.md](./DATE_UPDATE_FEATURE.md)
+
 ## ⚠️ 重要注意事项
 
 ### 执行前检查清单
 
+#### 标签迁移
 - [ ] 已在 Vercel 中配置 `IMPORT_SECRET`
 - [ ] 已查看当前标签状态
 - [ ] 已预览迁移计划（`dryRun: true`）
 - [ ] 已备份数据库（可选，但强烈推荐）
 - [ ] 在低流量时段执行
 - [ ] 准备好在迁移后验证结果
+
+#### 日期更新
+- [ ] 确认需要更新12月26日和27日的数据
+- [ ] 了解此操作不可逆
+- [ ] 已预览要更新的数据数量
+- [ ] 确认时间推移30天符合需求
 
 ### 数据库备份
 
@@ -158,11 +228,22 @@ npx prisma db pull
 
 ### 1. 检查 API
 
+#### 验证标签
+
 ```bash
 curl https://your-domain.com/api/tags
 ```
 
 应该返回 20 个中文标签。
+
+#### 验证日期更新
+
+```bash
+# 获取最近的 Prompts
+curl https://your-domain.com/api/prompts
+```
+
+查看 `createdAt` 字段，确认12月26-27日的数据已变为11月26-27日。
 
 ### 2. 检查前端
 
