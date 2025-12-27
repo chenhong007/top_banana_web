@@ -324,7 +324,7 @@ export function applyApiProtection(
 /**
  * Add anti-scraping headers to response
  */
-export function addProtectionHeaders(response: NextResponse): NextResponse {
+export function addProtectionHeaders<T>(response: NextResponse<T>): NextResponse<T> {
   // Prevent caching of API responses in shared caches
   response.headers.set('Cache-Control', 'private, no-store, max-age=0');
   
