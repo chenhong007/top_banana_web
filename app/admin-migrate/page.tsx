@@ -72,7 +72,7 @@ interface MigrationResult {
 
 export default function MigrateTagsPage() {
   // 直接写死密钥，用完删除
-  const [secret] = useState('my-super-secret-key-2024');
+  const secret = 'my-super-secret-key-2024'; // 写死为常量，不需要 useState
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'input' | 'status' | 'preview' | 'confirm' | 'result'>('status'); // 直接跳到状态页
   const [status, setStatus] = useState<TagStatus | null>(null);
@@ -311,7 +311,7 @@ export default function MigrateTagsPage() {
           </div>
         )}
 
-        {/* Step 1: Input Secret */}
+        {/* Step 1: Input Secret - 已弃用，密钥已写死 */}
         {step === 'input' && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">步骤 1: 身份验证</h2>
@@ -326,24 +326,22 @@ export default function MigrateTagsPage() {
                 id="import-secret-input"
                 type="text"
                 value={secret}
-                onChange={(e) => setSecret(e.target.value)}
-                onInput={(e) => setSecret((e.target as HTMLInputElement).value)}
+                readOnly
+                disabled
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck="false"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                placeholder="请输入环境变量 IMPORT_SECRET 的值"
-                disabled={loading}
-                style={{ pointerEvents: 'auto' }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100"
+                placeholder="密钥已写死在代码中"
               />
               <p className="mt-2 text-sm text-gray-500">
-                在 Vercel 项目设置的环境变量中查找此值
+                密钥已直接写在代码中，无需输入
               </p>
             </div>
             <button
               onClick={handleGetStatus}
-              disabled={loading || !secret.trim()}
+              disabled={loading}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
