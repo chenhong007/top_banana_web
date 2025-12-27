@@ -243,15 +243,26 @@ export default function MigrateTagsPage() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">步骤 1: 身份验证</h2>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label 
+                htmlFor="import-secret-input"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 IMPORT_SECRET
               </label>
               <input
-                type="password"
+                id="import-secret-input"
+                type="text"
                 value={secret}
                 onChange={(e) => setSecret(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onInput={(e) => setSecret((e.target as HTMLInputElement).value)}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 placeholder="请输入环境变量 IMPORT_SECRET 的值"
+                disabled={loading}
+                style={{ pointerEvents: 'auto' }}
               />
               <p className="mt-2 text-sm text-gray-500">
                 在 Vercel 项目设置的环境变量中查找此值
