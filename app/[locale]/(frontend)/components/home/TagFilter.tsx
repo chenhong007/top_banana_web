@@ -33,7 +33,7 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
       <button
         onClick={() => onSelect('')}
         className={cn(
-          "tag-badge transition-all",
+          "tag-badge transition-all text-sm px-4 py-1.5",
           selected === ''
             ? "tag-badge-primary"
             : "hover:bg-primary/10 hover:text-primary"
@@ -47,7 +47,7 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
           key={tag}
           onClick={() => onSelect(tag === selected ? '' : tag)}
           className={cn(
-            "tag-badge transition-all",
+            "tag-badge transition-all text-sm px-4 py-1.5",
             tag === selected
               ? "tag-badge-primary"
               : "hover:bg-primary/10 hover:text-primary"
