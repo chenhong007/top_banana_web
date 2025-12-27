@@ -6,6 +6,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticated } from './auth';
 
+function isSafeMethod(method: string): boolean {
+  return method === 'GET' || method === 'HEAD' || method === 'OPTIONS';
+}
+
+/**
+ * Basic CSRF mitigation for cookie-authenticated admin APIs:
+ * - For non-safe methods, if Origin is present, require same-origin.
+ * - If Origin is missing but Referer is present, require same-origin.
+ * - If neither is present (e.g., curl/server-to-server), allow.
+ */
+function isSameOriginMutation(request: NextRequest): boolean {
+  const origin = request.headers.get('origin');
+  const referer = request.headers.get('referer');
+  const expected = request.nextUrl.origin;
+
+  if (origin) return origin === expected;
+
+  if (referer) {
+    try {
+      const ref = new URL(referer);
+      return ref.origin === expected;
+    } catch {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 /**
  * Private/internal IP ranges and metadata service addresses to block
  * Prevents SSRF attacks
@@ -145,6 +174,17 @@ export function requireAuth(request: NextRequest): NextResponse | null {
       { status: 401 }
     );
   }
+
+  // CSRF mitigation for state-changing requests (production only).
+  if (process.env.NODE_ENV === 'production' && !isSafeMethod(request.method)) {
+    if (!isSameOriginMutation(request)) {
+      return NextResponse.json(
+        { success: false, error: 'Forbidden' },
+        { status: 403 }
+      );
+    }
+  }
+
   return null;
 }
 
@@ -169,19 +209,10 @@ export function verifyImportSecret(
   if (!token && body?.secret && typeof body.secret === 'string') {
     token = body.secret;
   }
-  
-  // Also check query string
-  if (!token) {
-    try {
-      const url = new URL(request.url);
-      token = url.searchParams.get('secret') || undefined;
-    } catch {
-      // Ignore URL parsing errors
-    }
-  }
 
   if (!token) {
-    return { success: false, error: 'Missing Authorization header or secret parameter' };
+    // Avoid query-string secrets (leaks via logs/referrers); require header or body.
+    return { success: false, error: 'Missing Authorization header or secret field' };
   }
   
   if (token !== importSecret) {
@@ -195,12 +226,18 @@ export function verifyImportSecret(
  * Create standardized security headers
  */
 export function getSecurityHeaders(): Record<string, string> {
+  const isProduction = process.env.NODE_ENV === 'production';
   return {
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',
     'X-XSS-Protection': '1; mode=block',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    // Additional hardening headers
+    ...(isProduction ? { 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains' } : {}),
+    'Cross-Origin-Opener-Policy': 'same-origin',
+    'Cross-Origin-Resource-Policy': 'same-site',
+    'X-Permitted-Cross-Domain-Policies': 'none',
   };
 }
 

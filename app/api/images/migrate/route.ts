@@ -144,7 +144,11 @@ export async function POST(request: NextRequest) {
 }
 
 // GET 获取迁移状态统计
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Check authentication (admin-only)
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     // 统计各类型图片数量
     const [total, migrated, pending, localImages] = await Promise.all([

@@ -71,7 +71,11 @@ export async function POST(request: NextRequest) {
 }
 
 // GET 方法用于检查当前类别状态
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Check authentication (admin-only)
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const categories = await prisma.category.findMany({
       include: {

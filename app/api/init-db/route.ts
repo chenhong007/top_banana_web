@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -80,6 +81,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  // Admin-only: avoid exposing DB health / inventory publicly
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const count = await prisma.prompt.count();
     return NextResponse.json({

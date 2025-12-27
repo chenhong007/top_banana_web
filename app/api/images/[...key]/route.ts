@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getImageFromR2, deleteImageFromR2, isR2Configured } from '@/lib/r2';
 import prisma from '@/lib/db';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -70,6 +71,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ key: string[] }> }
 ) {
+  // Check authentication (admin-only)
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const { key: keySegments } = await params;
     const fullKey = buildKeyFromSegments(keySegments);

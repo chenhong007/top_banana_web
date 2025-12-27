@@ -59,7 +59,11 @@ export async function POST(request: NextRequest) {
 }
 
 // GET 方法用于检查当前 AI 模型标签状态
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Check authentication (admin-only)
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const modelTags = await prisma.modelTag.findMany({
       include: {

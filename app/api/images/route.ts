@@ -6,11 +6,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { listImagesInR2, isR2Configured } from '@/lib/r2';
 import prisma from '@/lib/db';
+import { requireAuth } from '@/lib/security';
 
 // 强制动态渲染，因为使用了 searchParams
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  // Admin-only: image inventory contains internal keys / originalUrl
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const searchParams = request.nextUrl.searchParams;
     const source = searchParams.get('source') || 'db'; // 'db' 或 'r2'

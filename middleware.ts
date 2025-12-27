@@ -9,11 +9,31 @@ const TOKEN_NAME = 'admin_token';
  * Apply security headers to response
  */
 function applySecurityHeaders(response: NextResponse): NextResponse {
-  // Content Security Policy - Allows inline scripts/styles for Next.js
-  response.headers.set(
-    'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';"
-  );
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  // Content Security Policy
+  // - Keep 'unsafe-inline' to avoid breaking Next.js without a nonce pipeline.
+  // - Remove 'unsafe-eval' in production to reduce XSS blast radius.
+  const csp = [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isProduction ? '' : " 'unsafe-eval'"}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https: blob:",
+    "font-src 'self' data:",
+    "connect-src 'self' https:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    ...(isProduction ? ["upgrade-insecure-requests"] : []),
+  ].join('; ') + ';';
+
+  response.headers.set('Content-Security-Policy', csp);
+
+  // HSTS (only meaningful on HTTPS; enable in production)
+  if (isProduction) {
+    response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
   
   // Prevent clickjacking
   response.headers.set('X-Frame-Options', 'DENY');
@@ -29,6 +49,11 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   
   // Permissions Policy
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
+  // Additional hardening headers
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
+  response.headers.set('X-Permitted-Cross-Domain-Policies', 'none');
   
   return response;
 }
@@ -74,6 +99,24 @@ async function createSignature(payload: string, secret: string): Promise<string>
 }
 
 /**
+ * Constant-time string equality (Edge Runtime compatible).
+ */
+function timingSafeEqualString(a: string, b: string): boolean {
+  const aLen = a.length;
+  const bLen = b.length;
+  const max = Math.max(aLen, bLen);
+  let out = aLen ^ bLen;
+
+  for (let i = 0; i < max; i++) {
+    const ac = i < aLen ? a.charCodeAt(i) : 0;
+    const bc = i < bLen ? b.charCodeAt(i) : 0;
+    out |= ac ^ bc;
+  }
+
+  return out === 0;
+}
+
+/**
  * 安全的 Token 验证（Edge Runtime 兼容）
  */
 async function verifyToken(token: string): Promise<boolean> {
@@ -96,8 +139,8 @@ async function verifyToken(token: string): Promise<boolean> {
     // 使用 Web Crypto API 验证签名
     const expectedSignature = await createSignature(payloadBase64, AUTH_SECRET);
     
-    // 简单的字符串比较（在这个场景下足够安全）
-    if (providedSignature !== expectedSignature) {
+    // Constant-time comparison to reduce side-channel leakage
+    if (!timingSafeEqualString(providedSignature, expectedSignature)) {
       console.error('[Middleware] Signature mismatch');
       return false;
     }
