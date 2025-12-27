@@ -122,7 +122,22 @@ export default function MigrateTagsPage() {
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('API 响应错误:', response.status, text);
+        setError(`API 错误 (${response.status}): ${text.substring(0, 200)}`);
+        return;
+      }
+
+      let data;
+      try {
+        const text = await response.text();
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('JSON 解析错误:', parseError);
+        setError('服务器返回了无效的响应格式');
+        return;
+      }
 
       if (data.success) {
         setDateUpdateResult(data.data);
@@ -131,6 +146,7 @@ export default function MigrateTagsPage() {
         setError(data.error || '日期更新失败');
       }
     } catch (err) {
+      console.error('请求失败:', err);
       setError(err instanceof Error ? err.message : '网络请求失败');
     } finally {
       setLoading(false);
@@ -147,7 +163,24 @@ export default function MigrateTagsPage() {
         method: 'GET',
       });
 
-      const data = await response.json();
+      // 检查响应状态
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('API 响应错误:', response.status, text);
+        setError(`API 错误 (${response.status}): ${text.substring(0, 200)}`);
+        return;
+      }
+
+      // 尝试解析 JSON
+      let data;
+      try {
+        const text = await response.text();
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('JSON 解析错误:', parseError);
+        setError('服务器返回了无效的响应格式，请检查 Vercel 日志');
+        return;
+      }
 
       if (data.success) {
         setStatus(data.data);
@@ -156,6 +189,7 @@ export default function MigrateTagsPage() {
         setError(data.error || '获取状态失败');
       }
     } catch (err) {
+      console.error('请求失败:', err);
       setError(err instanceof Error ? err.message : '网络请求失败');
     } finally {
       setLoading(false);
@@ -178,7 +212,22 @@ export default function MigrateTagsPage() {
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('API 响应错误:', response.status, text);
+        setError(`API 错误 (${response.status}): ${text.substring(0, 200)}`);
+        return;
+      }
+
+      let data;
+      try {
+        const text = await response.text();
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('JSON 解析错误:', parseError);
+        setError('服务器返回了无效的响应格式');
+        return;
+      }
 
       if (data.success) {
         setPlan(data.data);
@@ -187,6 +236,7 @@ export default function MigrateTagsPage() {
         setError(data.error || '预览失败');
       }
     } catch (err) {
+      console.error('请求失败:', err);
       setError(err instanceof Error ? err.message : '网络请求失败');
     } finally {
       setLoading(false);
@@ -209,7 +259,22 @@ export default function MigrateTagsPage() {
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('API 响应错误:', response.status, text);
+        setError(`API 错误 (${response.status}): ${text.substring(0, 200)}`);
+        return;
+      }
+
+      let data;
+      try {
+        const text = await response.text();
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('JSON 解析错误:', parseError);
+        setError('服务器返回了无效的响应格式');
+        return;
+      }
 
       if (data.success) {
         setResult(data.data);
@@ -218,6 +283,7 @@ export default function MigrateTagsPage() {
         setError(data.error || '迁移失败');
       }
     } catch (err) {
+      console.error('请求失败:', err);
       setError(err instanceof Error ? err.message : '网络请求失败');
     } finally {
       setLoading(false);
