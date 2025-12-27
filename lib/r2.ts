@@ -105,41 +105,54 @@ export async function uploadImageToR2(
       url: getPublicUrl(key),
     };
   } catch (error) {
-    console.error('Error uploading to R2:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Upload failed',
+      error: 'Upload failed',
     };
   }
 }
 
 /**
  * 从 URL 下载图片并上传到 R2
+ * Note: URL validation should be done before calling this function
+ * Use validateUrlForSSRF from @/lib/security for validation
  */
 export async function uploadImageFromUrl(imageUrl: string): Promise<R2UploadResult> {
   try {
+    // Parse URL first
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(imageUrl);
+    } catch {
+      return { success: false, error: 'Invalid URL format' };
+    }
+
+    // Basic protocol check
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      return { success: false, error: 'Only HTTP/HTTPS protocols are allowed' };
+    }
+
     // 获取图片内容
     const response = await fetch(imageUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer': new URL(imageUrl).origin,
+        'Referer': parsedUrl.origin,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch image: ${response.status}`);
+      return { success: false, error: `Failed to fetch image: ${response.status}` };
     }
 
     const buffer = Buffer.from(await response.arrayBuffer());
     const contentType = response.headers.get('content-type') || 'image/jpeg';
     
     // 从 URL 提取文件名
-    const urlPath = new URL(imageUrl).pathname;
+    const urlPath = parsedUrl.pathname;
     const fileName = urlPath.split('/').pop() || 'image.jpg';
 
     return uploadImageToR2(buffer, fileName, contentType);
   } catch (error) {
-    console.error('Error uploading image from URL:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to upload from URL',
@@ -162,7 +175,7 @@ export async function deleteImageFromR2(key: string): Promise<boolean> {
     await client.send(command);
     return true;
   } catch (error) {
-    console.error('Error deleting from R2:', error);
+    // Error deleting from R2
     return false;
   }
 }
@@ -189,7 +202,7 @@ export async function listImagesInR2(prefix = 'images/', maxKeys = 1000): Promis
       lastModified: item.LastModified,
     }));
   } catch (error) {
-    console.error('Error listing R2 images:', error);
+    // Error listing R2 images
     return [];
   }
 }
@@ -219,7 +232,7 @@ export async function getImageFromR2(key: string): Promise<Buffer | null> {
     
     return null;
   } catch (error) {
-    console.error('Error getting image from R2:', error);
+    // Error getting image from R2
     return null;
   }
 }
@@ -246,7 +259,7 @@ export async function getPresignedUploadUrl(
 
     return { uploadUrl, key };
   } catch (error) {
-    console.error('Error generating presigned URL:', error);
+    // Error generating presigned URL
     return null;
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Prompts API Route
  * GET /api/prompts - Get all prompts
- * POST /api/prompts - Create a new prompt
+ * POST /api/prompts - Create a new prompt (requires authentication)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -14,6 +14,7 @@ import {
   createPromptSchema,
 } from '@/lib/api-utils';
 import { checkDuplicate } from '@/lib/duplicate-checker';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -26,8 +27,12 @@ export async function GET() {
   });
 }
 
-// POST create new prompt
+// POST create new prompt (requires authentication)
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const validation = await validateBody(request, createPromptSchema);
 

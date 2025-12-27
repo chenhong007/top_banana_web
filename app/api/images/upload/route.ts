@@ -1,6 +1,6 @@
 /**
  * 图片上传 API
- * POST /api/images/upload
+ * POST /api/images/upload (requires authentication)
  * 
  * 支持两种方式：
  * 1. 直接上传文件 (multipart/form-data)
@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadImageToR2, uploadImageFromUrl, isR2Configured } from '@/lib/r2';
 import prisma from '@/lib/db';
+import { requireAuth, validateUrlForSSRF } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -19,6 +20,10 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'im
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     // 检查 R2 是否配置
     if (!isR2Configured()) {
@@ -38,6 +43,15 @@ export async function POST(request: NextRequest) {
       if (!url) {
         return NextResponse.json(
           { success: false, error: '缺少图片 URL' },
+          { status: 400 }
+        );
+      }
+
+      // SSRF protection: validate URL before fetching
+      const urlValidation = validateUrlForSSRF(url);
+      if (!urlValidation.valid) {
+        return NextResponse.json(
+          { success: false, error: urlValidation.error || 'Invalid URL' },
           { status: 400 }
         );
       }
@@ -63,8 +77,7 @@ export async function POST(request: NextRequest) {
             status: 'active',
           },
         });
-      } catch (dbError) {
-        console.warn('Failed to save image to database:', dbError);
+      } catch {
         // 数据库保存失败不影响上传结果
       }
 
@@ -132,8 +145,8 @@ export async function POST(request: NextRequest) {
             status: 'active',
           },
         });
-      } catch (dbError) {
-        console.warn('Failed to save image to database:', dbError);
+      } catch {
+        // 数据库保存失败不影响上传结果
       }
 
       return NextResponse.json({
@@ -153,16 +166,19 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   } catch (error) {
-    console.error('Image upload error:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '上传失败' },
+      { success: false, error: 'Upload failed' },
       { status: 500 }
     );
   }
 }
 
-// 批量从 URL 上传图片
+// 批量从 URL 上传图片 (requires authentication)
 export async function PUT(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     if (!isR2Configured()) {
       return NextResponse.json(
@@ -184,6 +200,13 @@ export async function PUT(request: NextRequest) {
 
     for (const url of urls) {
       try {
+        // SSRF protection: validate each URL
+        const urlValidation = validateUrlForSSRF(url);
+        if (!urlValidation.valid) {
+          results.push({ originalUrl: url, error: urlValidation.error || 'Invalid URL' });
+          continue;
+        }
+
         const result = await uploadImageFromUrl(url);
         
         if (result.success) {
@@ -221,9 +244,8 @@ export async function PUT(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Batch upload error:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '批量上传失败' },
+      { success: false, error: 'Batch upload failed' },
       { status: 500 }
     );
   }

@@ -44,14 +44,12 @@ export async function GET(
     const fullKey = buildKeyFromSegments(keySegments);
 
     if (!isR2Configured()) {
-      console.error('R2 not configured. Check environment variables: CLOUDFLARE_R2_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY_ID, CLOUDFLARE_R2_SECRET_ACCESS_KEY');
       return new NextResponse('R2 not configured', { status: 500 });
     }
 
     const imageBuffer = await getImageFromR2(fullKey);
 
     if (!imageBuffer) {
-      console.error(`Image not found in R2: ${fullKey}`);
       return new NextResponse('Image not found', { status: 404 });
     }
 
@@ -64,7 +62,6 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('Error fetching image:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
@@ -102,9 +99,8 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting image:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '删除失败' },
+      { success: false, error: 'Delete failed' },
       { status: 500 }
     );
   }

@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseCSV, transformCSVToPrompts } from '@/lib/csv-parser';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-// POST parse CSV data
+// POST parse CSV data (requires authentication)
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { csvText } = body;
@@ -50,12 +55,10 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('CSV parse error:', error);
     return NextResponse.json(
       { 
         success: false, 
         error: 'Failed to parse CSV',
-        message: error instanceof Error ? error.message : 'CSV解析失败'
       },
       { status: 500 }
     );

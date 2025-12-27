@@ -25,12 +25,12 @@ export const revalidate = 0; // 禁用缓存
 // 版本标记
 const API_VERSION = 'v1.1';
 
-// 配置常量
-const IMAGE_URL_PREFIX = 'https://opennana.com/awesome-prompt-gallery/';
-const SIMILARITY_THRESHOLD = 0.9;
-const MAX_TAGS = 3;
-const DEFAULT_MODEL_TAG = 'Banana';
-const DEFAULT_CATEGORY = '文生图';
+// 配置常量 - 从环境变量读取，提供默认值
+const IMAGE_URL_PREFIX = process.env.IMAGE_URL_PREFIX || 'https://opennana.com/awesome-prompt-gallery/';
+const SIMILARITY_THRESHOLD = parseFloat(process.env.SIMILARITY_THRESHOLD || '0.9');
+const MAX_TAGS = parseInt(process.env.MAX_IMPORT_TAGS || '3', 10);
+const DEFAULT_MODEL_TAG = process.env.DEFAULT_MODEL_TAG || 'Banana';
+const DEFAULT_CATEGORY = process.env.DEFAULT_CATEGORY || '文生图';
 
 // 类型定义
 interface JsonPromptItem {
@@ -63,58 +63,31 @@ interface ImportStats {
  * 验证授权 - v1.1
  * 支持从 Header 或 Body 读取 token
  */
-function verifyAuth(request: NextRequest, body?: any): { success: boolean; error?: string } {
-  console.log(`[Auth ${API_VERSION}] ===== 开始验证 =====`);
-  
+function verifyAuth(request: NextRequest, body?: Record<string, unknown>): { success: boolean; error?: string } {
   const importSecret = process.env.IMPORT_SECRET;
   
   if (!importSecret) {
-    console.error(`[Auth ${API_VERSION}] IMPORT_SECRET 未配置`);
-    return { success: false, error: `[${API_VERSION}] 服务端未配置 IMPORT_SECRET` };
+    return { success: false, error: 'Server IMPORT_SECRET not configured' };
   }
-  
-  console.log(`[Auth ${API_VERSION}] IMPORT_SECRET 已配置，长度: ${importSecret.length}`);
-  
-  // 打印所有 Headers（调试用）
-  const headers = Object.fromEntries(request.headers.entries());
-  console.log(`[Auth ${API_VERSION}] 收到的 Headers:`, JSON.stringify(headers, null, 2));
   
   // 1. 尝试从 Header 获取
   let token = request.headers.get('Authorization')?.replace('Bearer ', '') || 
               request.headers.get('authorization')?.replace('Bearer ', '');
   
-  if (token) {
-    console.log(`[Auth ${API_VERSION}] 从 Header 获取到 token，长度: ${token.length}`);
-  } else {
-    console.log(`[Auth ${API_VERSION}] Header 中没有 Authorization`);
-  }
-  
   // 2. 如果 Header 没有，尝试从 Body 获取
-  if (!token && body) {
-    console.log(`[Auth ${API_VERSION}] Body 内容:`, JSON.stringify(body, null, 2));
-    if (body.secret && typeof body.secret === 'string') {
-      token = body.secret;
-      console.log(`[Auth ${API_VERSION}] ✓ 从 Body 获取到 secret，长度: ${body.secret.length}`);
-    } else {
-      console.log(`[Auth ${API_VERSION}] Body 中没有 secret 字段`);
-    }
+  if (!token && body?.secret && typeof body.secret === 'string') {
+    token = body.secret;
   }
 
   if (!token) {
-    console.error(`[Auth ${API_VERSION}] 最终未找到 token`);
-    return { success: false, error: `[${API_VERSION}] 缺少 Authorization 头或 secret 参数` };
+    return { success: false, error: 'Missing Authorization header or secret parameter' };
   }
   
   // 3. 验证 token
-  console.log(`[Auth ${API_VERSION}] 开始比对 token...`);
   if (token !== importSecret) {
-    console.error(`[Auth ${API_VERSION}] Token 不匹配！`);
-    console.error(`[Auth ${API_VERSION}] 期望: ${importSecret.substring(0, 10)}...`);
-    console.error(`[Auth ${API_VERSION}] 实际: ${token.substring(0, 10)}...`);
-    return { success: false, error: `[${API_VERSION}] Token 不匹配` };
+    return { success: false, error: 'Invalid token' };
   }
 
-  console.log(`[Auth ${API_VERSION}] ✓ 验证通过`);
   return { success: true };
 }
 
@@ -286,24 +259,18 @@ async function createPrompt(
 }
 
 export async function POST(request: NextRequest) {
-  console.log(`[API ${API_VERSION}] ===== 收到 POST 请求 =====`);
-  
   try {
     // 先解析 body
-    const body = await request.json().catch(() => ({}));
-    console.log(`[API ${API_VERSION}] Body 解析完成`);
+    const body = await request.json().catch(() => ({})) as Record<string, unknown>;
     
     // 验证授权 (传入 body)
     const auth = verifyAuth(request, body);
     if (!auth.success) {
-      console.error(`[API ${API_VERSION}] 认证失败: ${auth.error}`);
       return NextResponse.json(
-        { success: false, error: `认证失败: ${auth.error}` },
+        { success: false, error: `Authentication failed: ${auth.error}` },
         { status: 401 }
       );
     }
-
-    console.log(`[API ${API_VERSION}] ✓ 认证通过，开始处理导入`);
 
     const { skipR2 = false, limit = 0, offset = 0, createdAt } = body as { 
       skipR2?: boolean; 
@@ -339,14 +306,10 @@ export async function POST(request: NextRequest) {
       itemsToProcess = itemsToProcess.slice(0, limit);
     }
 
-    console.log(`[API ${API_VERSION}] 准备处理 ${itemsToProcess.length} 条数据`);
-
     // 获取现有数据
-    const startTime = Date.now();
     const existingSources = await getExistingSources();
     const existingPrompts = await getExistingPrompts();
     const existingTags = await getExistingTags();
-    console.log(`[API ${API_VERSION}] 数据加载完成，耗时: ${Date.now() - startTime}ms`);
 
     // 批内去重跟踪
     const batchSources = new Set<string>();
@@ -402,23 +365,12 @@ export async function POST(request: NextRequest) {
         }
 
         stats.success++;
-        
-        // 每处理5条输出一次进度（避免日志过多）
-        if (stats.processed % 5 === 0) {
-          const elapsed = Date.now() - startTime;
-          const avgTime = elapsed / stats.processed;
-          const remaining = itemsToProcess.length - stats.processed;
-          const eta = Math.round((avgTime * remaining) / 1000);
-          console.log(`[API ${API_VERSION}] 进度: ${stats.processed}/${itemsToProcess.length}, 成功=${stats.success}, 预计剩余=${eta}秒`);
-        }
 
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`${item.title}: ${errorMsg}`);
       }
     }
-
-    console.log(`[API ${API_VERSION}] ✓ 处理完成: 成功=${stats.success}, 跳过=${stats.skippedByUrl + stats.skippedBySimilarity}`);
 
     return NextResponse.json({
       success: true,
@@ -442,9 +394,8 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error(`[API ${API_VERSION}] 导入错误:`, error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '导入失败' },
+      { success: false, error: 'Import failed' },
       { status: 500 }
     );
   }
@@ -452,11 +403,8 @@ export async function POST(request: NextRequest) {
 
 // GET 方法用于查看状态
 export async function GET(request: NextRequest) {
-  console.log(`[API ${API_VERSION}] ===== 收到 GET 请求 =====`);
-  
   try {
-    const body = undefined; // GET 没有 body
-    const auth = verifyAuth(request, body);
+    const auth = verifyAuth(request);
     if (!auth.success) {
       return NextResponse.json(
         { success: false, error: `认证失败: ${auth.error}` },
@@ -486,9 +434,8 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error(`[API ${API_VERSION}] GET 错误:`, error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '查询失败' },
+      { success: false, error: 'Query failed' },
       { status: 500 }
     );
   }

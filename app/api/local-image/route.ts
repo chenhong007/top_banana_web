@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
 
   // 只允许访问 data/image 目录
   if (!relativePath.startsWith('data/image/') && !relativePath.startsWith('data\\image\\')) {
-    console.error(`Access denied: ${relativePath} is not in data/image`);
     return new NextResponse('Access denied: Only local images in data/image are allowed', { status: 403 });
   }
 
@@ -34,7 +33,6 @@ export async function GET(request: NextRequest) {
   const fullPath = path.join(process.cwd(), relativePath);
 
   if (!fs.existsSync(fullPath)) {
-    console.error(`Image not found: ${fullPath}`);
     return new NextResponse('Image not found', { status: 404 });
   }
 
@@ -69,7 +67,6 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error reading image:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

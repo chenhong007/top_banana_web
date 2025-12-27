@@ -5,6 +5,34 @@ import { routing } from './i18n/routing';
 
 const TOKEN_NAME = 'admin_token';
 
+/**
+ * Apply security headers to response
+ */
+function applySecurityHeaders(response: NextResponse): NextResponse {
+  // Content Security Policy - Allows inline scripts/styles for Next.js
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';"
+  );
+  
+  // Prevent clickjacking
+  response.headers.set('X-Frame-Options', 'DENY');
+  
+  // Prevent MIME type sniffing
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  
+  // XSS Protection
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  
+  // Referrer Policy
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  // Permissions Policy
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  
+  return response;
+}
+
 // Admin access control configuration - 在模块级别读取一次
 const SHOW_ADMIN_ENTRY = process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY !== 'false';
 const ADMIN_ALLOWED_DOMAINS = (process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS || '')
@@ -154,16 +182,19 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/admin', request.url));
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    return applySecurityHeaders(response);
   }
 
   // Skip i18n for API and static paths
   if (isApiPath || isStaticPath) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    return applySecurityHeaders(response);
   }
 
   // Apply i18n middleware for frontend routes
-  return intlMiddleware(request);
+  const response = intlMiddleware(request);
+  return applySecurityHeaders(response);
 }
 
 export const config = {

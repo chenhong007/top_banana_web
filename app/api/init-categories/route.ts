@@ -1,19 +1,24 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { DEFAULT_CATEGORIES, DEFAULT_CATEGORY } from '@/lib/constants';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
 /**
- * POST /api/init-categories
+ * POST /api/init-categories (requires authentication)
  * 初始化默认类别数据，部署后调用一次即可
  * 
  * 功能：
  * 1. 创建默认类别（文生图、文生视频、文生音频、图像修复、发现更多）
  * 2. 将所有现有的 prompt 关联到"文生图"类别
  */
-export async function POST() {
+export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const results = {
       categoriesCreated: [] as string[],
@@ -58,9 +63,8 @@ export async function POST() {
       data: results,
     });
   } catch (error) {
-    console.error('Init categories error:', error);
     return NextResponse.json(
-      { success: false, error: '初始化类别失败' },
+      { success: false, error: 'Failed to initialize categories' },
       { status: 500 }
     );
   }
@@ -93,9 +97,8 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Get categories status error:', error);
     return NextResponse.json(
-      { success: false, error: '获取类别状态失败' },
+      { success: false, error: 'Failed to get category status' },
       { status: 500 }
     );
   }

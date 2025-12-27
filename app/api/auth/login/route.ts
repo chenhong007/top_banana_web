@@ -89,16 +89,15 @@ export async function POST(request: NextRequest) {
     
     return response;
   } catch (error) {
-    console.error('Login error:', error);
-    // 返回更详细的错误信息用于调试
-    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    // Log error server-side only, don't expose details to client
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Login error:', error);
+    }
+    
     return NextResponse.json(
       { 
         success: false, 
         error: '登录失败，请重试',
-        debug: process.env.NODE_ENV === 'production' ? undefined : errorMessage,
-        // 临时添加：帮助诊断生产环境问题
-        errorDetail: errorMessage,
       },
       { status: 500 }
     );

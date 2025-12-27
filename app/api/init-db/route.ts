@@ -72,9 +72,8 @@ export async function POST(request: NextRequest) {
       count: imported
     });
   } catch (error) {
-    console.error('Database init error:', error);
     return NextResponse.json(
-      { success: false, error: '数据库初始化失败' },
+      { success: false, error: 'Database initialization failed' },
       { status: 500 }
     );
   }
@@ -86,12 +85,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       count,
-      message: count > 0 ? `数据库有 ${count} 条数据` : '数据库为空'
+      message: count > 0 ? `Database has ${count} records` : 'Database is empty'
     });
   } catch (error) {
-    console.error('Database check error:', error);
     return NextResponse.json(
-      { success: false, error: '无法连接数据库', details: String(error) },
+      { success: false, error: 'Cannot connect to database' },
       { status: 500 }
     );
   }

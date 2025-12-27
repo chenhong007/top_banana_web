@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadImageFromUrl, isR2Configured, isR2ImageUrl } from '@/lib/r2';
 import prisma from '@/lib/db';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,10 @@ interface MigrationResult {
 }
 
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     if (!isR2Configured()) {
       return NextResponse.json(
@@ -131,9 +136,8 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Migration error:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '迁移失败' },
+      { success: false, error: 'Migration failed' },
       { status: 500 }
     );
   }
@@ -183,9 +187,8 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Error getting migration status:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '获取状态失败' },
+      { success: false, error: 'Failed to get status' },
       { status: 500 }
     );
   }

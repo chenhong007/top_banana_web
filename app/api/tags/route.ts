@@ -1,14 +1,15 @@
 /**
  * Tags API Route
  * GET /api/tags - Get all tags
- * POST /api/tags - Create a new tag
- * PUT /api/tags - Update a tag
- * DELETE /api/tags - Delete a tag
+ * POST /api/tags - Create a new tag (requires authentication)
+ * PUT /api/tags - Update a tag (requires authentication)
+ * DELETE /api/tags - Delete a tag (requires authentication)
  */
 
 import { NextRequest } from 'next/server';
 import { tagRepository } from '@/repositories';
 import { successResponse, errorResponse, handleApiRoute } from '@/lib/api-utils';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -21,8 +22,12 @@ export async function GET() {
   });
 }
 
-// POST - Create a new tag
+// POST - Create a new tag (requires authentication)
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const body = await request.json();
     const { name } = body;
@@ -48,8 +53,12 @@ export async function POST(request: NextRequest) {
   });
 }
 
-// PUT - Update a tag
+// PUT - Update a tag (requires authentication)
 export async function PUT(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const body = await request.json();
     const { oldName, newName } = body;
@@ -84,8 +93,12 @@ export async function PUT(request: NextRequest) {
   });
 }
 
-// DELETE - Delete a tag
+// DELETE - Delete a tag (requires authentication)
 export async function DELETE(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const { searchParams } = new URL(request.url);
     const name = searchParams.get('name');

@@ -55,9 +55,8 @@ export async function GET(request: NextRequest) {
       data: images,
     });
   } catch (error) {
-    console.error('Error listing images:', error);
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : '获取列表失败' },
+      { success: false, error: 'Failed to get image list' },
       { status: 500 }
     );
   }

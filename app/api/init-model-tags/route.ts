@@ -1,18 +1,23 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { DEFAULT_MODEL_TAGS } from '@/lib/constants';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
 /**
- * POST /api/init-model-tags
+ * POST /api/init-model-tags (requires authentication)
  * 初始化默认 AI 模型标签，部署后调用一次即可
  * 
  * 功能：
  * 1. 创建默认 AI 模型标签（Midjourney、DALL-E 3、Stable Diffusion 等）
  */
-export async function POST() {
+export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const results = {
       modelTagsCreated: [] as string[],
@@ -46,9 +51,8 @@ export async function POST() {
       data: results,
     });
   } catch (error) {
-    console.error('Init model tags error:', error);
     return NextResponse.json(
-      { success: false, error: '初始化 AI 模型标签失败' },
+      { success: false, error: 'Failed to initialize model tags' },
       { status: 500 }
     );
   }
@@ -87,9 +91,8 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Get model tags status error:', error);
     return NextResponse.json(
-      { success: false, error: '获取 AI 模型标签状态失败' },
+      { success: false, error: 'Failed to get model tags status' },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 /**
  * Import API Route
- * POST /api/import - Import prompts from external data
+ * POST /api/import - Import prompts from external data (requires authentication)
  */
 
 import { NextRequest } from 'next/server';
@@ -13,12 +13,17 @@ import {
   handleApiRoute,
 } from '@/lib/api-utils';
 import { filterDuplicates, DuplicateType } from '@/lib/duplicate-checker';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
-// POST import prompts from external data
+// POST import prompts from external data (requires authentication)
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const body = await request.json();
     const { items, mode = 'merge' } = body; // mode: 'merge' or 'replace'

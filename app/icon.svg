@@ -1,19 +1,10 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366f1"/>
-      <stop offset="100%" style="stop-color:#8b5cf6"/>
-    </linearGradient>
-    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#f472b6"/>
-      <stop offset="100%" style="stop-color:#ec4899"/>
-    </linearGradient>
-  </defs>
-  <!-- 背景圆角矩形 -->
-  <rect width="32" height="32" rx="8" fill="url(#gradient1)"/>
-  <!-- AI 字母样式的设计 -->
-  <path d="M8 24L13 8H15.5L20.5 24H18L17 20.5H12L11 24H8ZM12.7 18H16.3L14.5 11.5L12.7 18Z" fill="white"/>
-  <circle cx="23" cy="10" r="2" fill="url(#gradient2)"/>
-  <rect x="22" y="14" width="2" height="10" rx="1" fill="white"/>
+  <!-- 背景圆角矩形 - 橙色 -->
+  <rect width="32" height="32" rx="6" fill="#F59E0B"/>
+  <!-- 大星星 -->
+  <path d="M12 8L13.5 12.5L18 14L13.5 15.5L12 20L10.5 15.5L6 14L10.5 12.5L12 8Z" fill="white"/>
+  <!-- 小星星 -->
+  <path d="M22 16L23 18.5L25.5 19.5L23 20.5L22 23L21 20.5L18.5 19.5L21 18.5L22 16Z" fill="white"/>
+  <!-- 更小的星星 -->
+  <path d="M20 8L20.7 10L22.7 10.7L20.7 11.4L20 13.4L19.3 11.4L17.3 10.7L19.3 10L20 8Z" fill="white"/>
 </svg>
-

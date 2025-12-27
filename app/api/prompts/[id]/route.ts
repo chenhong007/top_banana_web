@@ -1,8 +1,8 @@
 /**
  * Single Prompt API Route
  * GET /api/prompts/[id] - Get a single prompt
- * PUT /api/prompts/[id] - Update a prompt
- * DELETE /api/prompts/[id] - Delete a prompt
+ * PUT /api/prompts/[id] - Update a prompt (requires authentication)
+ * DELETE /api/prompts/[id] - Delete a prompt (requires authentication)
  */
 
 import { NextRequest } from 'next/server';
@@ -15,6 +15,7 @@ import {
   handleApiRoute,
   updatePromptSchema,
 } from '@/lib/api-utils';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
@@ -37,8 +38,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   });
 }
 
-// PUT update prompt
+// PUT update prompt (requires authentication)
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const { id } = await params;
     const validation = await validateBody(request, updatePromptSchema);
@@ -57,8 +62,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   });
 }
 
-// DELETE prompt
+// DELETE prompt (requires authentication)
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   return handleApiRoute(async () => {
     const { id } = await params;
     const deleted = await promptRepository.delete(id);

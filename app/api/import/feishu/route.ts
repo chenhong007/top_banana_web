@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scrapeFeishuDocument, extractTableData } from '@/lib/feishu-scraper';
+import { requireAuth } from '@/lib/security';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-// POST scrape Feishu document
+// POST scrape Feishu document (requires authentication)
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authError = requireAuth(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { url, cookie } = body;
@@ -61,7 +66,6 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Feishu scrape error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch Feishu document' },
       { status: 500 }
