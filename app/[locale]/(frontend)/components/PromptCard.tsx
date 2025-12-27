@@ -312,6 +312,8 @@ export default function PromptCard({ prompt, index = 0 }: PromptCardProps) {
                 </>
               ) : (
                 <>
+                  <Heart className="h-3.5 w-3.5" />
+                  <span>{prompt.hearts || 0}</span>
                   <Copy className="h-3.5 w-3.5" />
                   {t('copy')}
                 </>

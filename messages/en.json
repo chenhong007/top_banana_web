@@ -10,14 +10,15 @@
     "logout": "Logout"
   },
   "hero": {
-    "badge": "Explore 1000+ Curated AI Prompts",
+    "badge": "Explore 10000+ Curated AI Monetization Cases",
     "titlePart1": "Discover",
     "titleHighlight": "AI Creation",
-    "titlePart2": "Unlimited Possibilities",
+    "titlePart2": "10000+ Cases of Unlimited Possibilities",
     "description": "Curated collection of the finest AI prompts covering image generation, video creation, music production and more, empowering your creativity",
     "category1": "Text to Image",
     "category2": "Text to Video",
-    "category3": "Text to Audio"
+    "category3": "Text to Audio",
+    "category4": "Image Restoration"
   },
   "search": {
     "placeholder": "Search prompts, effects, or descriptions..."
