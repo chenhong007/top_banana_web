@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import OptimizedImage from './OptimizedImage';
 
@@ -21,6 +22,13 @@ export default function ImagePreview({
   onCloseModal,
   hoverPosition,
 }: ImagePreviewProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   // Handle ESC key to close modal
   const handleEscKey = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape' && isModalOpen) {
@@ -44,12 +52,14 @@ export default function ImagePreview({
     };
   }, [isModalOpen, handleEscKey]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       {/* Hover Overlay Preview */}
       {isHovering && !isModalOpen && (
         <div
-          className="fixed pointer-events-none z-50 transition-opacity duration-300"
+          className="fixed pointer-events-none z-[999] transition-opacity duration-300"
           style={{
             left: hoverPosition?.x ? `${hoverPosition.x}px` : '50%',
             top: hoverPosition?.y ? `${hoverPosition.y}px` : '50%',
@@ -78,7 +88,7 @@ export default function ImagePreview({
       {/* Full Modal Preview */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center transition-opacity duration-300"
+          className="fixed inset-0 z-[1000] flex items-center justify-center transition-opacity duration-300"
           onClick={onCloseModal}
         >
           {/* Backdrop */}
@@ -136,7 +146,8 @@ export default function ImagePreview({
           animation: scale-in 0.3s ease-out;
         }
       `}</style>
-    </>
+    </>,
+    document.body
   );
 }
 
