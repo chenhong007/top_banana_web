@@ -69,17 +69,29 @@ export default function ImagePreview({
           <div className="relative bg-dark-800 rounded-xl shadow-2xl border border-white/10 overflow-hidden backdrop-blur-xl">
             <div className="relative" style={{ width: '500px', maxWidth: '90vw' }}>
               <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+                {/* Low-res placeholder (Cached from card) */}
+                <div className="absolute inset-0">
+                   <OptimizedImage
+                    src={src}
+                    alt={alt}
+                    fill
+                    className="w-full h-full opacity-50 blur-sm scale-105"
+                    sizes="400px"
+                    priority
+                  />
+                </div>
+                {/* High-res hover image */}
                 <OptimizedImage
                   src={src}
                   alt={alt}
                   fill
-                  className="w-full h-full"
+                  className="w-full h-full relative z-10"
                   sizes="500px"
                   priority
                 />
               </div>
               {/* Subtle glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-900/50 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-900/50 to-transparent pointer-events-none z-20" />
             </div>
           </div>
         </div>
@@ -110,19 +122,35 @@ export default function ImagePreview({
           >
             <div className="relative w-full h-full bg-dark-800 rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
               <div className="relative w-full h-full flex items-center justify-center">
-                <OptimizedImage
-                  src={src}
-                  alt={alt}
-                  fill
-                  className="object-contain"
-                  objectFit="contain"
-                  sizes="95vw"
-                  priority
-                />
+                {/* Low-res placeholder (Cached from card) - Instant Display */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <OptimizedImage
+                    src={src}
+                    alt={alt}
+                    fill
+                    className="object-contain blur-md opacity-50 scale-105"
+                    sizes="400px"
+                    objectFit="contain"
+                    priority
+                  />
+                </div>
+                
+                {/* High-res Full Image */}
+                <div className="relative w-full h-full z-10">
+                  <OptimizedImage
+                    src={src}
+                    alt={alt}
+                    fill
+                    className="object-contain"
+                    objectFit="contain"
+                    sizes="95vw"
+                    priority
+                  />
+                </div>
               </div>
               {/* Image caption */}
               {alt && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none">
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 pointer-events-none z-20">
                   <p className="text-white text-sm font-medium">{alt}</p>
                 </div>
               )}
