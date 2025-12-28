@@ -97,8 +97,8 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
             key={prompt.id} 
             prompt={prompt} 
             index={index}
-            // 首屏前6张图片优先加载（仅第一页）
-            priority={pagination.currentPage === 1 && index < 6}
+            // 首屏前12张图片优先加载（覆盖4行，确保首屏无需懒加载）
+            priority={pagination.currentPage === 1 && index < 12}
           />
         ))}
       </div>

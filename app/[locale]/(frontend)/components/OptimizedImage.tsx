@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
 
 interface OptimizedImageProps {
@@ -18,6 +18,9 @@ interface OptimizedImageProps {
 
 // R2 CDN URL（客户端环境变量）
 const R2_CDN_URL = process.env.NEXT_PUBLIC_R2_CDN_URL || '';
+
+// 使用 useLayoutEffect 在 SSR 时的安全版本
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * 优化的图片组件
@@ -39,14 +42,27 @@ export default function OptimizedImage({
   onError,
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(priority);
+  // 默认设置为 true，让图片立即开始加载，而不是等待 IntersectionObserver
+  const [isInView, setIsInView] = useState(true);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
 
-  // 使用 Intersection Observer 检测是否进入视口
-  useEffect(() => {
+  // 使用 useIsomorphicLayoutEffect 确保尽早检测视口
+  useIsomorphicLayoutEffect(() => {
+    // priority 图片始终加载
     if (priority) return;
 
+    // 立即检查元素是否在视口中
+    if (imgRef.current) {
+      const rect = imgRef.current.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight + 500 && rect.bottom > -500;
+      if (isVisible) {
+        setIsInView(true);
+        return;
+      }
+    }
+
+    // 对于视口外的图片，使用 IntersectionObserver 进行懒加载
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -55,7 +71,7 @@ export default function OptimizedImage({
         }
       },
       {
-        rootMargin: '200px', // 提前 200px 开始加载
+        rootMargin: '500px', // 提前 500px 开始加载，让图片提前预加载
         threshold: 0,
       }
     );
