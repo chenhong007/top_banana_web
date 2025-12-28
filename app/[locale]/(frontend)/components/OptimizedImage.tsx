@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
 import Image from 'next/image';
 
 interface OptimizedImageProps {
@@ -22,12 +22,16 @@ const R2_CDN_URL = process.env.NEXT_PUBLIC_R2_CDN_URL || '';
 // 使用 useLayoutEffect 在 SSR 时的安全版本
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
+// 全局图片加载缓存 - 记录已加载的图片，避免重复动画
+const loadedImages = new Set<string>();
+
 /**
  * 优化的图片组件
  * - 支持懒加载和占位符
- * - 渐进式加载效果
+ * - 极速渐进式加载效果（100ms 过渡）
  * - 自动处理不同来源的图片 URL
  * - 使用 Intersection Observer 优化加载
+ * - 缓存已加载图片状态，避免闪烁
  */
 export default function OptimizedImage({
   src,
@@ -41,25 +45,97 @@ export default function OptimizedImage({
   objectFit = 'cover',
   onError,
 }: OptimizedImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  // 默认设置为 true，让图片立即开始加载，而不是等待 IntersectionObserver
+  // 处理图片 URL - 提前计算避免重复
+  const optimizedSrc = useMemo(() => {
+    if (!src) return '';
+    
+    // 如果是本地相对路径 (./data/image/... 或 data/image/...)
+    if (src.startsWith('./data/image') || src.startsWith('data/image')) {
+      return `/api/local-image?path=${encodeURIComponent(src)}`;
+    }
+    
+    // 如果是 R2 存储的图片（/api/images/ 开头）
+    if (src.startsWith('/api/images/')) {
+      let key = src.replace('/api/images/', '');
+      if (key.includes('%2F') || key.includes('%2f')) {
+        key = decodeURIComponent(key);
+      }
+      // 优先使用 R2 CDN 直连（更快）
+      if (R2_CDN_URL) {
+        return `${R2_CDN_URL}/${key}`;
+      }
+      return `/api/images/${key}`;
+    }
+    
+    // 如果是 R2 公开 URL，直接返回
+    if (src.includes('.r2.cloudflarestorage.com') || 
+        src.includes('.r2.dev') ||
+        (src.includes('images/') && !src.startsWith('http'))) {
+      return src;
+    }
+    
+    // 如果是外部 URL，使用代理绕过防盗链
+    if (src.startsWith('http') || src.startsWith('//')) {
+      const fullUrl = src.startsWith('//') ? `https:${src}` : src;
+      return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
+    }
+    
+    return src;
+  }, [src]);
+
+  // 检查是否已经加载过，避免重复动画
+  const alreadyLoaded = loadedImages.has(optimizedSrc);
+  
+  // priority 图片或已加载过的图片跳过加载动画
+  const [isLoaded, setIsLoaded] = useState(alreadyLoaded);
+  // priority 图片立即在视口中，其他图片默认也是 true 以便快速开始加载
   const [isInView, setIsInView] = useState(true);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
 
-  // 使用 useIsomorphicLayoutEffect 确保尽早检测视口
+  // 判断是否可以使用 Next.js Image 优化
+  const useNextImage = useMemo(() => {
+    // 排除 API 代理路径，直接由浏览器加载更稳定
+    if (src.startsWith('/api/')) {
+      return false;
+    }
+    // 本地图片可以直接优化
+    if (src.startsWith('/') && !src.startsWith('//')) {
+      return true;
+    }
+    // R2 CDN 直连可以使用 next/image 优化
+    if (R2_CDN_URL && optimizedSrc.startsWith(R2_CDN_URL)) {
+      return true;
+    }
+    // R2 公开 URL 可以
+    if (src.includes('.r2.dev') || src.includes('.r2.cloudflarestorage.com')) {
+      return true;
+    }
+    // 外部图片（已在 next.config.js 配置的域名）
+    if (src.startsWith('https://cdn.nlark.com') ||
+        src.includes('.qpic.cn') ||
+        src.includes('.zhimg.com')) {
+      return true;
+    }
+    return false;
+  }, [src, optimizedSrc]);
+
+  // 使用 useIsomorphicLayoutEffect 确保尽早检测视口（仅用于非优先图片的懒加载）
   useIsomorphicLayoutEffect(() => {
-    // priority 图片始终加载
+    // priority 图片始终立即加载
     if (priority) return;
 
     // 立即检查元素是否在视口中
     if (imgRef.current) {
       const rect = imgRef.current.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight + 500 && rect.bottom > -500;
+      // 放大检测范围到 600px，让图片更早开始加载
+      const isVisible = rect.top < window.innerHeight + 600 && rect.bottom > -100;
       if (isVisible) {
         setIsInView(true);
         return;
       }
+      // 不在视口中时设为 false，等待 IntersectionObserver
+      setIsInView(false);
     }
 
     // 对于视口外的图片，使用 IntersectionObserver 进行懒加载
@@ -71,7 +147,7 @@ export default function OptimizedImage({
         }
       },
       {
-        rootMargin: '500px', // 提前 500px 开始加载，让图片提前预加载
+        rootMargin: '600px', // 提前 600px 开始加载
         threshold: 0,
       }
     );
@@ -83,75 +159,10 @@ export default function OptimizedImage({
     return () => observer.disconnect();
   }, [priority]);
 
-  // 处理图片 URL，转换为可访问的格式
-  const getOptimizedUrl = (url: string): string => {
-    if (!url) return '';
-    
-    // 如果是本地相对路径 (./data/image/... 或 data/image/...)
-    if (url.startsWith('./data/image') || url.startsWith('data/image')) {
-      return `/api/local-image?path=${encodeURIComponent(url)}`;
-    }
-    
-    // 如果是 R2 存储的图片（/api/images/ 开头）
-    if (url.startsWith('/api/images/')) {
-      // 解码 URL 获取 key
-      let key = url.replace('/api/images/', '');
-      if (key.includes('%2F') || key.includes('%2f')) {
-        key = decodeURIComponent(key);
-      }
-      
-      // 优先使用 R2 CDN 直连（更快）
-      if (R2_CDN_URL) {
-        return `${R2_CDN_URL}/${key}`;
-      }
-      return `/api/images/${key}`;
-    }
-    
-    // 如果是 R2 公开 URL，直接返回（CDN 加速）
-    if (url.includes('.r2.cloudflarestorage.com') || 
-        url.includes('.r2.dev') ||
-        (url.includes('images/') && !url.startsWith('http'))) {
-      return url;
-    }
-    
-    // 如果是外部 URL，使用代理绕过防盗链
-    if (url.startsWith('http') || url.startsWith('//')) {
-      const fullUrl = url.startsWith('//') ? `https:${url}` : url;
-      return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
-    }
-    
-    return url;
-  };
-
-  // 判断是否可以使用 Next.js Image 优化
-  const canUseNextImage = (url: string): boolean => {
-    // 排除 API 代理路径，这些路径不应该由 next/image 二次处理，直接由浏览器加载更稳定
-    if (url.startsWith('/api/')) {
-      return false;
-    }
-    // 本地图片可以直接优化
-    if (url.startsWith('/') && !url.startsWith('//')) {
-      return true;
-    }
-    // R2 CDN 直连可以使用 next/image 优化
-    if (R2_CDN_URL && url.startsWith(R2_CDN_URL)) {
-      return true;
-    }
-    // R2 公开 URL 可以
-    if (url.includes('.r2.dev') || url.includes('.r2.cloudflarestorage.com')) {
-      return true;
-    }
-    // 外部图片（已在 next.config.js 配置的域名）
-    if (url.startsWith('https://cdn.nlark.com') ||
-        url.includes('.qpic.cn') ||
-        url.includes('.zhimg.com')) {
-      return true;
-    }
-    return false;
-  };
-
   const handleLoad = () => {
     setIsLoaded(true);
+    // 缓存已加载的图片
+    loadedImages.add(optimizedSrc);
   };
 
   const handleError = () => {
@@ -159,8 +170,10 @@ export default function OptimizedImage({
     onError?.();
   };
 
-  const optimizedSrc = getOptimizedUrl(src);
-  const useNextImage = canUseNextImage(src);
+  // Priority 图片不需要任何过渡效果，直接显示
+  const imageClassName = priority
+    ? `${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`
+    : `transition-opacity duration-150 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`;
 
   return (
     <div 
@@ -168,9 +181,9 @@ export default function OptimizedImage({
       className={`relative overflow-hidden ${className}`}
       style={fill ? { width: '100%', height: '100%' } : { width, height }}
     >
-      {/* 加载占位符 - 骨架屏动画 */}
+      {/* 简洁的背景占位符 - 所有未加载完成的图片都显示占位符 */}
       {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-800 via-dark-700 to-dark-800 animate-shimmer bg-[length:200%_100%]" />
+        <div className="absolute inset-0 bg-muted/20" />
       )}
 
       {/* 图片内容 */}
@@ -184,12 +197,11 @@ export default function OptimizedImage({
             height={!fill ? height : undefined}
             sizes={sizes}
             priority={priority}
-            className={`transition-opacity duration-500 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-            } ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            className={imageClassName}
             onLoad={handleLoad}
             onError={handleError}
             loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
           />
         ) : (
           // 使用原生 img 标签处理无法优化的图片
@@ -197,10 +209,11 @@ export default function OptimizedImage({
           <img
             src={optimizedSrc}
             alt={alt}
-            className={`w-full h-full transition-opacity duration-500 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-            } ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+            className={`w-full h-full ${imageClassName}`}
             loading={priority ? 'eager' : 'lazy'}
+            // @ts-expect-error fetchpriority is a valid HTML attribute
+            fetchpriority={priority ? 'high' : 'auto'}
+            decoding={priority ? 'sync' : 'async'}
             referrerPolicy="no-referrer"
             onLoad={handleLoad}
             onError={handleError}
@@ -210,9 +223,9 @@ export default function OptimizedImage({
 
       {/* 错误状态 */}
       {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-dark-800">
+        <div className="absolute inset-0 flex items-center justify-center bg-muted/20">
           <svg
-            className="w-10 h-10 text-dark-500"
+            className="w-10 h-10 text-muted-foreground/30"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -229,4 +242,3 @@ export default function OptimizedImage({
     </div>
   );
 }
-

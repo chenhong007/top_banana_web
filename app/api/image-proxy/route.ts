@@ -24,37 +24,6 @@ function isSameOriginRequest(request: NextRequest): boolean {
   return true;
 }
 
-async function readResponseUpTo(response: Response, maxBytes: number): Promise<Uint8Array> {
-  const reader = response.body?.getReader();
-  if (!reader) {
-    return new Uint8Array(await response.arrayBuffer());
-  }
-
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (!value) continue;
-
-    total += value.byteLength;
-    if (total > maxBytes) {
-      try { await reader.cancel(); } catch {}
-      throw new Error('IMAGE_TOO_LARGE');
-    }
-    chunks.push(value);
-  }
-
-  const out = new Uint8Array(total);
-  let offset = 0;
-  for (const c of chunks) {
-    out.set(c, offset);
-    offset += c.byteLength;
-  }
-  return out;
-}
-
 /**
  * Image Proxy API
  * Fetches external images server-side to bypass CORS and hotlink protection
@@ -141,21 +110,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    let imageBuffer: Uint8Array;
-    try {
-      imageBuffer = await readResponseUpTo(response, MAX_IMAGE_BYTES);
-    } catch (e) {
-      if (e instanceof Error && e.message === 'IMAGE_TOO_LARGE') {
-        return applySecurityHeaders(new NextResponse('Image too large', { status: 413 }));
-      }
-      throw e;
-    }
-
-    // Some TS libs type Uint8Array as Uint8Array<ArrayBufferLike>, which can break BodyInit/BlobPart checks.
-    // Copy into an ArrayBuffer-backed Uint8Array to keep types (and behavior) consistent.
-    const bytes = new Uint8Array(imageBuffer);
-
-    const proxied = new NextResponse(bytes, {
+    const proxied = new NextResponse(response.body, {
       headers: {
         'Content-Type': contentType,
         // 7天缓存，30天 stale-while-revalidate 支持后台更新

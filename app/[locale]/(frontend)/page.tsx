@@ -9,6 +9,30 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+// R2 CDN URL for image optimization
+const R2_CDN_URL = process.env.NEXT_PUBLIC_R2_CDN_URL || '';
+
+/**
+ * 获取优化后的图片 URL（服务端版本）
+ */
+function getOptimizedImageUrl(url: string): string {
+  if (!url) return '';
+  
+  // 如果是 R2 存储的图片（/api/images/ 开头）
+  if (url.startsWith('/api/images/')) {
+    let key = url.replace('/api/images/', '');
+    if (key.includes('%2F') || key.includes('%2f')) {
+      key = decodeURIComponent(key);
+    }
+    // 优先使用 R2 CDN 直连
+    if (R2_CDN_URL) {
+      return `${R2_CDN_URL}/${key}`;
+    }
+  }
+  
+  return url;
+}
+
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   
@@ -18,5 +42,27 @@ export default async function Home({ params }: Props) {
   // Read prompts from database using repository
   const prompts = await promptRepository.findAll();
 
-  return <HomeClient initialPrompts={prompts} />;
+  // 预加载首屏前12张图片（服务端渲染时注入 link preload）
+  const preloadImages = prompts
+    .slice(0, 12)
+    .map(p => getOptimizedImageUrl(p.imageUrl || ''))
+    .filter(Boolean);
+
+  return (
+    <>
+      {/* 首屏图片预加载 - 服务端渲染时注入 */}
+      {preloadImages.map((imgUrl, index) => (
+        <link
+          key={imgUrl}
+          rel="preload"
+          as="image"
+          href={imgUrl}
+          // 前6张最高优先级
+          // @ts-expect-error fetchPriority is valid for link preload
+          fetchpriority={index < 6 ? 'high' : 'low'}
+        />
+      ))}
+      <HomeClient initialPrompts={prompts} />
+    </>
+  );
 }

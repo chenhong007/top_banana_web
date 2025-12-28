@@ -168,7 +168,7 @@ export default function PromptCard({ prompt, index = 0, priority = false }: Prom
   return (
     <article 
       className="glass-card glass-card-hover glow-effect group overflow-hidden animate-fade-in-up"
-      style={{ animationDelay: `${index * 0.05}s` }}
+      style={{ animationDelay: `${Math.min(index * 0.03, 0.3)}s` }}
     >
       {/* Image */}
       <div 

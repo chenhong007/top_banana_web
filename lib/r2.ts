@@ -208,6 +208,28 @@ export async function listImagesInR2(prefix = 'images/', maxKeys = 1000): Promis
 }
 
 /**
+ * 获取 R2 图片内容流
+ */
+export async function getImageStreamFromR2(key: string): Promise<ReadableStream | null> {
+  try {
+    const client = getR2Client();
+
+    const command = new GetObjectCommand({
+      Bucket: R2_BUCKET_NAME,
+      Key: key,
+    });
+
+    const response = await client.send(command);
+    
+    // @ts-expect-error - Body is a stream
+    return response.Body as ReadableStream;
+  } catch (error) {
+    // Error getting image from R2
+    return null;
+  }
+}
+
+/**
  * 获取 R2 图片内容
  */
 export async function getImageFromR2(key: string): Promise<Buffer | null> {

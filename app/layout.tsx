@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   },
 };
 
+// 获取 R2 CDN 域名用于预连接
+const r2CdnUrl = process.env.NEXT_PUBLIC_R2_CDN_URL || '';
+const r2CdnHost = r2CdnUrl ? new URL(r2CdnUrl).origin : '';
+
 export default function RootLayout({
   children,
 }: {
@@ -28,6 +32,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
+      <head>
+        {/* 预连接到图片 CDN，加速首屏图片加载 */}
+        {r2CdnHost && (
+          <>
+            <link rel="preconnect" href={r2CdnHost} />
+            <link rel="dns-prefetch" href={r2CdnHost} />
+          </>
+        )}
+        {/* 预连接到常用外部图片源 */}
+        <link rel="preconnect" href="https://cdn.nlark.com" />
+        <link rel="dns-prefetch" href="https://cdn.nlark.com" />
+      </head>
       <body className={inter.className}>
         <QueryProvider>
           <ToastProvider>{children}</ToastProvider>

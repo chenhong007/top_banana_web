@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getImageFromR2, deleteImageFromR2, isR2Configured } from '@/lib/r2';
+import { getImageStreamFromR2, deleteImageFromR2, isR2Configured } from '@/lib/r2';
 import prisma from '@/lib/db';
 import { requireAuth } from '@/lib/security';
 
@@ -48,15 +48,16 @@ export async function GET(
       return new NextResponse('R2 not configured', { status: 500 });
     }
 
-    const imageBuffer = await getImageFromR2(fullKey);
+    const imageStream = await getImageStreamFromR2(fullKey);
 
-    if (!imageBuffer) {
+    if (!imageStream) {
       return new NextResponse('Image not found', { status: 404 });
     }
 
     const contentType = getContentType(fullKey);
 
-    return new NextResponse(new Uint8Array(imageBuffer), {
+    // @ts-expect-error - NextResponse supports ReadableStream
+    return new NextResponse(imageStream, {
       headers: {
         'Content-Type': contentType,
         // 1年强缓存，immutable 表示内容不会变化
