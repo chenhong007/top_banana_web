@@ -242,16 +242,31 @@ export default function PromptCard({ prompt, index = 0, priority = false }: Prom
           {prompt.description}
         </p>
 
-        {/* Tags */}
-        {(prompt.tags || []).filter(tag => tag).length > 0 && (
-          <div className="mb-4 flex flex-wrap gap-1.5">
-            {(prompt.tags || []).filter(tag => tag).slice(0, 3).map((tag, idx) => (
-              <span key={tag || idx} className="tag-badge text-xs">
-                {tag}
-              </span>
-            ))}
-            {(prompt.tags || []).filter(tag => tag).length > 3 && (
-              <span className="tag-badge text-xs">+{(prompt.tags || []).filter(tag => tag).length - 3}</span>
+        {/* Tags and Source */}
+        {((prompt.tags || []).filter(tag => tag).length > 0 || (prompt.source && prompt.source !== 'unknown')) && (
+          <div className="mb-4 flex items-start justify-between gap-2">
+            <div className="flex flex-wrap gap-1.5">
+              {(prompt.tags || []).filter(tag => tag).slice(0, 3).map((tag, idx) => (
+                <span key={tag || idx} className="tag-badge text-xs">
+                  {tag}
+                </span>
+              ))}
+              {(prompt.tags || []).filter(tag => tag).length > 3 && (
+                <span className="tag-badge text-xs">+{(prompt.tags || []).filter(tag => tag).length - 3}</span>
+              )}
+            </div>
+
+            {prompt.source && prompt.source !== 'unknown' && (
+              <a
+                href={prompt.source}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0 pt-0.5"
+                title={prompt.source}
+              >
+                {t('source')}
+                <ExternalLink className="h-3 w-3" />
+              </a>
             )}
           </div>
         )}
@@ -278,17 +293,6 @@ export default function PromptCard({ prompt, index = 0, priority = false }: Prom
               <Calendar className="h-3 w-3" />
               {formatDate(prompt.updatedAt)}
             </span>
-            {prompt.source && prompt.source !== 'unknown' && (
-              <a
-                href={prompt.source}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 hover:text-foreground transition-colors"
-              >
-                <ExternalLink className="h-3 w-3" />
-                {t('source')}
-              </a>
-            )}
           </div>
           
           <div className="flex items-center gap-2">
