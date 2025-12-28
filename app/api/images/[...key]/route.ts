@@ -56,7 +56,6 @@ export async function GET(
 
     const contentType = getContentType(fullKey);
 
-    // @ts-expect-error - NextResponse supports ReadableStream
     return new NextResponse(imageStream, {
       headers: {
         'Content-Type': contentType,

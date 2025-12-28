@@ -221,7 +221,6 @@ export async function getImageStreamFromR2(key: string): Promise<ReadableStream 
 
     const response = await client.send(command);
     
-    // @ts-expect-error - Body is a stream
     return response.Body as ReadableStream;
   } catch (error) {
     // Error getting image from R2
@@ -245,8 +244,7 @@ export async function getImageFromR2(key: string): Promise<Buffer | null> {
     
     if (response.Body) {
       const chunks: Uint8Array[] = [];
-      // @ts-expect-error - Body is a stream
-      for await (const chunk of response.Body) {
+      for await (const chunk of (response.Body as any)) {
         chunks.push(chunk);
       }
       return Buffer.concat(chunks);
