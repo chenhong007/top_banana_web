@@ -6,6 +6,16 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 // Deployment mode: 'frontend' for static export, 'full' for complete app with admin
 const deployMode = process.env.DEPLOY_MODE || 'full';
 
+// Helper to safely get hostname from URL
+const getHostname = (url) => {
+  try {
+    return new URL(url).hostname;
+  } catch (e) {
+    console.warn(`Warning: Invalid URL provided in environment variable: ${url}`);
+    return null;
+  }
+};
+
 const baseConfig = {
   reactStrictMode: true,
   images: {
@@ -30,14 +40,14 @@ const baseConfig = {
         hostname: '*.r2.cloudflarestorage.com',
       },
       // 自定义 R2 CDN 域名（NEXT_PUBLIC_R2_CDN_URL，用于前端加速）
-      ...(process.env.NEXT_PUBLIC_R2_CDN_URL ? [{
+      ...(process.env.NEXT_PUBLIC_R2_CDN_URL && getHostname(process.env.NEXT_PUBLIC_R2_CDN_URL) ? [{
         protocol: 'https',
-        hostname: new URL(process.env.NEXT_PUBLIC_R2_CDN_URL).hostname,
+        hostname: getHostname(process.env.NEXT_PUBLIC_R2_CDN_URL),
       }] : []),
       // 自定义 CDN 域名（如果配置了 CLOUDFLARE_R2_PUBLIC_URL）
-      ...(process.env.CLOUDFLARE_R2_PUBLIC_URL ? [{
+      ...(process.env.CLOUDFLARE_R2_PUBLIC_URL && getHostname(process.env.CLOUDFLARE_R2_PUBLIC_URL) ? [{
         protocol: 'https',
-        hostname: new URL(process.env.CLOUDFLARE_R2_PUBLIC_URL).hostname,
+        hostname: getHostname(process.env.CLOUDFLARE_R2_PUBLIC_URL),
       }] : []),
       // 其他外部图片源
       {
