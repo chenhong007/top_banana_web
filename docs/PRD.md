@@ -752,6 +752,7 @@ npx ts-node scripts/fill-missing-fields.ts
 - [导入指南](./IMPORT_GUIDE.md)
 - [CSV 格式指南](./CSV_FORMAT_GUIDE.md)
 - [分页功能说明](./PAGINATION_GUIDE.md)
+- [cloudfare托管](https://zhuanlan.zhihu.com/p/1944453154059031385)
 
 ---
 

@@ -95,9 +95,10 @@ export default function OptimizedImage({
 
   // 判断是否可以使用 Next.js Image 优化
   const useNextImage = useMemo(() => {
-    // 排除 API 代理路径，直接由浏览器加载更稳定
+    // 允许 API 代理路径使用 Next.js Image 优化
+    // Next.js Image 会调用这些 API 获取原图并进行压缩/格式转换
     if (src.startsWith('/api/')) {
-      return false;
+      return true;
     }
     // 本地图片可以直接优化
     if (src.startsWith('/') && !src.startsWith('//')) {
