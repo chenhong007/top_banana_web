@@ -12,6 +12,7 @@ import { DEFAULTS, API_ENDPOINTS, MESSAGES } from '@/lib/constants';
 import { tagKeys } from '@/hooks/queries/useTagsQuery';
 import { categoryKeys } from '@/hooks/queries/useCategoriesQuery';
 import { modelTagKeys } from '@/hooks/queries/useModelTagsQuery';
+import { promptKeys } from '@/hooks/queries/usePromptsQuery';
 
 // 分批导入配置
 const BATCH_SIZE = 100; // 每批导入的数量，避免超时（优化后可以增大）
@@ -89,13 +90,15 @@ export function useImport(onSuccess?: () => void) {
   const cancelRef = useRef(false);
 
   /**
-   * 使标签、分类和模型标签的缓存失效
-   * 导入时可能创建了新的标签/分类/模型标签，需要刷新这些列表
+   * 使标签、分类、模型标签和提示词的缓存失效
+   * 导入时可能创建了新的数据，需要刷新这些列表
    */
   const invalidateRelatedQueries = () => {
     queryClient.invalidateQueries({ queryKey: tagKeys.all });
     queryClient.invalidateQueries({ queryKey: categoryKeys.all });
     queryClient.invalidateQueries({ queryKey: modelTagKeys.all });
+    // 刷新提示词列表，确保前端显示最新数据
+    queryClient.invalidateQueries({ queryKey: promptKeys.all });
   };
 
   const handleJsonFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

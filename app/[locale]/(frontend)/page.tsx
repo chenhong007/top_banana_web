@@ -6,9 +6,9 @@ import { PromptItem } from '@/types';
 import SeoJsonLd, { CollectionJsonLd } from '@/components/seo/JsonLd';
 
 // Use ISR (Incremental Static Regeneration)
-// 1小时刷新一次，静态网页没必要刷新太快
-// Note: For immediate sync after import, call /api/revalidate endpoint
-export const revalidate = 3600;
+// 60秒刷新一次，确保数据更新能快速反映到前端
+// 导入数据后会自动调用 revalidatePath 触发重新生成
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{ locale: string }>;

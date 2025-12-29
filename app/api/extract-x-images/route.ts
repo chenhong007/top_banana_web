@@ -286,12 +286,9 @@ export async function POST(request: NextRequest) {
         if (existingPrompt) {
           // 获取现有图片
           let existingUrls: string[] = [];
-          if (existingPrompt.imageUrls) {
-            try {
-              existingUrls = JSON.parse(existingPrompt.imageUrls as string);
-            } catch {
-              existingUrls = [];
-            }
+          if (existingPrompt.imageUrls && existingPrompt.imageUrls.length > 0) {
+            // imageUrls 在 Prisma schema 中已经是 String[] 类型，直接使用
+            existingUrls = existingPrompt.imageUrls;
           } else if (existingPrompt.imageUrl) {
             existingUrls = [existingPrompt.imageUrl];
           }
@@ -318,7 +315,7 @@ export async function POST(request: NextRequest) {
             where: { id: promptId },
             data: {
               imageUrl: finalUrls[0] || null,
-              imageUrls: JSON.stringify(finalUrls),
+              imageUrls: finalUrls, // 直接传数组，Prisma schema 定义为 String[]
               updatedAt: new Date(),
             },
           });

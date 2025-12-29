@@ -59,7 +59,11 @@ export function usePromptsInfiniteQuery(initialData?: PaginatedResponse<PromptIt
       pages: [initialData],
       pageParams: [1]
     } : undefined,
-    staleTime: 60 * 1000, // 1 minute stale time
+    // 减少 staleTime 以便更快获取最新数据
+    // 初始数据来自 SSR，之后每 30 秒检查一次是否有更新
+    staleTime: 30 * 1000, // 30 seconds stale time
+    // 页面获得焦点时自动刷新
+    refetchOnWindowFocus: true,
   });
 }
 

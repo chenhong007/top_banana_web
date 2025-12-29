@@ -364,6 +364,22 @@ export async function POST(request: NextRequest) {
       revalidatePath('/en', 'page');
       revalidatePath('/', 'page');
       console.log('[Import] Cache revalidated for home pages');
+      
+      // 主动预热缓存：触发页面重新生成（异步执行，不阻塞响应）
+      // 这确保下一个用户访问时能看到最新数据
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}` 
+        : 'http://localhost:3000';
+      
+      // 异步预热，不等待结果
+      Promise.all([
+        fetch(`${baseUrl}/zh`, { cache: 'no-store' }).catch(() => {}),
+        fetch(`${baseUrl}/en`, { cache: 'no-store' }).catch(() => {}),
+      ]).then(() => {
+        console.log('[Import] Cache warmed up for home pages');
+      }).catch(() => {
+        // 忽略预热失败
+      });
     } catch (revalidateError) {
       console.warn('[Import] Cache revalidation failed:', revalidateError);
       // 不影响导入结果，只是缓存刷新失败
