@@ -1,9 +1,10 @@
 'use client';
 
 import { PromptItem } from '@/types';
-import { Tag, Calendar, ExternalLink, Copy, Check, Zap, ThumbsUp, Heart, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import OptimizedImage from './OptimizedImage';
+import ImagePreview from './ImagePreview';
 import { useInteractPromptMutation } from '@/hooks/queries/usePromptsQuery';
 import { useTranslations, useLocale } from 'next-intl';
 
@@ -39,7 +40,10 @@ export default function PromptCard({ prompt, index = 0, priority = false, onPrev
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
+  const imageRef = useRef<HTMLDivElement>(null);
   const interactMutation = useInteractPromptMutation();
 
   const copyPrompt = async () => {
@@ -66,11 +70,83 @@ export default function PromptCard({ prompt, index = 0, priority = false, onPrev
     interactMutation.mutate({ id: prompt.id, type: 'heart' });
   };
 
+  const handleImageMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!prompt.imageUrl || imageError) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoverPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
+    setIsHovering(true);
+  };
+
+  const handleImageMouseLeave = () => {
+    setIsHovering(false);
+  };
+
+  // 监听滚动事件，滚动时取消放大显示
+  useEffect(() => {
+    if (!isHovering) return;
+
+    const handleScroll = () => {
+      setIsHovering(false);
+    };
+
+    // 监听 window 滚动和所有可能的滚动容器
+    window.addEventListener('scroll', handleScroll, true);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+    };
+  }, [isHovering]);
+
+  // 监听鼠标移动，检测是否离开了图片区域
+  const handleMouseMoveCheck = useCallback(() => {
+    if (!isHovering || !imageRef.current) return;
+    
+    // 使用 requestAnimationFrame 来优化性能
+    requestAnimationFrame(() => {
+      if (!imageRef.current) return;
+      const rect = imageRef.current.getBoundingClientRect();
+      const mouseX = (window as typeof window & { _lastMouseX?: number })._lastMouseX ?? 0;
+      const mouseY = (window as typeof window & { _lastMouseY?: number })._lastMouseY ?? 0;
+      
+      // 检查鼠标是否在图片区域内
+      if (
+        mouseX < rect.left ||
+        mouseX > rect.right ||
+        mouseY < rect.top ||
+        mouseY > rect.bottom
+      ) {
+        setIsHovering(false);
+      }
+    });
+  }, [isHovering]);
+
+  // 全局鼠标位置跟踪
+  useEffect(() => {
+    if (!isHovering) return;
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      (window as typeof window & { _lastMouseX?: number })._lastMouseX = e.clientX;
+      (window as typeof window & { _lastMouseY?: number })._lastMouseY = e.clientY;
+      handleMouseMoveCheck();
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+    };
+  }, [isHovering, handleMouseMoveCheck]);
+
   const handleImageClick = (e: React.MouseEvent) => {
     if (!prompt.imageUrl || imageError) return;
     e.preventDefault();
     e.stopPropagation();
+    setIsHovering(false);
     
+    // 优先使用传入的全局预览处理函数（如果有）
     if (onPreview) {
       onPreview(prompt.imageUrl, prompt.effect);
     }
@@ -96,7 +172,10 @@ export default function PromptCard({ prompt, index = 0, priority = false, onPrev
     >
       {/* Image */}
       <div 
+        ref={imageRef}
         className="relative aspect-[4/3] overflow-hidden cursor-pointer"
+        onMouseEnter={handleImageMouseEnter}
+        onMouseLeave={handleImageMouseLeave}
         onClick={handleImageClick}
       >
         {prompt.imageUrl && !imageError ? (
@@ -250,6 +329,18 @@ export default function PromptCard({ prompt, index = 0, priority = false, onPrev
           </div>
         </div>
       </div>
+
+      {/* Image Preview Component - 仅用于悬浮预览 */}
+      {prompt.imageUrl && !imageError && (
+        <ImagePreview
+          src={prompt.imageUrl}
+          alt={prompt.effect}
+          isHovering={isHovering}
+          isModalOpen={false} // 卡片内部不控制模态框，模态框交由父组件控制
+          onCloseModal={() => {}} // 空函数，因为模态框不在本地控制
+          hoverPosition={hoverPosition}
+        />
+      )}
     </article>
   );
 }

@@ -104,6 +104,21 @@ export default function OptimizedImage({
   // 检查是否已经加载过，避免重复动画
   const alreadyLoaded = loadedImages.has(optimizedSrc);
   
+  // Debug logging
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' || hasError) {
+      console.log('[OptimizedImage Debug]', {
+        originalSrc: src,
+        optimizedSrc,
+        useNextImage,
+        R2_CDN_URL,
+        isInView,
+        isLoaded,
+        hasError
+      });
+    }
+  }, [src, optimizedSrc, useNextImage, hasError, isInView, isLoaded]);
+
   // priority 图片或已加载过的图片跳过加载动画
   const [isLoaded, setIsLoaded] = useState(alreadyLoaded);
   // priority 图片立即在视口中，其他图片默认也是 true 以便快速开始加载
