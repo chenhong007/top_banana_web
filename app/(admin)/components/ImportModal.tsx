@@ -157,6 +157,9 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                 {batchProgress.skippedCount > 0 && (
                   <span className="text-amber-600">⏭ 跳过重复: {batchProgress.skippedCount} 条</span>
                 )}
+                {batchProgress.filteredCount > 0 && (
+                  <span className="text-orange-600">🚫 过滤无效: {batchProgress.filteredCount} 条</span>
+                )}
                 {batchProgress.failedCount > 0 && (
                   <span className="text-red-600">✗ 失败: {batchProgress.failedCount} 条</span>
                 )}
@@ -164,7 +167,7 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
               
               {/* 待处理数量 */}
               {batchProgress.isRunning && (() => {
-                const processed = batchProgress.successCount + batchProgress.skippedCount + batchProgress.failedCount;
+                const processed = batchProgress.successCount + batchProgress.skippedCount + batchProgress.filteredCount + batchProgress.failedCount;
                 const remaining = batchProgress.totalItemsCount - processed;
                 return remaining > 0 ? (
                   <div className="text-xs text-gray-500 mb-2">
@@ -209,6 +212,25 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                     {batchProgress.duplicateStats.byPromptSimilarity > 0 && (
                       <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded">
                         提示词相似(&gt;90%): {batchProgress.duplicateStats.byPromptSimilarity}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* 无效数据统计明细 */}
+              {batchProgress.invalidStats && batchProgress.invalidStats.total > 0 && (
+                <div className="mt-3 pt-3 border-t border-orange-200">
+                  <p className="text-xs font-medium text-orange-700 mb-1">过滤原因明细（数据缺少必需字段）:</p>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {batchProgress.invalidStats.missingEffect > 0 && (
+                      <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded">
+                        缺少标题(effect): {batchProgress.invalidStats.missingEffect}
+                      </span>
+                    )}
+                    {batchProgress.invalidStats.missingPrompt > 0 && (
+                      <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded">
+                        缺少提示词(prompt): {batchProgress.invalidStats.missingPrompt}
                       </span>
                     )}
                   </div>

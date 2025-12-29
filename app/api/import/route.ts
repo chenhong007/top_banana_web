@@ -246,12 +246,19 @@ export async function POST(request: NextRequest) {
     console.log(`[Import] Image processing complete: ${imageUploadStats.uploaded} uploaded, ${imageUploadStats.failed} failed`);
 
     // Validate required fields - only effect and prompt are required
+    // v2.1: 改为过滤无效数据，而不是拒绝整个批次
+    const validPrompts = newPrompts.filter((item) => item.effect && item.prompt);
     const invalidItems = newPrompts.filter((item) => !item.effect || !item.prompt);
 
+    // 记录无效数据统计（但不拒绝整个批次）
+    let invalidStats = {
+      total: invalidItems.length,
+      missingEffect: newPrompts.filter((item) => !item.effect).length,
+      missingPrompt: newPrompts.filter((item) => !item.prompt).length,
+    };
+
     if (invalidItems.length > 0) {
-      // 提供更详细的错误信息，帮助调试
-      const missingEffect = newPrompts.filter((item) => !item.effect).length;
-      const missingPrompt = newPrompts.filter((item) => !item.prompt).length;
+      // 只记录日志，不拒绝批次
       const sampleInvalid = invalidItems.slice(0, 3).map((item, i) => ({
         index: i,
         hasEffect: !!item.effect,
@@ -260,15 +267,19 @@ export async function POST(request: NextRequest) {
         promptPreview: item.prompt ? item.prompt.substring(0, 30) : '(空)',
       }));
       
-      console.error('[Import] Invalid items detected:', {
+      console.warn('[Import] Filtered invalid items:', {
         total: invalidItems.length,
-        missingEffect,
-        missingPrompt,
+        missingEffect: invalidStats.missingEffect,
+        missingPrompt: invalidStats.missingPrompt,
+        validCount: validPrompts.length,
         sampleInvalid,
       });
-      
+    }
+
+    // 如果没有有效数据，才返回错误
+    if (validPrompts.length === 0) {
       return badRequestResponse(
-        `${invalidItems.length} 条数据缺少必需字段。缺少effect(标题): ${missingEffect}条，缺少prompt(提示词): ${missingPrompt}条。示例: ${JSON.stringify(sampleInvalid)}`
+        `所有 ${invalidItems.length} 条数据都缺少必需字段。缺少effect(标题): ${invalidStats.missingEffect}条，缺少prompt(提示词): ${invalidStats.missingPrompt}条。`
       );
     }
 
@@ -276,7 +287,8 @@ export async function POST(request: NextRequest) {
     let failedCount = 0;
     let duplicateStats: Record<DuplicateType, number> | undefined;
     let failedItems: Array<{ index: number; effect: string; error: string }> | undefined;
-    const submittedCount = newPrompts.length; // 本批次提交的总数
+    const submittedCount = newPrompts.length; // 本批次提交的总数（包含无效数据）
+    const filteredInvalidCount = invalidItems.length; // 被过滤的无效数据数量
 
     if (mode === 'replace') {
       // Delete all existing data first
@@ -290,7 +302,8 @@ export async function POST(request: NextRequest) {
       const seenImageUrls = new Set<string>();
       const seenSources = new Set<string>();
       
-      const uniqueInBatch = newPrompts.filter((p) => {
+      // v2.1: 使用 validPrompts（已过滤无效数据）
+      const uniqueInBatch = validPrompts.filter((p) => {
         // Check effect
         if (seenEffects.has(p.effect)) return false;
         seenEffects.add(p.effect);
@@ -311,7 +324,7 @@ export async function POST(request: NextRequest) {
       failedCount = result.failed;
       failedItems = result.failedItems;
       
-      const totalDuplicates = newPrompts.length - uniqueInBatch.length;
+      const totalDuplicates = validPrompts.length - uniqueInBatch.length;
       if (totalDuplicates > 0) {
         duplicateStats = {
           imageUrl: 0,
@@ -324,7 +337,8 @@ export async function POST(request: NextRequest) {
       // Merge with existing data - full duplicate detection
       // Checks: imageUrl, source, effect (exact match), prompt similarity (>90%)
       // v2.0: 支持快速模式和采样检查
-      const { uniqueItems, stats } = await filterDuplicates(newPrompts, {
+      // v2.1: 使用 validPrompts（已过滤无效数据）
+      const { uniqueItems, stats } = await filterDuplicates(validPrompts, {
         checkImageUrl: true,
         checkSource: true,
         checkEffect: true,
@@ -368,10 +382,11 @@ export async function POST(request: NextRequest) {
     }
 
     return successResponse({
-      submitted: submittedCount,     // 本批次提交的总数
+      submitted: submittedCount,     // 本批次提交的总数（包含无效数据）
       imported: importedCount,       // 成功导入的数量
       skipped: skippedCount,         // 因重复跳过的数量
       failed: failedCount,           // 导入失败的数量（数据库错误等）
+      filtered: filteredInvalidCount,// 因缺少必需字段被过滤的数量
       total: totalCount,             // 数据库中的总数
       mode,
       // 新增：图片上传统计
@@ -387,6 +402,12 @@ export async function POST(request: NextRequest) {
         byEffect: duplicateStats.effect,
         byPromptSimilarity: duplicateStats.prompt_similarity,
         total: skippedCount,
+      } : undefined,
+      // 无效数据统计（缺少必需字段）
+      invalidFiltered: filteredInvalidCount > 0 ? {
+        total: filteredInvalidCount,
+        missingEffect: invalidStats.missingEffect,
+        missingPrompt: invalidStats.missingPrompt,
       } : undefined,
       // 新增：失败详情
       failedDetails: failedCount > 0 ? {

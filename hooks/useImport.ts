@@ -33,6 +33,13 @@ interface FailedDetails {
   totalFailed: number;
 }
 
+// 无效数据统计类型
+interface InvalidStats {
+  total: number;
+  missingEffect: number;
+  missingPrompt: number;
+}
+
 // 分批导入进度类型
 interface BatchProgress {
   current: number;
@@ -40,8 +47,10 @@ interface BatchProgress {
   successCount: number;
   failedCount: number;
   skippedCount: number;      // 因重复被跳过的数量
+  filteredCount: number;     // 因缺少必需字段被过滤的数量
   totalItemsCount: number;   // 总提交条数（用于验证统计）
   duplicateStats?: DuplicateStats; // 详细的重复统计
+  invalidStats?: InvalidStats;     // 无效数据统计
   failedDetails?: FailedDetails;   // 失败详情
   isRunning: boolean;
 }
@@ -69,8 +78,10 @@ export function useImport(onSuccess?: () => void) {
     successCount: 0,
     failedCount: 0,
     skippedCount: 0,
+    filteredCount: 0,
     totalItemsCount: 0,
     duplicateStats: undefined,
+    invalidStats: undefined,
     isRunning: false,
   });
   
@@ -173,8 +184,10 @@ export function useImport(onSuccess?: () => void) {
     submitted: number;   // 本批次提交的总数
     imported: number;    // 成功导入的数量
     skipped: number;     // 因重复跳过的数量
+    filtered: number;    // 因缺少必需字段被过滤的数量
     failed: number;      // 导入失败的数量
     duplicateStats?: DuplicateStats;
+    invalidStats?: InvalidStats;    // 无效数据统计
     failedDetails?: FailedDetails;  // 失败详情
     error?: string;
   }
@@ -210,23 +223,23 @@ export function useImport(onSuccess?: () => void) {
       
       if (!response.ok) {
         if (response.status === 504) {
-          return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: '请求超时，请减少批次大小' };
+          return { success: false, submitted: batchSize, imported: 0, skipped: 0, filtered: 0, failed: batchSize, error: '请求超时，请减少批次大小' };
         }
         if (response.status === 413) {
-          return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: '请求数据过大' };
+          return { success: false, submitted: batchSize, imported: 0, skipped: 0, filtered: 0, failed: batchSize, error: '请求数据过大' };
         }
         // 尝试从响应中解析详细错误信息
         try {
           const errorResult = JSON.parse(responseText);
           if (errorResult.error) {
-            return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: errorResult.error };
+            return { success: false, submitted: batchSize, imported: 0, skipped: 0, filtered: 0, failed: batchSize, error: errorResult.error };
           }
         } catch {
           // 解析失败，使用原始文本（截取前200字符）
           const errorPreview = responseText.length > 200 ? responseText.substring(0, 200) + '...' : responseText;
           console.error('[Import] Server error response:', errorPreview);
         }
-        return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: `服务器错误 (${response.status})` };
+        return { success: false, submitted: batchSize, imported: 0, skipped: 0, filtered: 0, failed: batchSize, error: `服务器错误 (${response.status})` };
       }
 
       const result = JSON.parse(responseText);
@@ -234,6 +247,7 @@ export function useImport(onSuccess?: () => void) {
         // 使用后端返回的完整统计
         const data = result.data;
         const duplicateStats = data.duplicatesFiltered as DuplicateStats | undefined;
+        const invalidStats = data.invalidFiltered as InvalidStats | undefined;
         const failedDetails = data.failedDetails as FailedDetails | undefined;
         
         return { 
@@ -241,12 +255,14 @@ export function useImport(onSuccess?: () => void) {
           submitted: data.submitted || batchSize,
           imported: data.imported || 0,
           skipped: data.skipped || 0,
+          filtered: data.filtered || 0,  // 因缺少必需字段被过滤的数量
           failed: data.failed || 0,
           duplicateStats,
+          invalidStats,
           failedDetails,
         };
       } else {
-        return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: result.error };
+        return { success: false, submitted: batchSize, imported: 0, skipped: 0, filtered: 0, failed: batchSize, error: result.error };
       }
     } catch (err) {
       return { 
@@ -254,6 +270,7 @@ export function useImport(onSuccess?: () => void) {
         submitted: batchSize,
         imported: 0, 
         skipped: 0,
+        filtered: 0,
         failed: batchSize,
         error: err instanceof Error ? err.message : '网络错误' 
       };
@@ -367,14 +384,17 @@ export function useImport(onSuccess?: () => void) {
       successCount: 0,
       failedCount: 0,
       skippedCount: 0,
+      filteredCount: 0,
       totalItemsCount: totalItems,
       duplicateStats: undefined,
+      invalidStats: undefined,
       isRunning: true,
     });
 
     let totalImported = 0;
     let totalFailed = 0;
     let totalSkipped = 0;
+    let totalFiltered = 0;  // 因缺少必需字段被过滤的数量
     let lastError = '';
     // 汇总的重复统计
     const aggregatedDuplicateStats: DuplicateStats = {
@@ -383,6 +403,12 @@ export function useImport(onSuccess?: () => void) {
       byEffect: 0,
       byPromptSimilarity: 0,
       total: 0,
+    };
+    // 汇总的无效数据统计
+    const aggregatedInvalidStats: InvalidStats = {
+      total: 0,
+      missingEffect: 0,
+      missingPrompt: 0,
     };
     // 汇总的失败详情
     const aggregatedFailedDetails: FailedDetails = {
@@ -407,6 +433,7 @@ export function useImport(onSuccess?: () => void) {
       // 累加统计 - 使用后端返回的精确数据
       totalImported += result.imported;
       totalSkipped += result.skipped;
+      totalFiltered += result.filtered;  // 因缺少必需字段被过滤的数量
       totalFailed += result.failed;
       
       // 汇总重复统计
@@ -416,6 +443,13 @@ export function useImport(onSuccess?: () => void) {
         aggregatedDuplicateStats.byEffect += result.duplicateStats.byEffect;
         aggregatedDuplicateStats.byPromptSimilarity += result.duplicateStats.byPromptSimilarity;
         aggregatedDuplicateStats.total += result.duplicateStats.total;
+      }
+      
+      // 汇总无效数据统计
+      if (result.invalidStats) {
+        aggregatedInvalidStats.total += result.invalidStats.total;
+        aggregatedInvalidStats.missingEffect += result.invalidStats.missingEffect;
+        aggregatedInvalidStats.missingPrompt += result.invalidStats.missingPrompt;
       }
       
       // 汇总失败详情
@@ -444,8 +478,10 @@ export function useImport(onSuccess?: () => void) {
         successCount: totalImported,
         failedCount: totalFailed,
         skippedCount: totalSkipped,
+        filteredCount: totalFiltered,
         totalItemsCount: totalItems,
         duplicateStats: aggregatedDuplicateStats.total > 0 ? { ...aggregatedDuplicateStats } : undefined,
+        invalidStats: aggregatedInvalidStats.total > 0 ? { ...aggregatedInvalidStats } : undefined,
         failedDetails: aggregatedFailedDetails.totalFailed > 0 ? { ...aggregatedFailedDetails } : undefined,
         isRunning: i < totalBatches - 1,
       });
@@ -468,6 +504,10 @@ export function useImport(onSuccess?: () => void) {
         
         if (totalSkipped > 0) {
           parts.push(`跳过重复 ${totalSkipped} 条`);
+        }
+        
+        if (totalFiltered > 0) {
+          parts.push(`过滤无效 ${totalFiltered} 条`);
         }
         
         if (totalFailed > 0) {
@@ -493,6 +533,20 @@ export function useImport(onSuccess?: () => void) {
           }
           if (details.length > 0) {
             message += `\n跳过原因: ${details.join('、')}`;
+          }
+        }
+        
+        // 如果有被过滤的无效数据，说明详细原因
+        if (aggregatedInvalidStats.total > 0) {
+          const details: string[] = [];
+          if (aggregatedInvalidStats.missingEffect > 0) {
+            details.push(`缺少标题: ${aggregatedInvalidStats.missingEffect}`);
+          }
+          if (aggregatedInvalidStats.missingPrompt > 0) {
+            details.push(`缺少提示词: ${aggregatedInvalidStats.missingPrompt}`);
+          }
+          if (details.length > 0) {
+            message += `\n过滤原因: ${details.join('、')}`;
           }
         }
         

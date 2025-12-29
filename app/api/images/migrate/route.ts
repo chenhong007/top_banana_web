@@ -303,6 +303,9 @@ export async function GET(request: NextRequest) {
   if (authError) return authError;
 
   try {
+    const url = new URL(request.url);
+    const showPending = url.searchParams.get('showPending') === 'true';
+
     // 获取所有 Prompt 的图片信息
     const allPrompts = await prisma.prompt.findMany({
       where: {
@@ -312,6 +315,8 @@ export async function GET(request: NextRequest) {
         ],
       },
       select: {
+        id: true,
+        effect: true,
         imageUrl: true,
         imageUrls: true,
       },
@@ -322,6 +327,9 @@ export async function GET(request: NextRequest) {
     let r2Images = 0;
     let externalImages = 0;
     let localImages = 0;
+    
+    // 收集待迁移的外部图片详情
+    const pendingImages: { promptId: string; effect: string; url: string }[] = [];
 
     for (const prompt of allPrompts) {
       // 收集所有图片 URL
@@ -342,6 +350,12 @@ export async function GET(request: NextRequest) {
           localImages++;
         } else if (url.startsWith('http://') || url.startsWith('https://')) {
           externalImages++;
+          // 收集外部图片详情
+          pendingImages.push({
+            promptId: prompt.id,
+            effect: prompt.effect,
+            url,
+          });
         }
       }
     }
@@ -368,8 +382,17 @@ export async function GET(request: NextRequest) {
           migrated: migratedCount,
           pending: externalImages, // 待迁移的外部图片
         },
+        // 当 showPending=true 时，返回待迁移图片详情
+        ...(showPending && pendingImages.length > 0 ? { 
+          pendingImages,
+          tip: '这些外部图片可能因防盗链无法自动迁移，可以：1) 手动下载后上传替换 2) 在后台管理界面编辑 Prompt 更换图片',
+        } : {}),
         r2Configured: isR2Configured(),
         usage: {
+          GET: '/api/images/migrate',
+          params: {
+            showPending: '显示待迁移的外部图片详情 (默认: false)',
+          },
           POST: '/api/images/migrate',
           body: {
             dryRun: '预览模式，不执行实际迁移 (默认: false)',
@@ -378,6 +401,7 @@ export async function GET(request: NextRequest) {
             includeLocal: '是否包含本地图片 (默认: false)',
           },
           example: {
+            '查看待迁移': 'GET /api/images/migrate?showPending=true',
             '预览': 'POST { "dryRun": true, "limit": 20 }',
             '执行迁移': 'POST { "limit": 10 }',
             '分页迁移': 'POST { "limit": 10, "offset": 10 }',
