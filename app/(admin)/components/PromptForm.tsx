@@ -3,15 +3,41 @@
  * Form for creating and editing prompts
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { CreatePromptRequest } from '@/types';
-import { Save, X, FolderOpen, ImageIcon, AlertCircle } from 'lucide-react';
+import { Save, X, FolderOpen, ImageIcon, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import { UI_TEXT, MESSAGES, DEFAULT_CATEGORIES } from '@/lib/constants';
 import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
 import { getImageUrlsArray, createImageFields } from '@/lib/image-utils';
 import TagInput from './TagInput';
 import ModelTagInput from './ModelTagInput';
 import MultiImageUpload from './MultiImageUpload';
+
+/**
+ * 检查 URL 是否是 X.com/Twitter 链接
+ */
+function isXUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') return false;
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
+    // 检查是否是推文链接（包含 /status/）
+    const isTwitterHost = hostname.includes('x.com') || hostname.includes('twitter.com');
+    const hasStatusPath = urlObj.pathname.includes('/status/');
+    return isTwitterHost && hasStatusPath;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 检查 URL 是否是 R2 存储的图片
+ */
+function isR2ImageUrl(url: string): boolean {
+  if (!url) return false;
+  // 检查是否是 API 代理格式或公开 URL
+  return url.includes('/api/images/') || url.includes('images.topai.ink/images/');
+}
 
 interface PromptFormProps {
   formData: CreatePromptRequest;
@@ -23,6 +49,24 @@ interface PromptFormProps {
   onChange: (data: CreatePromptRequest) => void;
   onTagsChange: (tags: string[]) => void;
   onModelTagsChange: (modelTags: string[]) => void;
+}
+
+interface ExtractXResponse {
+  success: boolean;
+  error?: string;
+  data?: {
+    tweetId: string;
+    username: string;
+    totalFound: number;
+    uploaded: number;
+    failed: number;
+    r2Urls: string[];
+    results: Array<{
+      originalUrl: string;
+      r2Url?: string;
+      error?: string;
+    }>;
+  };
 }
 
 // 必填字段配置
@@ -54,6 +98,79 @@ export default function PromptForm({
 }: PromptFormProps) {
   // 是否已尝试提交（用于显示验证错误）
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  // X.com 同步状态
+  const [syncing, setSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [syncSuccess, setSyncSuccess] = useState<string | null>(null);
+
+  // 检查来源是否是 X.com 链接
+  const sourceIsXUrl = isXUrl(formData.source);
+
+  // 同步 X.com 图片 - 提取并上传到 R2，清除非 R2 链接
+  const handleSyncXImages = useCallback(async () => {
+    if (!sourceIsXUrl || syncing) return;
+
+    setSyncing(true);
+    setSyncError(null);
+    setSyncSuccess(null);
+
+    try {
+      // 获取现有图片，只保留 R2 图片
+      const existingImages = getImageUrlsArray(formData.imageUrl, formData.imageUrls);
+      const r2OnlyImages = existingImages.filter(url => isR2ImageUrl(url));
+      
+      const response = await fetch('/api/extract-x-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: formData.source,
+          clearNonR2: true, // 清除非 R2 链接
+        }),
+      });
+
+      const data: ExtractXResponse = await response.json();
+
+      if (data.success && data.data) {
+        const { r2Urls, uploaded, failed, totalFound } = data.data;
+        
+        if (r2Urls.length > 0) {
+          // 合并 R2 图片（保留已有的 R2 图片 + 新上传的）
+          const mergedUrls = [...r2OnlyImages, ...r2Urls];
+          // 去重并限制最多 6 张
+          const uniqueUrls = [...new Set(mergedUrls)].slice(0, 6);
+          
+          // 更新图片字段
+          onChange({
+            ...formData,
+            ...createImageFields(uniqueUrls),
+          });
+          
+          let message = `从推文提取 ${totalFound} 张图片，成功上传 ${uploaded} 张到 R2`;
+          if (failed > 0) {
+            message += `，${failed} 张失败`;
+          }
+          // 如果清除了非 R2 图片
+          const clearedCount = existingImages.length - r2OnlyImages.length;
+          if (clearedCount > 0) {
+            message += `，已清除 ${clearedCount} 张非 R2 链接图片`;
+          }
+          
+          setSyncSuccess(message);
+          
+          // 5秒后清除成功消息
+          setTimeout(() => setSyncSuccess(null), 5000);
+        } else {
+          setSyncError('上传图片失败，请重试');
+        }
+      } else {
+        setSyncError(data.error || '同步失败，未找到图片');
+      }
+    } catch (error) {
+      setSyncError(error instanceof Error ? error.message : '同步请求失败');
+    } finally {
+      setSyncing(false);
+    }
+  }, [sourceIsXUrl, syncing, formData, onChange]);
   
   // 检查单个字段是否有效
   const isFieldValid = (key: keyof CreatePromptRequest): boolean => {
@@ -139,16 +256,62 @@ export default function PromptForm({
           {/* Source Field */}
           <div>
             <label className={LABEL_STYLES.required}>来源</label>
-            <input
-              type="text"
-              value={formData.source}
-              onChange={(e) => onChange({ ...formData, source: e.target.value })}
-              disabled={submitting}
-              className={getInputClassName('source', submitting ? INPUT_STYLES.disabled : INPUT_STYLES.base)}
-              placeholder={UI_TEXT.PLACEHOLDER.SOURCE}
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={formData.source}
+                onChange={(e) => {
+                  onChange({ ...formData, source: e.target.value });
+                  // 清除之前的同步状态
+                  setSyncError(null);
+                  setSyncSuccess(null);
+                }}
+                disabled={submitting || syncing}
+                className={getInputClassName('source', submitting ? INPUT_STYLES.disabled : `${INPUT_STYLES.base} flex-1`)}
+                placeholder={UI_TEXT.PLACEHOLDER.SOURCE}
+              />
+              {sourceIsXUrl && (
+                <button
+                  type="button"
+                  onClick={handleSyncXImages}
+                  disabled={submitting || syncing}
+                  className={`
+                    flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium
+                    transition-all duration-200 whitespace-nowrap
+                    ${syncing 
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                      : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 hover:border-blue-300'
+                    }
+                  `}
+                  title="从 X.com 提取图片并上传到 R2"
+                >
+                  {syncing ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-4 h-4" />
+                  )}
+                  {syncing ? '同步中...' : '同步图片'}
+                </button>
+              )}
+            </div>
             {hasAttemptedSubmit && !isFieldValid('source') && (
               <p className="text-xs text-red-500 mt-1.5">请填写来源</p>
+            )}
+            {syncError && (
+              <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                {syncError}
+              </p>
+            )}
+            {syncSuccess && (
+              <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
+                ✓ {syncSuccess}
+              </p>
+            )}
+            {sourceIsXUrl && !syncing && !syncError && !syncSuccess && (
+              <p className="text-xs text-gray-400 mt-1.5">
+                检测到 X.com 链接，点击"同步图片"可自动提取推文图片并上传到 R2
+              </p>
             )}
           </div>
         </div>
