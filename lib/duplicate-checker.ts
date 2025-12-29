@@ -3,8 +3,10 @@
  * Provides comprehensive duplicate detection for prompts
  */
 
-import { promptRepository, CreatePromptInput } from '@/repositories/prompt.repository';
+import { promptRepository } from '@/repositories/prompt.repository';
+import type { CreatePromptInput } from '@/types';
 import { findMostSimilarPrompt } from './text-similarity';
+import { getPrimaryImageUrl } from './image-utils';
 
 /**
  * Types of duplicates that can be detected
@@ -58,9 +60,7 @@ export async function checkDuplicate(
 
   // 1. Check imageUrl (primary image)
   if (mergedConfig.checkImageUrl) {
-    const imageUrlToCheck = data.imageUrls && data.imageUrls.length > 0 
-      ? data.imageUrls[0] 
-      : data.imageUrl;
+    const imageUrlToCheck = getPrimaryImageUrl(data.imageUrl, data.imageUrls);
     
     if (imageUrlToCheck) {
       const existingByImage = await promptRepository.findByImageUrl(imageUrlToCheck);
@@ -182,9 +182,7 @@ export async function checkDuplicatesBatch(
 
     // 1. Check imageUrl
     if (mergedConfig.checkImageUrl) {
-      const imageUrlToCheck = item.imageUrls && item.imageUrls.length > 0 
-        ? item.imageUrls[0] 
-        : item.imageUrl;
+      const imageUrlToCheck = getPrimaryImageUrl(item.imageUrl, item.imageUrls);
       
       if (imageUrlToCheck) {
         // Check against existing DB
@@ -281,9 +279,7 @@ export async function checkDuplicatesBatch(
       if (item.effect) batchEffects.add(item.effect);
       if (item.source && item.source !== 'unknown') batchSources.add(item.source);
       
-      const imageUrlToAdd = item.imageUrls && item.imageUrls.length > 0 
-        ? item.imageUrls[0] 
-        : item.imageUrl;
+      const imageUrlToAdd = getPrimaryImageUrl(item.imageUrl, item.imageUrls);
       if (imageUrlToAdd) batchImageUrls.add(imageUrlToAdd);
       
       if (item.prompt) {

@@ -8,6 +8,7 @@ import { CreatePromptRequest } from '@/types';
 import { Save, X, FolderOpen, ImageIcon, AlertCircle } from 'lucide-react';
 import { UI_TEXT, MESSAGES, DEFAULT_CATEGORIES } from '@/lib/constants';
 import { INPUT_STYLES, BUTTON_STYLES, CARD_STYLES, LABEL_STYLES } from '@/lib/styles';
+import { getImageUrlsArray, createImageFields } from '@/lib/image-utils';
 import TagInput from './TagInput';
 import ModelTagInput from './ModelTagInput';
 import MultiImageUpload from './MultiImageUpload';
@@ -248,11 +249,10 @@ export default function PromptForm({
             图片（可选，最多 6 张，第一张为封面）
           </label>
           <MultiImageUpload
-            value={formData.imageUrls || (formData.imageUrl ? [formData.imageUrl] : [])}
+            value={getImageUrlsArray(formData.imageUrl, formData.imageUrls)}
             onChange={(urls) => onChange({ 
               ...formData, 
-              imageUrls: urls,
-              imageUrl: urls.length > 0 ? urls[0] : '' // 保持向后兼容
+              ...createImageFields(urls)
             })}
             disabled={submitting}
             maxImages={6}

@@ -10,7 +10,9 @@ export type { PromptItem } from './prompt';
 export type { 
   CreatePromptRequest, 
   UpdatePromptRequest, 
-  ApiResponse 
+  ApiResponse,
+  CreatePromptInput,
+  UpdatePromptInput
 } from './api';
 
 // Import types

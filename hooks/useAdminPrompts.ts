@@ -20,6 +20,7 @@ import {
   useUpdatePromptMutation,
   useDeletePromptMutation,
 } from '@/hooks/queries';
+import { normalizeImageUrls } from '@/lib/image-utils';
 
 const initialFormData: CreatePromptRequest = {
   effect: '',
@@ -125,9 +126,7 @@ export function useAdminPrompts() {
 
   const startEdit = (prompt: PromptItem) => {
     setEditingId(prompt.id);
-    const imageUrls = prompt.imageUrls && prompt.imageUrls.length > 0 
-      ? prompt.imageUrls 
-      : (prompt.imageUrl ? [prompt.imageUrl] : []);
+    const { primaryImageUrl, imageUrls } = normalizeImageUrls(prompt.imageUrl, prompt.imageUrls);
     setFormData({
       effect: prompt.effect || '',
       description: prompt.description || '',
@@ -135,7 +134,7 @@ export function useAdminPrompts() {
       modelTags: prompt.modelTags || [],
       prompt: prompt.prompt || '',
       source: prompt.source || '',
-      imageUrl: imageUrls.length > 0 ? imageUrls[0] : '',
+      imageUrl: primaryImageUrl || '',
       imageUrls: imageUrls,
       category: prompt.category || '',
     });

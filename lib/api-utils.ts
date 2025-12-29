@@ -5,16 +5,10 @@
 
 import { NextResponse } from 'next/server';
 import { z, ZodSchema } from 'zod';
+import type { ApiResponse, CreatePromptInput, UpdatePromptInput } from '@/types';
 
-/**
- * Standard API response type
- */
-export interface ApiResponse<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
-}
+// Re-export types for backward compatibility
+export type { ApiResponse, CreatePromptInput, UpdatePromptInput };
 
 /**
  * Create a successful API response
@@ -186,6 +180,7 @@ export const createPromptSchema = z.object({
   prompt: z.string().min(1, 'Prompt content is required'),
   source: z.string().optional().default('unknown'),
   imageUrl: z.string().optional(),
+  imageUrls: z.array(z.string()).optional(),
   category: z.string().optional(),
 });
 
@@ -207,12 +202,11 @@ export const importDataSchema = z.object({
       prompt: z.string().min(1),
       source: z.string().optional(),
       imageUrl: z.string().optional(),
+      imageUrls: z.array(z.string()).optional(),
       category: z.string().optional(),
     })
   ),
   mode: z.enum(['merge', 'replace']).optional().default('merge'),
 });
 
-export type CreatePromptInput = z.infer<typeof createPromptSchema>;
-export type UpdatePromptInput = z.infer<typeof updatePromptSchema>;
 export type ImportDataInput = z.infer<typeof importDataSchema>;
