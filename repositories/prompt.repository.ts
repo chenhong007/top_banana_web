@@ -301,59 +301,77 @@ class PromptRepository extends BaseRepository<
   }
 
   /**
-   * Bulk create prompts (optimized with transaction)
+   * Bulk create prompts (optimized with batch processing)
+   * Uses smaller batches to avoid transaction timeout issues
    */
   async bulkCreate(items: CreatePromptInput[]): Promise<{ success: number; failed: number }> {
     let success = 0;
     let failed = 0;
 
-    // Use transaction for batch operations
-    await this.withTransaction(async (tx) => {
-      for (const item of items) {
-        try {
-          const categoryName = item.category || DEFAULT_CATEGORY;
-          
-          // 使用统一的图片处理工具函数
-          const { primaryImageUrl, imageUrls } = normalizeImageUrls(item.imageUrl, item.imageUrls);
+    // 分批处理，每批最多 50 条，避免事务超时
+    const BATCH_SIZE = 50;
+    const batches: CreatePromptInput[][] = [];
+    
+    for (let i = 0; i < items.length; i += BATCH_SIZE) {
+      batches.push(items.slice(i, i + BATCH_SIZE));
+    }
 
-          await tx.prompt.create({
-            data: {
-              effect: item.effect,
-              description: item.description,
-              prompt: item.prompt,
-              source: item.source,
-              imageUrl: primaryImageUrl || null,
-              imageUrls: imageUrls,
-              tags: {
-                connectOrCreate: item.tags.map((name) => ({
-                  where: { name },
-                  create: { name },
-                })),
-              },
-              modelTags:
-                item.modelTags && item.modelTags.length > 0
-                  ? {
-                      connectOrCreate: item.modelTags.map((name) => ({
-                        where: { name },
-                        create: { name },
-                      })),
-                    }
-                  : undefined,
-              category: {
-                connectOrCreate: {
-                  where: { name: categoryName },
-                  create: { name: categoryName },
+    // 逐批处理
+    for (const batch of batches) {
+      try {
+        // 每批使用独立的事务，设置 120 秒超时
+        await this.withTransaction(async (tx) => {
+          for (const item of batch) {
+            try {
+              const categoryName = item.category || DEFAULT_CATEGORY;
+              
+              // 使用统一的图片处理工具函数
+              const { primaryImageUrl, imageUrls } = normalizeImageUrls(item.imageUrl, item.imageUrls);
+
+              await tx.prompt.create({
+                data: {
+                  effect: item.effect,
+                  description: item.description,
+                  prompt: item.prompt,
+                  source: item.source,
+                  imageUrl: primaryImageUrl || null,
+                  imageUrls: imageUrls,
+                  tags: {
+                    connectOrCreate: item.tags.map((name) => ({
+                      where: { name },
+                      create: { name },
+                    })),
+                  },
+                  modelTags:
+                    item.modelTags && item.modelTags.length > 0
+                      ? {
+                          connectOrCreate: item.modelTags.map((name) => ({
+                            where: { name },
+                            create: { name },
+                          })),
+                        }
+                      : undefined,
+                  category: {
+                    connectOrCreate: {
+                      where: { name: categoryName },
+                      create: { name: categoryName },
+                    },
+                  },
                 },
-              },
-            },
-          });
-          success++;
-        } catch (error) {
-          console.error(`Failed to import prompt "${item.effect}":`, error);
-          failed++;
-        }
+              });
+              success++;
+            } catch (error) {
+              console.error(`Failed to import prompt "${item.effect}":`, error);
+              failed++;
+            }
+          }
+        }, { timeout: 120000 }); // 120 秒超时
+      } catch (batchError) {
+        // 如果整批事务失败，记录失败数量
+        console.error(`Batch transaction failed:`, batchError);
+        failed += batch.length;
       }
-    });
+    }
 
     return { success, failed };
   }

@@ -21,11 +21,17 @@ export abstract class BaseRepository<TModel, TCreateData, TUpdateData, TDto> {
 
   /**
    * Execute operation within a transaction
+   * @param operation - The operation to execute
+   * @param options - Transaction options (timeout in ms, default 60000ms = 60s)
    */
   protected async withTransaction<T>(
-    operation: (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => Promise<T>
+    operation: (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => Promise<T>,
+    options?: { timeout?: number; maxWait?: number }
   ): Promise<T> {
-    return this.prisma.$transaction(operation);
+    return this.prisma.$transaction(operation, {
+      timeout: options?.timeout ?? 60000,  // 默认 60 秒超时
+      maxWait: options?.maxWait ?? 10000,  // 默认最大等待 10 秒
+    });
   }
 
   /**
