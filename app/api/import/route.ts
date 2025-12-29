@@ -43,17 +43,70 @@ export async function POST(request: NextRequest) {
     }
 
     // Transform and validate imported items
+    // 统一字段映射规则：
+    // - title/标题 → effect (标题) - 必填
+    // - description/描述 → description (描述) - 可选
+    // - prompt/提示词 → prompt (提示词) - 必填
+    // - source/来源 → source (来源) - 可选
+    // - tags/标签 → tags (标签数组) - 可选，支持多个标签
+    // - imageUrl/图片 → imageUrl (主图片) - 可选
+    // - imageUrls/图片列表 → imageUrls (图片数组) - 可选，支持多个图片
+    // - modelTags/模型标签 → modelTags (默认: ['Banana'])
+    // - category/生成类型 → category (默认: '文生图')
     const newPrompts = items.map((item: Record<string, unknown>) => {
-      // Flexible field mapping
-      const effect = (item.effect || item.效果 || item.title || '') as string;
-      const description = (item.description || item.描述 || item.desc || item.title || '') as string;
+      // 标题字段映射 (title/标题 → effect)
+      const effect = (item.title || item.标题 || item.effect || item.效果 || '') as string;
+      
+      // 描述字段映射 (description/描述)
+      const description = (item.description || item.描述 || item.desc || '') as string;
+      
+      // 提示词字段映射 (prompt/提示词)
       const prompt = (item.prompt || item.提示词 || item.content || '') as string;
+      
+      // 来源字段映射 (source/来源)
       const source = (item.source || item.来源 || item.提示词来源 || item.link || '') as string;
+      
+      // 标签字段映射 (tags/标签)
       const tags = item.tags || item.标签 || item.评测对象 || item.场景标签 || [];
-      const modelTags = item.modelTags || item.AI模型 || item.模型标签 || item.模型 || [];
-      const imageUrl = (item.imageUrl || item.图片 || item.image || item.preview || '') as string;
-      // Category field mapping - defaults to '文生图'
-      const category = (item.category || item.类别 || item.分类 || item.生成类型 || DEFAULT_CATEGORY) as string;
+      
+      // 模型标签字段映射 (modelTags/模型标签)
+      const modelTags = item.modelTags || item.模型标签 || item.AI模型 || item.模型 || [];
+      
+      // 图片字段映射 - 支持多个图片
+      // imageUrl/图片 可以是单个字符串或数组
+      // imageUrls/图片列表 是图片数组
+      const rawImageUrl = item.imageUrl || item.图片 || item.image || item.preview || '';
+      const rawImageUrls = item.imageUrls || item.图片列表 || [];
+      
+      // 收集所有图片到 imageUrls 数组
+      let imageUrls: string[] = [];
+      
+      // 1. 先处理 imageUrls 字段（可能是数组或嵌套数组）
+      if (Array.isArray(rawImageUrls)) {
+        imageUrls = rawImageUrls.flat().filter((url): url is string => typeof url === 'string' && url.trim().length > 0);
+      }
+      
+      // 2. 处理 imageUrl 字段（可能是字符串或数组）
+      if (Array.isArray(rawImageUrl)) {
+        // 如果 imageUrl 是数组，合并到 imageUrls
+        const urlsFromImageUrl = rawImageUrl.filter((url): url is string => typeof url === 'string' && url.trim().length > 0);
+        imageUrls = [...new Set([...imageUrls, ...urlsFromImageUrl])]; // 去重
+      } else if (typeof rawImageUrl === 'string' && rawImageUrl.trim()) {
+        // 如果 imageUrl 是字符串，添加到数组开头（作为主图片）
+        if (!imageUrls.includes(rawImageUrl.trim())) {
+          imageUrls.unshift(rawImageUrl.trim());
+        }
+      }
+      
+      // 主图片是 imageUrls 的第一个
+      const imageUrl = imageUrls[0] || '';
+      
+      // 生成类型字段映射 (category/生成类型) - 默认为 '文生图'
+      // Handle category - could be string or array
+      const rawCategory = item.category || item.生成类型 || item.类别 || item.分类 || '';
+      const category = Array.isArray(rawCategory)
+        ? (rawCategory[0] || '') as string
+        : rawCategory as string;
 
       // Parse tags if it's a string
       let parsedTags = tags;
@@ -72,16 +125,24 @@ export async function POST(request: NextRequest) {
           .map((t: string) => t.trim())
           .filter((t: string) => t);
       }
+      
+      // 确保 modelTags 是数组，如果为空则默认设置为 ['Banana']
+      const finalModelTags = Array.isArray(parsedModelTags) ? parsedModelTags : [];
+      const modelTagsWithDefault = finalModelTags.length > 0 ? finalModelTags : ['Banana'];
+      
+      // 确保 category 有值，如果为空则默认设置为 '文生图'
+      const categoryWithDefault = category.trim() || DEFAULT_CATEGORY;
 
       return {
         effect,
         description: description || '',
         tags: Array.isArray(parsedTags) ? parsedTags : [],
-        modelTags: Array.isArray(parsedModelTags) ? parsedModelTags : [],
+        modelTags: modelTagsWithDefault,
         prompt,
         source: source || 'unknown',
         imageUrl: imageUrl || undefined,
-        category,
+        imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+        category: categoryWithDefault,
       };
     });
 
@@ -89,8 +150,26 @@ export async function POST(request: NextRequest) {
     const invalidItems = newPrompts.filter((item) => !item.effect || !item.prompt);
 
     if (invalidItems.length > 0) {
+      // 提供更详细的错误信息，帮助调试
+      const missingEffect = newPrompts.filter((item) => !item.effect).length;
+      const missingPrompt = newPrompts.filter((item) => !item.prompt).length;
+      const sampleInvalid = invalidItems.slice(0, 3).map((item, i) => ({
+        index: i,
+        hasEffect: !!item.effect,
+        hasPrompt: !!item.prompt,
+        effectPreview: item.effect ? item.effect.substring(0, 30) : '(空)',
+        promptPreview: item.prompt ? item.prompt.substring(0, 30) : '(空)',
+      }));
+      
+      console.error('[Import] Invalid items detected:', {
+        total: invalidItems.length,
+        missingEffect,
+        missingPrompt,
+        sampleInvalid,
+      });
+      
       return badRequestResponse(
-        `${invalidItems.length} items missing required fields (effect, prompt)`
+        `${invalidItems.length} 条数据缺少必需字段。缺少effect(标题): ${missingEffect}条，缺少prompt(提示词): ${missingPrompt}条。示例: ${JSON.stringify(sampleInvalid)}`
       );
     }
 

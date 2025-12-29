@@ -32,6 +32,15 @@ export const revalidate = 0; // 禁用缓存
 const API_VERSION = 'v1.1';
 
 // 配置常量 - 从环境变量读取，提供默认值
+// 统一字段映射规则：
+// - title → effect (标题)
+// - description → description (描述)
+// - prompts[0] → prompt (提示词)
+// - source.url → source (来源)
+// - tags → tags (标签)
+// - images → imageUrls (图片)
+// - modelTags → modelTags (默认: ['Banana'])
+// - category → category (默认: '文生图')
 const IMAGE_URL_PREFIX = process.env.IMAGE_URL_PREFIX || 'https://opennana.com/awesome-prompt-gallery/';
 const SIMILARITY_THRESHOLD = parseFloat(process.env.SIMILARITY_THRESHOLD || '0.9');
 const MAX_TAGS = parseInt(process.env.MAX_IMPORT_TAGS || '3', 10);

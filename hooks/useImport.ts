@@ -206,6 +206,17 @@ export function useImport(onSuccess?: () => void) {
         if (response.status === 413) {
           return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: '请求数据过大' };
         }
+        // 尝试从响应中解析详细错误信息
+        try {
+          const errorResult = JSON.parse(responseText);
+          if (errorResult.error) {
+            return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: errorResult.error };
+          }
+        } catch {
+          // 解析失败，使用原始文本（截取前200字符）
+          const errorPreview = responseText.length > 200 ? responseText.substring(0, 200) + '...' : responseText;
+          console.error('[Import] Server error response:', errorPreview);
+        }
         return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: `服务器错误 (${response.status})` };
       }
 
