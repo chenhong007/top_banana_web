@@ -18,6 +18,9 @@ import { requireAuth } from '@/lib/security';
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
+// Increase timeout for large imports (60 seconds)
+export const maxDuration = 60;
+
 // POST import prompts from external data (requires authentication)
 export async function POST(request: NextRequest) {
   // Check authentication

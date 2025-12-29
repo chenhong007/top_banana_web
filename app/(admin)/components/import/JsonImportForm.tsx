@@ -25,9 +25,86 @@ function formatFileSize(bytes: number): string {
 }
 
 /**
+ * 获取 JSON 错误的详细位置信息
+ * 解析错误消息中的位置信息，并找出对应的行号和上下文
+ */
+function getJsonErrorDetails(jsonData: string, error: SyntaxError): { 
+  line: number; 
+  column: number; 
+  context: string; 
+  message: string;
+} {
+  const errorMessage = error.message;
+  
+  // 尝试从错误消息中提取位置信息
+  // 常见格式: "Unexpected token X at position N" 或 "Unexpected token X in JSON at position N"
+  const positionMatch = errorMessage.match(/position\s+(\d+)/i);
+  
+  if (positionMatch) {
+    const position = parseInt(positionMatch[1], 10);
+    
+    // 计算行号和列号
+    const beforeError = jsonData.substring(0, position);
+    const lines = beforeError.split('\n');
+    const lineNumber = lines.length;
+    const columnNumber = lines[lines.length - 1].length + 1;
+    
+    // 获取错误行的上下文（前后各2行）
+    const allLines = jsonData.split('\n');
+    const startLine = Math.max(0, lineNumber - 3);
+    const endLine = Math.min(allLines.length, lineNumber + 2);
+    const contextLines = allLines.slice(startLine, endLine).map((line, idx) => {
+      const currentLineNum = startLine + idx + 1;
+      const prefix = currentLineNum === lineNumber ? '>>> ' : '    ';
+      const lineNumStr = String(currentLineNum).padStart(5, ' ');
+      return `${prefix}${lineNumStr} | ${line}`;
+    });
+    
+    return {
+      line: lineNumber,
+      column: columnNumber,
+      context: contextLines.join('\n'),
+      message: errorMessage,
+    };
+  }
+  
+  // 如果无法解析位置，尝试逐行解析来找到错误
+  const lines = jsonData.split('\n');
+  let accumulatedLength = 0;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const testJson = lines.slice(0, i + 1).join('\n');
+    try {
+      // 尝试解析，看是否能找到第一个错误
+      JSON.parse(testJson + (testJson.trim().endsWith(']') || testJson.trim().endsWith('}') ? '' : ']}'));
+    } catch {
+      // 继续尝试
+    }
+    accumulatedLength += lines[i].length + 1;
+  }
+  
+  return {
+    line: 0,
+    column: 0,
+    context: '',
+    message: errorMessage,
+  };
+}
+
+/**
  * 解析 JSON 数据获取摘要信息
  */
-function getJsonSummary(jsonData: string): { itemCount: number; isValid: boolean; error?: string } {
+function getJsonSummary(jsonData: string): { 
+  itemCount: number; 
+  isValid: boolean; 
+  error?: string;
+  errorDetails?: {
+    line: number;
+    column: number;
+    context: string;
+    message: string;
+  };
+} {
   if (!jsonData) return { itemCount: 0, isValid: false };
   try {
     const items = JSON.parse(jsonData);
@@ -36,7 +113,19 @@ function getJsonSummary(jsonData: string): { itemCount: number; isValid: boolean
     }
     return { itemCount: 0, isValid: false, error: '数据格式错误：需要数组格式' };
   } catch (e) {
-    return { itemCount: 0, isValid: false, error: 'JSON 格式无效' };
+    if (e instanceof SyntaxError) {
+      const errorDetails = getJsonErrorDetails(jsonData, e);
+      const errorMsg = errorDetails.line > 0 
+        ? `JSON 格式错误（第 ${errorDetails.line} 行，第 ${errorDetails.column} 列）`
+        : `JSON 格式错误：${e.message}`;
+      return { 
+        itemCount: 0, 
+        isValid: false, 
+        error: errorMsg,
+        errorDetails,
+      };
+    }
+    return { itemCount: 0, isValid: false, error: 'JSON 解析错误' };
   }
 }
 
@@ -118,6 +207,19 @@ export default function JsonImportForm({
               <div className="mt-2 text-sm text-red-700">
                 {jsonSummary.error || '数据格式错误'}
               </div>
+              {jsonSummary.errorDetails?.context && (
+                <div className="mt-3">
+                  <p className="text-xs font-medium text-red-800 mb-1">
+                    错误位置附近的代码（&gt;&gt;&gt; 标记的是错误行）：
+                  </p>
+                  <pre className="text-xs bg-red-100 p-3 rounded overflow-x-auto whitespace-pre font-mono border border-red-200">
+                    {jsonSummary.errorDetails.context}
+                  </pre>
+                  <p className="text-xs text-red-600 mt-2">
+                    提示：请检查该行附近是否有缺少逗号、引号未闭合、括号不匹配等问题
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

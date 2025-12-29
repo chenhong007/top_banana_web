@@ -121,22 +121,84 @@ export function useImport(onSuccess?: () => void) {
     setError('');
     setSuccess('');
 
+    // 步骤1：先解析本地 JSON 数据
+    let items;
     try {
-      const items = JSON.parse(jsonData);
-
-      if (!Array.isArray(items)) {
-        setError(MESSAGES.ERROR.IMPORT_JSON_FORMAT);
-        setLoading(false);
-        return;
+      items = JSON.parse(jsonData);
+    } catch (parseErr) {
+      // JSON 解析错误 - 提供详细的错误位置信息
+      if (parseErr instanceof SyntaxError) {
+        const errorMessage = parseErr.message;
+        const positionMatch = errorMessage.match(/position\s+(\d+)/i);
+        
+        if (positionMatch && jsonData) {
+          const position = parseInt(positionMatch[1], 10);
+          const beforeError = jsonData.substring(0, position);
+          const lines = beforeError.split('\n');
+          const lineNumber = lines.length;
+          const columnNumber = lines[lines.length - 1].length + 1;
+          
+          // 获取错误行的上下文
+          const allLines = jsonData.split('\n');
+          const errorLine = allLines[lineNumber - 1] || '';
+          const trimmedLine = errorLine.length > 50 
+            ? errorLine.substring(0, 50) + '...' 
+            : errorLine;
+          
+          setError(
+            `JSON 格式错误：第 ${lineNumber} 行，第 ${columnNumber} 列\n` +
+            `错误内容: "${trimmedLine}"\n` +
+            `原始错误: ${errorMessage}`
+          );
+        } else {
+          setError(MESSAGES.ERROR.IMPORT_JSON_SYNTAX(errorMessage));
+        }
+      } else {
+        setError(MESSAGES.ERROR.IMPORT_JSON_SYNTAX(parseErr instanceof Error ? parseErr.message : '未知错误'));
       }
+      setLoading(false);
+      return;
+    }
 
+    // 步骤2：验证数据格式
+    if (!Array.isArray(items)) {
+      setError(MESSAGES.ERROR.IMPORT_JSON_FORMAT);
+      setLoading(false);
+      return;
+    }
+
+    // 步骤3：发送 API 请求
+    try {
       const response = await fetch(API_ENDPOINTS.IMPORT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items, mode: importMode }),
       });
 
-      const result = await response.json();
+      // 先获取响应文本
+      const responseText = await response.text();
+      
+      // 检查 HTTP 状态码
+      if (!response.ok) {
+        // 检查是否是请求体过大的错误
+        if (response.status === 413 || responseText.includes('Request Entity Too Large') || responseText.includes('PayloadTooLargeError')) {
+          setError(`请求数据过大（${items.length} 条记录）。请尝试分批导入或减少数据量。`);
+        } else {
+          setError(`服务器错误 (${response.status}): ${responseText.substring(0, 200)}`);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // 解析响应 JSON
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        setError(`服务器响应格式错误: ${responseText.substring(0, 200)}`);
+        setLoading(false);
+        return;
+      }
 
       if (result.success) {
         setSuccess(MESSAGES.SUCCESS.IMPORT(result.data.imported));
@@ -148,11 +210,7 @@ export function useImport(onSuccess?: () => void) {
         setError(result.error || MESSAGES.ERROR.IMPORT);
       }
     } catch (err) {
-      if (err instanceof SyntaxError) {
-        setError(MESSAGES.ERROR.IMPORT_JSON_SYNTAX(err.message));
-      } else {
-        setError(MESSAGES.ERROR.IMPORT + '：' + (err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
-      }
+      setError(MESSAGES.ERROR.NETWORK(err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
     } finally {
       setLoading(false);
     }
