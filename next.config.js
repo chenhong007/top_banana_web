@@ -62,6 +62,15 @@ const baseConfig = {
         protocol: 'https',
         hostname: '**.zhimg.com',
       },
+      // YouMind CDN
+      {
+        protocol: 'https',
+        hostname: 'youmind.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cms-assets.youmind.com',
+      },
     ],
   },
 };

@@ -13,7 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import { uploadImageFromUrl, isR2Configured } from '@/lib/r2';
+import { uploadImageFromUrl, isR2Configured, isR2ImageUrl } from '@/lib/r2';
 import { checkPromptSimilarity } from '@/lib/text-similarity';
 import fs from 'fs';
 import path from 'path';
@@ -48,20 +48,29 @@ const MAX_TAGS = parseInt(process.env.MAX_IMPORT_TAGS || '3', 10);
 const DEFAULT_MODEL_TAG = process.env.DEFAULT_MODEL_TAG || 'Banana';
 const DEFAULT_CATEGORY = process.env.DEFAULT_CATEGORY || '文生图';
 
-// 类型定义
+// 类型定义 - 支持新旧两种格式
 interface JsonPromptItem {
-  id: number;
-  slug: string;
+  // 通用字段
+  id: number | string;
   title: string;
-  source: {
+  tags: string[];
+  
+  // 旧格式字段
+  slug?: string;
+  source?: {
     name: string;
     url: string;
-  };
-  model: string;
-  images: string[];
-  prompts: string[];
-  tags: string[];
-  coverImage: string;
+  } | string;  // 新格式中 source 是字符串
+  model?: string;
+  images?: string[];  // 旧格式：相对路径数组
+  prompts?: string[];
+  coverImage?: string;
+  
+  // 新格式字段
+  description?: string;
+  prompt?: string;     // 新格式：直接的 prompt 字符串
+  imageUrl?: string | string[];  // 新格式：完整 URL 或 URL 数组
+  modelTags?: string[];
 }
 
 interface ImportStats {
@@ -188,47 +197,142 @@ function checkSimilarity(
 }
 
 /**
- * 处理图片（优化版：并行上传）
+ * 处理图片（优化版：并行上传，支持完整URL和相对路径）
  */
 async function processImages(images: string[], skipR2: boolean): Promise<{ urls: string[]; successCount: number; failedCount: number }> {
   const urls: string[] = [];
   let successCount = 0;
   let failedCount = 0;
 
+  if (!images || images.length === 0) {
+    return { urls: [], successCount: 0, failedCount: 0 };
+  }
+
+  // 如果跳过 R2 或 R2 未配置
   if (skipR2 || !isR2Configured()) {
     for (const image of images) {
-      urls.push(IMAGE_URL_PREFIX + image);
+      // 判断是否已经是完整 URL
+      if (image.startsWith('http://') || image.startsWith('https://')) {
+        urls.push(image);
+      } else {
+        // 相对路径需要添加前缀
+        urls.push(IMAGE_URL_PREFIX + image);
+      }
     }
     return { urls, successCount: 0, failedCount: 0 };
   }
 
-  // 优化：并行上传所有图片
-  const uploadPromises = images.map(async (image) => {
-    const fullUrl = IMAGE_URL_PREFIX + image;
-    try {
-      const result = await uploadImageFromUrl(fullUrl);
-      if (result.success && result.url) {
-        return { url: result.url, success: true };
+  // 优化：并行上传所有图片（限制并发数为 5）
+  const CONCURRENCY = 5;
+  for (let i = 0; i < images.length; i += CONCURRENCY) {
+    const batch = images.slice(i, i + CONCURRENCY);
+    const uploadPromises = batch.map(async (image) => {
+      // 判断是否已经是完整 URL
+      let fullUrl: string;
+      if (image.startsWith('http://') || image.startsWith('https://')) {
+        fullUrl = image;
       } else {
+        // 相对路径需要添加前缀
+        fullUrl = IMAGE_URL_PREFIX + image;
+      }
+      
+      // 如果已经是 R2 URL，直接返回
+      if (isR2ImageUrl(fullUrl)) {
+        return { url: fullUrl, success: false, skipped: true };
+      }
+
+      try {
+        const result = await uploadImageFromUrl(fullUrl);
+        if (result.success && result.url) {
+          return { url: result.url, success: true };
+        } else {
+          console.warn(`[JSON Import] Failed to upload image: ${fullUrl} - ${result.error}`);
+          return { url: fullUrl, success: false };
+        }
+      } catch (error) {
+        console.warn(`[JSON Import] Error uploading image: ${fullUrl}`, error);
         return { url: fullUrl, success: false };
       }
-    } catch {
-      return { url: fullUrl, success: false };
-    }
-  });
+    });
 
-  const results = await Promise.all(uploadPromises);
+    const results = await Promise.all(uploadPromises);
   
-  for (const result of results) {
-    urls.push(result.url);
-    if (result.success) {
-      successCount++;
-    } else {
-      failedCount++;
+    for (const result of results) {
+      urls.push(result.url);
+      if (result.success) {
+        successCount++;
+      } else if (!(result as { skipped?: boolean }).skipped) {
+        failedCount++;
+      }
     }
   }
 
   return { urls, successCount, failedCount };
+}
+
+/**
+ * 从 item 中提取 source URL（支持新旧格式）
+ */
+function extractSourceUrl(item: JsonPromptItem): string {
+  // 新格式：source 是字符串
+  if (typeof item.source === 'string') {
+    return item.source;
+  }
+  // 旧格式：source 是对象
+  if (item.source && typeof item.source === 'object' && 'url' in item.source) {
+    return item.source.url || 'unknown';
+  }
+  return 'unknown';
+}
+
+/**
+ * 从 item 中提取 prompt 文本（支持新旧格式）
+ */
+function extractPromptText(item: JsonPromptItem): string {
+  // 新格式：直接使用 prompt 字段
+  if (item.prompt && typeof item.prompt === 'string') {
+    return item.prompt;
+  }
+  // 旧格式：使用 prompts 数组的第一个
+  if (item.prompts && Array.isArray(item.prompts) && item.prompts.length > 0) {
+    return item.prompts[0];
+  }
+  return '';
+}
+
+/**
+ * 从 item 中提取图片 URL 数组（支持新旧格式）
+ */
+function extractImageUrls(item: JsonPromptItem): string[] {
+  const urls: string[] = [];
+  
+  // 新格式：使用 imageUrl 字段（可能是字符串或数组）
+  if (item.imageUrl) {
+    if (Array.isArray(item.imageUrl)) {
+      urls.push(...item.imageUrl.filter(u => u && typeof u === 'string'));
+    } else if (typeof item.imageUrl === 'string') {
+      urls.push(item.imageUrl);
+    }
+  }
+  
+  // 旧格式：使用 images 数组（相对路径）
+  if (item.images && Array.isArray(item.images)) {
+    urls.push(...item.images.filter(u => u && typeof u === 'string'));
+  }
+  
+  return urls;
+}
+
+/**
+ * 从 item 中提取 modelTags（支持新旧格式）
+ */
+function extractModelTags(item: JsonPromptItem): string[] {
+  // 新格式：使用 modelTags
+  if (item.modelTags && Array.isArray(item.modelTags) && item.modelTags.length > 0) {
+    return item.modelTags;
+  }
+  // 默认值
+  return [DEFAULT_MODEL_TAG];
 }
 
 /**
@@ -240,15 +344,17 @@ async function createPrompt(
   tags: string[],
   createdAt?: Date
 ): Promise<void> {
-  const promptText = item.prompts[0] || '';
-  const description = generateDescription(item.title, promptText);
+  const promptText = extractPromptText(item);
+  const sourceUrl = extractSourceUrl(item);
+  const description = item.description || generateDescription(item.title, promptText);
+  const modelTags = extractModelTags(item);
 
   await prisma.prompt.create({
     data: {
       effect: item.title,
       description: description,
       prompt: promptText,
-      source: item.source.url,
+      source: sourceUrl,
       imageUrl: imageUrls[0] || null,
       imageUrls: imageUrls,
       tags: {
@@ -258,10 +364,10 @@ async function createPrompt(
         })),
       },
       modelTags: {
-        connectOrCreate: {
-          where: { name: DEFAULT_MODEL_TAG },
-          create: { name: DEFAULT_MODEL_TAG },
-        },
+        connectOrCreate: modelTags.map((name) => ({
+          where: { name },
+          create: { name },
+        })),
       },
       category: {
         connectOrCreate: {
@@ -335,19 +441,23 @@ export async function POST(request: NextRequest) {
     // 处理每条数据
     for (const item of itemsToProcess) {
       stats.processed++;
-      const itemStartTime = Date.now();
 
       try {
+        // 提取 source URL（支持新旧格式）
+        const sourceUrl = extractSourceUrl(item);
+        
         // 检查 URL 重复
-        if (item.source.url && item.source.url !== 'unknown') {
-          if (existingSources.has(item.source.url) || batchSources.has(item.source.url)) {
+        if (sourceUrl && sourceUrl !== 'unknown') {
+          if (existingSources.has(sourceUrl) || batchSources.has(sourceUrl)) {
             stats.skippedByUrl++;
             continue;
           }
         }
 
+        // 提取 prompt 文本（支持新旧格式）
+        const promptText = extractPromptText(item);
+        
         // 检查相似度
-        const promptText = item.prompts[0] || '';
         if (promptText) {
           const dbSimilarity = checkSimilarity(promptText, existingPrompts);
           if (dbSimilarity.isSimilar) {
@@ -362,20 +472,23 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // 处理图片
-        const imageResult = await processImages(item.images, skipR2);
+        // 提取图片 URL（支持新旧格式）
+        const rawImageUrls = extractImageUrls(item);
+        
+        // 处理图片 - 下载并上传到 R2
+        const imageResult = await processImages(rawImageUrls, skipR2);
         stats.imageUploadSuccess += imageResult.successCount;
         stats.imageUploadFailed += imageResult.failedCount;
 
         // 匹配标签
-        const matchedTags = matchTags(item.tags, existingTags);
+        const matchedTags = matchTags(item.tags || [], existingTags);
 
         // 创建记录
         await createPrompt(item, imageResult.urls, matchedTags, parsedCreatedAt);
 
         // 添加到批次跟踪
-        if (item.source.url && item.source.url !== 'unknown') {
-          batchSources.add(item.source.url);
+        if (sourceUrl && sourceUrl !== 'unknown') {
+          batchSources.add(sourceUrl);
         }
         if (promptText) {
           batchPrompts.push({ id: `batch-${batchPrompts.length}`, prompt: promptText });

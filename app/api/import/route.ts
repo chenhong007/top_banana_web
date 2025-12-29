@@ -1,6 +1,8 @@
 /**
  * Import API Route
  * POST /api/import - Import prompts from external data (requires authentication)
+ * 
+ * v2.0: 支持自动下载外部图片并上传到 R2 存储
  */
 
 import { NextRequest } from 'next/server';
@@ -15,12 +17,79 @@ import {
 } from '@/lib/api-utils';
 import { filterDuplicates, DuplicateType } from '@/lib/duplicate-checker';
 import { requireAuth } from '@/lib/security';
+import { uploadImageFromUrl, isR2Configured, isR2ImageUrl } from '@/lib/r2';
 
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
 // Increase timeout for large imports (Vercel Pro: 最大 300 秒)
 export const maxDuration = 300;
+
+/**
+ * 处理图片 URL - 如果是外部 URL，下载并上传到 R2
+ * @param imageUrls - 图片 URL 数组
+ * @param skipR2 - 是否跳过 R2 上传
+ * @returns 处理后的图片 URL 数组和统计信息
+ */
+async function processImageUrls(
+  imageUrls: string[],
+  skipR2: boolean
+): Promise<{ urls: string[]; uploaded: number; failed: number }> {
+  if (!imageUrls || imageUrls.length === 0) {
+    return { urls: [], uploaded: 0, failed: 0 };
+  }
+
+  // 如果跳过 R2 或 R2 未配置，直接返回原始 URL
+  if (skipR2 || !isR2Configured()) {
+    return { urls: imageUrls, uploaded: 0, failed: 0 };
+  }
+
+  const processedUrls: string[] = [];
+  let uploaded = 0;
+  let failed = 0;
+
+  // 并行处理所有图片（限制并发数为 5）
+  const CONCURRENCY = 5;
+  for (let i = 0; i < imageUrls.length; i += CONCURRENCY) {
+    const batch = imageUrls.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(
+      batch.map(async (url) => {
+        // 如果已经是 R2 URL，直接返回
+        if (isR2ImageUrl(url)) {
+          return { url, uploaded: false };
+        }
+
+        // 如果是外部 URL，下载并上传到 R2
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+          try {
+            const result = await uploadImageFromUrl(url);
+            if (result.success && result.url) {
+              return { url: result.url, uploaded: true };
+            } else {
+              console.warn(`[Import] Failed to upload image: ${url} - ${result.error}`);
+              // 上传失败时保留原始 URL
+              return { url, uploaded: false, failed: true };
+            }
+          } catch (error) {
+            console.warn(`[Import] Error uploading image: ${url}`, error);
+            return { url, uploaded: false, failed: true };
+          }
+        }
+
+        // 其他情况（相对路径等）保持原样
+        return { url, uploaded: false };
+      })
+    );
+
+    for (const result of results) {
+      processedUrls.push(result.url);
+      if (result.uploaded) uploaded++;
+      if ((result as { failed?: boolean }).failed) failed++;
+    }
+  }
+
+  return { urls: processedUrls, uploaded, failed };
+}
 
 // POST import prompts from external data (requires authentication)
 export async function POST(request: NextRequest) {
@@ -37,11 +106,16 @@ export async function POST(request: NextRequest) {
       fastMode = false,
       // 新增：采样大小 - 只检查最近N条记录的相似度
       sampleSize = 200,
+      // 新增：是否跳过 R2 上传（默认 false，即自动上传）
+      skipR2 = false,
     } = body; // mode: 'merge' or 'replace'
 
     if (!Array.isArray(items) || items.length === 0) {
       return badRequestResponse('Invalid data format');
     }
+
+    // 图片上传统计
+    let imageUploadStats = { uploaded: 0, failed: 0 };
 
     // Transform and validate imported items
     // 统一字段映射规则：
@@ -54,7 +128,9 @@ export async function POST(request: NextRequest) {
     // - imageUrls/图片列表 → imageUrls (图片数组) - 可选，支持多个图片
     // - modelTags/模型标签 → modelTags (默认: ['Banana'])
     // - category/生成类型 → category (默认: '文生图')
-    const newPrompts = items.map((item: Record<string, unknown>) => {
+    
+    // 第一步：解析所有数据字段
+    const parsedItems = items.map((item: Record<string, unknown>) => {
       // 标题字段映射 (title/标题 → effect)
       const effect = (item.title || item.标题 || item.effect || item.效果 || '') as string;
       
@@ -99,9 +175,6 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // 主图片是 imageUrls 的第一个
-      const imageUrl = imageUrls[0] || '';
-      
       // 生成类型字段映射 (category/生成类型) - 默认为 '文生图'
       // Handle category - could be string or array
       const rawCategory = item.category || item.生成类型 || item.类别 || item.分类 || '';
@@ -141,11 +214,36 @@ export async function POST(request: NextRequest) {
         modelTags: modelTagsWithDefault,
         prompt,
         source: source || 'unknown',
-        imageUrl: imageUrl || undefined,
-        imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+        imageUrls, // 先保存原始 URL，后面会处理
         category: categoryWithDefault,
       };
     });
+
+    // 第二步：处理图片上传到 R2（如果启用）
+    console.log(`[Import] Processing images for ${parsedItems.length} items, skipR2=${skipR2}, r2Configured=${isR2Configured()}`);
+    
+    const newPrompts = await Promise.all(
+      parsedItems.map(async (item) => {
+        // 处理图片 URL - 下载外部图片并上传到 R2
+        const imageResult = await processImageUrls(item.imageUrls, skipR2);
+        
+        // 累加统计
+        imageUploadStats.uploaded += imageResult.uploaded;
+        imageUploadStats.failed += imageResult.failed;
+
+        // 主图片是处理后的第一个 URL
+        const imageUrl = imageResult.urls[0] || '';
+        const imageUrls = imageResult.urls;
+
+        return {
+          ...item,
+          imageUrl: imageUrl || undefined,
+          imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+        };
+      })
+    );
+    
+    console.log(`[Import] Image processing complete: ${imageUploadStats.uploaded} uploaded, ${imageUploadStats.failed} failed`);
 
     // Validate required fields - only effect and prompt are required
     const invalidItems = newPrompts.filter((item) => !item.effect || !item.prompt);
@@ -276,6 +374,13 @@ export async function POST(request: NextRequest) {
       failed: failedCount,           // 导入失败的数量（数据库错误等）
       total: totalCount,             // 数据库中的总数
       mode,
+      // 新增：图片上传统计
+      imageUpload: {
+        uploaded: imageUploadStats.uploaded,    // 成功上传到 R2 的图片数
+        failed: imageUploadStats.failed,        // 上传失败的图片数
+        r2Configured: isR2Configured(),         // R2 是否已配置
+        skipR2,                                 // 是否跳过 R2 上传
+      },
       duplicatesFiltered: duplicateStats ? {
         byImageUrl: duplicateStats.imageUrl,
         bySource: duplicateStats.source,

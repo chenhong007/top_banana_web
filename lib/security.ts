@@ -131,6 +131,8 @@ const ALLOWED_IMAGE_DOMAINS = [
   'raw.githubusercontent.com',
   'avatars.githubusercontent.com',
   'opennana.com',
+  'youmind.com',
+  'cms-assets.youmind.com',
 ];
 
 /**

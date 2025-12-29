@@ -219,6 +219,9 @@ interface MigrationStats {
   skipped: number;
   success: number;
   failed: number;
+  imageCount: number;        // 总图片数量
+  imageSuccess: number;      // 成功迁移的图片数量
+  imageFailed: number;       // 失败的图片数量
   errors: { promptId: string; effect: string; error: string }[];
 }
 
@@ -250,6 +253,29 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// 收集所有图片 URL（合并 imageUrl 和 imageUrls）
+function collectImageUrls(imageUrl: string | null, imageUrls: string[] | null): string[] {
+  const urls: string[] = [];
+  
+  // 先添加 imageUrls 数组
+  if (imageUrls && Array.isArray(imageUrls)) {
+    for (const url of imageUrls) {
+      if (url && typeof url === 'string' && url.trim()) {
+        urls.push(url.trim());
+      }
+    }
+  }
+  
+  // 再添加 imageUrl（如果不在数组中）
+  if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim()) {
+    if (!urls.includes(imageUrl.trim())) {
+      urls.unshift(imageUrl.trim());
+    }
+  }
+  
+  return urls;
+}
+
 // 主迁移函数
 async function migrateImages(): Promise<void> {
   console.log('\n🚀 开始图片迁移到 R2...\n');
@@ -276,16 +302,18 @@ async function migrateImages(): Promise<void> {
   console.log(`   Public URL: ${R2_PUBLIC_URL || '使用 API 代理'}\n`);
 
   // 获取所有需要迁移的图片
-  const queryOptions: { where: { imageUrl: { not: null } }; select: { id: true; effect: true; imageUrl: true }; take?: number } = {
+  const queryOptions: { where: { OR: Array<{ imageUrl: { not: null } } | { imageUrls: { isEmpty: false } }> }; select: { id: true; effect: true; imageUrl: true; imageUrls: true }; take?: number } = {
     where: {
-      imageUrl: {
-        not: null,
-      },
+      OR: [
+        { imageUrl: { not: null } },
+        { imageUrls: { isEmpty: false } },
+      ],
     },
     select: {
       id: true,
       effect: true,
       imageUrl: true,
+      imageUrls: true,
     },
   };
 
@@ -295,25 +323,53 @@ async function migrateImages(): Promise<void> {
 
   const prompts = await prisma.prompt.findMany(queryOptions);
 
-  // 过滤需要迁移的图片
-  const promptsToMigrate = prompts.filter(p => {
-    if (!p.imageUrl) return false;
-    if (isR2ImageUrl(p.imageUrl)) return false;
-    return true;
-  });
+  // 检查 prompt 是否有需要迁移的图片
+  function hasImagesToMigrate(p: { imageUrl: string | null; imageUrls: string[] }): boolean {
+    // 检查 imageUrl
+    if (p.imageUrl && !isR2ImageUrl(p.imageUrl)) {
+      return true;
+    }
+    // 检查 imageUrls 数组中的每个 URL
+    if (p.imageUrls && p.imageUrls.length > 0) {
+      for (const url of p.imageUrls) {
+        if (url && !isR2ImageUrl(url)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  // 过滤需要迁移的 prompts
+  const promptsToMigrate = prompts.filter(hasImagesToMigrate);
+
+  // 计算总图片数量
+  let totalImageCount = 0;
+  for (const p of promptsToMigrate) {
+    if (p.imageUrl && !isR2ImageUrl(p.imageUrl)) totalImageCount++;
+    if (p.imageUrls) {
+      for (const url of p.imageUrls) {
+        if (url && !isR2ImageUrl(url)) totalImageCount++;
+      }
+    }
+  }
 
   const stats: MigrationStats = {
     total: prompts.length,
     skipped: prompts.length - promptsToMigrate.length,
     success: 0,
     failed: 0,
+    imageCount: totalImageCount,
+    imageSuccess: 0,
+    imageFailed: 0,
     errors: [],
   };
 
   console.log(`📊 统计信息:`);
-  console.log(`   总图片数: ${stats.total}`);
-  console.log(`   已在 R2: ${stats.skipped}`);
-  console.log(`   待迁移: ${promptsToMigrate.length}`);
+  console.log(`   总 Prompt 数: ${stats.total}`);
+  console.log(`   已在 R2 (跳过): ${stats.skipped}`);
+  console.log(`   待迁移 Prompt 数: ${promptsToMigrate.length}`);
+  console.log(`   待迁移图片数: ${stats.imageCount}`);
   console.log(`   批次大小: ${batch}`);
   console.log(`   批次延迟: ${delay}ms\n`);
 
@@ -326,9 +382,16 @@ async function migrateImages(): Promise<void> {
   if (dryRun) {
     console.log('📋 待迁移的图片列表:\n');
     for (const prompt of promptsToMigrate) {
-      const type = isLocalImagePath(prompt.imageUrl!) ? '本地' : '远程';
-      console.log(`   [${type}] ${prompt.effect}`);
-      console.log(`         ${prompt.imageUrl}\n`);
+      console.log(`   📄 ${prompt.effect}`);
+      // 列出所有需要迁移的图片
+      const allUrls = collectImageUrls(prompt.imageUrl, prompt.imageUrls);
+      for (const url of allUrls) {
+        if (!isR2ImageUrl(url)) {
+          const type = isLocalImagePath(url) ? '本地' : '远程';
+          console.log(`      [${type}] ${url}`);
+        }
+      }
+      console.log('');
     }
     console.log('💡 使用不带 --dry-run 参数运行以执行实际迁移\n');
     await prisma.$disconnect();
@@ -350,77 +413,124 @@ async function migrateImages(): Promise<void> {
 
     for (const prompt of currentBatch) {
       console.log(`🔄 [${stats.success + stats.failed + 1}/${promptsToMigrate.length}] ${prompt.effect}`);
-      console.log(`   原始 URL: ${prompt.imageUrl}`);
 
-      let imageData: { buffer: Buffer; contentType: string } | null = null;
-
-      // 根据 URL 类型下载图片
-      if (isLocalImagePath(prompt.imageUrl!)) {
-        console.log(`   类型: 本地文件`);
-        imageData = readLocalImage(prompt.imageUrl!);
-      } else {
-        console.log(`   类型: 远程 URL`);
-        imageData = await downloadFromUrl(prompt.imageUrl!);
-      }
-
-      if (!imageData) {
-        stats.failed++;
-        stats.errors.push({
-          promptId: prompt.id,
-          effect: prompt.effect,
-          error: '下载/读取失败',
-        });
+      // 收集所有需要处理的图片 URL
+      const allUrls = collectImageUrls(prompt.imageUrl, prompt.imageUrls);
+      const urlsToMigrate = allUrls.filter(url => url && !isR2ImageUrl(url));
+      
+      if (urlsToMigrate.length === 0) {
+        console.log(`   ⏭️ 所有图片已在 R2，跳过`);
+        stats.skipped++;
         console.log('');
         continue;
       }
 
-      // 上传到 R2
-      const fileName = extractFileName(prompt.imageUrl!);
-      const uploadResult = await uploadToR2(r2Client, imageData.buffer, fileName, imageData.contentType);
+      console.log(`   📷 需要迁移 ${urlsToMigrate.length} 张图片`);
 
-      if (!uploadResult) {
-        stats.failed++;
-        stats.errors.push({
-          promptId: prompt.id,
-          effect: prompt.effect,
-          error: '上传到 R2 失败',
-        });
-        console.log('');
-        continue;
-      }
+      // 用于存储迁移后的 URL 映射
+      const urlMapping = new Map<string, string>();
+      let promptSuccess = true;
 
-      // 更新数据库
-      try {
-        await prisma.prompt.update({
-          where: { id: prompt.id },
-          data: { imageUrl: uploadResult.url },
-        });
+      for (const originalUrl of urlsToMigrate) {
+        console.log(`   🔄 处理: ${originalUrl.substring(0, 80)}...`);
+
+        let imageData: { buffer: Buffer; contentType: string } | null = null;
+
+        // 根据 URL 类型下载图片
+        if (isLocalImagePath(originalUrl)) {
+          imageData = readLocalImage(originalUrl);
+        } else {
+          imageData = await downloadFromUrl(originalUrl);
+        }
+
+        if (!imageData) {
+          stats.imageFailed++;
+          console.log(`      ❌ 下载失败`);
+          continue;
+        }
+
+        // 上传到 R2
+        const fileName = extractFileName(originalUrl);
+        const uploadResult = await uploadToR2(r2Client, imageData.buffer, fileName, imageData.contentType);
+
+        if (!uploadResult) {
+          stats.imageFailed++;
+          console.log(`      ❌ 上传失败`);
+          continue;
+        }
+
+        // 记录映射关系
+        urlMapping.set(originalUrl, uploadResult.url);
+        stats.imageSuccess++;
+        console.log(`      ✅ -> ${uploadResult.url}`);
 
         // 在 Image 表中记录迁移信息
-        await prisma.image.create({
-          data: {
-            key: uploadResult.key,
-            originalUrl: prompt.imageUrl!,
-            url: uploadResult.url,
-            promptId: prompt.id,
-            fileName: fileName,
-            contentType: imageData.contentType,
-            size: imageData.buffer.length,
-            status: 'active',
-          },
-        });
+        try {
+          await prisma.image.create({
+            data: {
+              key: uploadResult.key,
+              originalUrl: originalUrl,
+              url: uploadResult.url,
+              promptId: prompt.id,
+              fileName: fileName,
+              contentType: imageData.contentType,
+              size: imageData.buffer.length,
+              status: 'active',
+            },
+          });
+        } catch (imgError) {
+          // Image 表记录失败不影响整体流程
+          console.log(`      ⚠️ Image 表记录失败: ${imgError instanceof Error ? imgError.message : imgError}`);
+        }
+      }
 
-        stats.success++;
-        console.log(`   ✅ 已迁移: ${uploadResult.url}`);
-      } catch (error) {
+      // 更新数据库中的 imageUrl 和 imageUrls
+      if (urlMapping.size > 0) {
+        try {
+          // 替换 imageUrl
+          let newImageUrl = prompt.imageUrl;
+          if (newImageUrl && urlMapping.has(newImageUrl)) {
+            newImageUrl = urlMapping.get(newImageUrl)!;
+          }
+
+          // 替换 imageUrls 数组中的 URL
+          const newImageUrls = (prompt.imageUrls || []).map(url => {
+            if (urlMapping.has(url)) {
+              return urlMapping.get(url)!;
+            }
+            return url;
+          });
+
+          await prisma.prompt.update({
+            where: { id: prompt.id },
+            data: { 
+              imageUrl: newImageUrl,
+              imageUrls: newImageUrls,
+            },
+          });
+
+          stats.success++;
+          console.log(`   ✅ Prompt 已更新 (${urlMapping.size} 张图片迁移成功)`);
+        } catch (error) {
+          stats.failed++;
+          promptSuccess = false;
+          const errorMsg = error instanceof Error ? error.message : String(error);
+          stats.errors.push({
+            promptId: prompt.id,
+            effect: prompt.effect,
+            error: `数据库更新失败: ${errorMsg}`,
+          });
+          console.log(`   ❌ 数据库更新失败: ${errorMsg}`);
+        }
+      } else {
         stats.failed++;
-        const errorMsg = error instanceof Error ? error.message : String(error);
+        promptSuccess = false;
         stats.errors.push({
           promptId: prompt.id,
           effect: prompt.effect,
-          error: `数据库更新失败: ${errorMsg}`,
+          error: '所有图片迁移失败',
         });
-        console.log(`   ❌ 数据库更新失败: ${errorMsg}`);
+        console.log(`   ❌ 所有图片迁移失败`);
       }
 
       console.log('');
@@ -436,15 +546,23 @@ async function migrateImages(): Promise<void> {
   // 输出最终统计
   console.log('\n' + '='.repeat(50));
   console.log('📊 迁移完成统计:\n');
-  console.log(`   ✅ 成功: ${stats.success}`);
-  console.log(`   ❌ 失败: ${stats.failed}`);
-  console.log(`   ⏭️  跳过 (已在 R2): ${stats.skipped}`);
-  console.log(`   📁 总计: ${stats.total}`);
+  console.log(`   📄 Prompt 统计:`);
+  console.log(`      ✅ 成功: ${stats.success}`);
+  console.log(`      ❌ 失败: ${stats.failed}`);
+  console.log(`      ⏭️  跳过 (已在 R2): ${stats.skipped}`);
+  console.log(`      📁 总计: ${stats.total}`);
+  console.log(`\n   📷 图片统计:`);
+  console.log(`      ✅ 成功: ${stats.imageSuccess}`);
+  console.log(`      ❌ 失败: ${stats.imageFailed}`);
+  console.log(`      📁 总计: ${stats.imageCount}`);
 
   if (stats.errors.length > 0) {
     console.log('\n❌ 失败详情:');
-    for (const error of stats.errors) {
+    for (const error of stats.errors.slice(0, 20)) {
       console.log(`   - ${error.effect}: ${error.error}`);
+    }
+    if (stats.errors.length > 20) {
+      console.log(`   ... 还有 ${stats.errors.length - 20} 个错误未显示`);
     }
   }
 
