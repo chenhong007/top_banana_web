@@ -4,16 +4,16 @@
  * Replaces the legacy usePrompts + usePromptForm combination
  * 
  * 优化：使用分页加载数据，避免一次性加载全部数据导致性能问题
+ * 支持缺失类型筛选
  */
 
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { PromptItem, CreatePromptRequest } from '@/types';
 import { useToast } from '@/components/shared/ToastContainer';
 import { formatErrorMessage } from '@/lib/error-handler';
-import { useQuery } from '@tanstack/react-query';
-import { promptService, PaginatedResponse } from '@/services/prompt.service';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   promptKeys,
   useCreatePromptMutation,
@@ -37,16 +37,64 @@ const initialFormData: CreatePromptRequest = {
 // 后台管理每页显示条数
 const ADMIN_PAGE_SIZE = 50;
 
+// 带筛选的分页请求
+async function fetchPaginatedPrompts(
+  page: number, 
+  pageSize: number, 
+  missingType?: string
+): Promise<{
+  data: PromptItem[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}> {
+  const url = new URL('/api/prompts', window.location.origin);
+  url.searchParams.set('page', page.toString());
+  url.searchParams.set('pageSize', pageSize.toString());
+  if (missingType) {
+    url.searchParams.set('missingType', missingType);
+  }
+
+  const response = await fetch(url.toString());
+  const result = await response.json();
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to fetch prompts');
+  }
+  
+  return {
+    data: result.data || [],
+    pagination: result.pagination || {
+      page: 1,
+      pageSize,
+      total: 0,
+      totalPages: 1,
+      hasNext: false,
+      hasPrev: false,
+    },
+  };
+}
+
 /**
  * Hook combining prompts data fetching and form management for Admin page
  * Uses React Query for data fetching and mutations
  * 使用分页来优化大数据量下的加载性能
+ * 支持缺失类型筛选
  */
 export function useAdminPrompts() {
   const toast = useToast();
+  const queryClient = useQueryClient();
   
   // 分页状态
   const [currentPage, setCurrentPage] = useState(1);
+  
+  // 缺失类型筛选状态
+  const [missingType, setMissingType] = useState<string | undefined>(undefined);
   
   // 使用分页查询获取数据
   const { 
@@ -54,9 +102,9 @@ export function useAdminPrompts() {
     isLoading, 
     refetch 
   } = useQuery({
-    queryKey: [...promptKeys.lists(), { page: currentPage, pageSize: ADMIN_PAGE_SIZE }],
+    queryKey: [...promptKeys.lists(), { page: currentPage, pageSize: ADMIN_PAGE_SIZE, missingType }],
     queryFn: async () => {
-      return promptService.getPaginated(currentPage, ADMIN_PAGE_SIZE);
+      return fetchPaginatedPrompts(currentPage, ADMIN_PAGE_SIZE, missingType);
     },
     staleTime: 30 * 1000, // 30秒内不重新请求
   });
@@ -94,6 +142,19 @@ export function useAdminPrompts() {
       setCurrentPage(prev => prev - 1);
     }
   }, [pagination.hasPrev]);
+
+  // 缺失类型筛选
+  const handleMissingTypeChange = useCallback((type: string | undefined) => {
+    setMissingType(type);
+    setCurrentPage(1); // 切换筛选时重置到第一页
+  }, []);
+
+  // 刷新统计和列表
+  const refreshAll = useCallback(async () => {
+    await refetch();
+    // 同时刷新统计数据
+    queryClient.invalidateQueries({ queryKey: ['admin', 'stats', 'missing'] });
+  }, [refetch, queryClient]);
 
   // Form state
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -158,6 +219,7 @@ export function useAdminPrompts() {
       const newPrompt = await createMutation.mutateAsync(formData);
       toast.showSuccess('创建成功');
       resetForm();
+      refreshAll();
       return newPrompt;
     } catch (error) {
       console.error('Failed to create prompt:', error);
@@ -176,6 +238,7 @@ export function useAdminPrompts() {
       });
       toast.showSuccess('更新成功');
       resetForm();
+      refreshAll();
       return updatedPrompt;
     } catch (error) {
       console.error('Failed to update prompt:', error);
@@ -192,6 +255,7 @@ export function useAdminPrompts() {
     try {
       await deleteMutation.mutateAsync(id);
       toast.showSuccess('删除成功');
+      refreshAll();
       return true;
     } catch (error) {
       console.error('Failed to delete prompt:', error);
@@ -220,7 +284,7 @@ export function useAdminPrompts() {
     // Data
     prompts,
     loading: isLoading,
-    refetch,
+    refetch: refreshAll,
 
     // Pagination
     pagination,
@@ -228,6 +292,10 @@ export function useAdminPrompts() {
     goToPage,
     nextPage,
     prevPage,
+
+    // Missing type filter
+    missingType,
+    setMissingType: handleMissingTypeChange,
 
     // Form state
     formData,
@@ -247,4 +315,3 @@ export function useAdminPrompts() {
     handleModelTagsChange,
   };
 }
-

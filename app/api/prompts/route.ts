@@ -40,12 +40,19 @@ export async function GET(request: NextRequest) {
     const requestedSize = parseInt(searchParams.get('pageSize') || String(DEFAULT_PAGE_SIZE), 10);
     const pageSize = Math.min(Math.max(1, requestedSize), MAX_PAGE_SIZE);
     
+    // Parse missing type filter (for admin use)
+    const missingType = searchParams.get('missingType') || undefined;
+    
     // Check if pagination is requested (for backwards compatibility)
     const usePagination = searchParams.has('page') || searchParams.has('pageSize');
     
     if (usePagination) {
-      // Return paginated results
-      const { data: prompts, total, totalPages } = await promptRepository.findAllPaginated(page, pageSize);
+      // Return paginated results with optional missing type filter
+      const result = missingType 
+        ? await promptRepository.findPaginatedWithMissingFilter({ page, pageSize }, missingType)
+        : await promptRepository.findAllPaginated(page, pageSize);
+      
+      const { data: prompts, total, totalPages } = result;
       
       const response = NextResponse.json({
         success: true,

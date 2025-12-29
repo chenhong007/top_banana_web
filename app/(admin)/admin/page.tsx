@@ -25,6 +25,9 @@ export default function AdminPage() {
     goToPage,
     nextPage,
     prevPage,
+    // 缺失类型筛选
+    missingType,
+    setMissingType,
     // 表单相关
     formData,
     setFormData,
@@ -60,9 +63,14 @@ export default function AdminPage() {
           }}
         />
 
-        {/* Stats Section - 传递数据库真实总量 */}
-        {!loading && prompts.length > 0 && (
-          <DashboardStats prompts={prompts} totalCount={pagination.total} />
+        {/* Stats Section - 传递数据库真实总量和缺失类型筛选 */}
+        {!loading && (
+          <DashboardStats 
+            prompts={prompts} 
+            totalCount={pagination.total}
+            selectedMissingType={missingType}
+            onMissingTypeChange={setMissingType}
+          />
         )}
 
         {isEditing && (
@@ -87,11 +95,19 @@ export default function AdminPage() {
           </div>
         )}
 
-        {!loading && prompts.length === 0 && (
+        {!loading && prompts.length === 0 && !missingType && (
           <EmptyState
             icon={<FolderOpen className="w-16 h-16 text-gray-300" />}
             title={UI_TEXT.EMPTY_STATE.TITLE}
             description={UI_TEXT.EMPTY_STATE.DESCRIPTION}
+          />
+        )}
+
+        {!loading && prompts.length === 0 && missingType && (
+          <EmptyState
+            icon={<FolderOpen className="w-16 h-16 text-gray-300" />}
+            title="没有匹配的数据"
+            description="当前筛选条件下没有找到符合的提示词"
           />
         )}
 

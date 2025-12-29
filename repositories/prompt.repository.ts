@@ -149,6 +149,131 @@ class PromptRepository extends BaseRepository<
   }
 
   /**
+   * Find prompts with pagination and missing type filter
+   * @param options Pagination options
+   * @param missingType Type of missing data to filter by
+   */
+  async findPaginatedWithMissingFilter(
+    options: PaginationOptions, 
+    missingType?: string
+  ): Promise<PaginatedResult<PromptDTO>> {
+    try {
+      // 获取所有符合条件的 prompts
+      const allPrompts = await this.prisma.prompt.findMany({
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      // 根据缺失类型过滤
+      let filteredPrompts = allPrompts;
+      if (missingType) {
+        filteredPrompts = allPrompts.filter(prompt => {
+          const imageUrl = prompt.imageUrl;
+          const imageUrls = (prompt as { imageUrls?: string[] }).imageUrls;
+          
+          switch (missingType) {
+            case 'noImage':
+              // 没有任何图片
+              return !imageUrl && (!imageUrls || imageUrls.length === 0);
+            case 'nonR2Image':
+              // 有图片但不是 R2 图片
+              return this.hasNonR2Images(imageUrl, imageUrls);
+            case 'noTags':
+              return !prompt.tags || prompt.tags.length === 0;
+            case 'noModelTags':
+              return !prompt.modelTags || prompt.modelTags.length === 0;
+            case 'noDescription':
+              return !prompt.description || prompt.description.trim() === '';
+            case 'noSource':
+              return !prompt.source || prompt.source.trim() === '' || prompt.source === 'unknown';
+            case 'noCategory':
+              return !prompt.category;
+            case 'complete':
+              // 完整数据
+              return this.isCompletePrompt(prompt);
+            default:
+              return true;
+          }
+        });
+      }
+
+      const total = filteredPrompts.length;
+      const { skip, take, page, pageSize, totalPages } = calculatePagination(options, total);
+
+      // 手动分页
+      const paginatedPrompts = filteredPrompts.slice(skip, skip + take);
+
+      return {
+        data: paginatedPrompts.map((p) => this.toDTO(p)),
+        total,
+        page,
+        pageSize,
+        totalPages,
+      };
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findPaginatedWithMissingFilter');
+    }
+  }
+
+  /**
+   * 检查图片是否是 R2 图片
+   */
+  private isR2ImageUrl(url: string): boolean {
+    if (!url) return false;
+    const R2_PUBLIC_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL || '';
+    if (R2_PUBLIC_URL && url.startsWith(R2_PUBLIC_URL)) {
+      return true;
+    }
+    if (url.includes('/api/images/')) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 检查是否有非 R2 的图片
+   */
+  private hasNonR2Images(imageUrl: string | null, imageUrls?: string[]): boolean {
+    if (imageUrl && imageUrl.trim() !== '' && !this.isR2ImageUrl(imageUrl)) {
+      return true;
+    }
+    if (imageUrls && Array.isArray(imageUrls)) {
+      return imageUrls.some(url => url && url.trim() !== '' && !this.isR2ImageUrl(url));
+    }
+    return false;
+  }
+
+  /**
+   * 检查 prompt 是否完整
+   */
+  private isCompletePrompt(prompt: PromptWithRelations): boolean {
+    const imageUrl = prompt.imageUrl;
+    const imageUrls = (prompt as { imageUrls?: string[] }).imageUrls;
+    
+    // 必须有 R2 图片
+    const hasR2Image = (imageUrl && this.isR2ImageUrl(imageUrl)) || 
+      (imageUrls && imageUrls.some(url => this.isR2ImageUrl(url)));
+    if (!hasR2Image) return false;
+    
+    // 必须有标签
+    if (!prompt.tags || prompt.tags.length === 0) return false;
+    
+    // 必须有模型标签
+    if (!prompt.modelTags || prompt.modelTags.length === 0) return false;
+    
+    // 必须有描述
+    if (!prompt.description || prompt.description.trim() === '') return false;
+    
+    // 必须有来源
+    if (!prompt.source || prompt.source.trim() === '' || prompt.source === 'unknown') return false;
+    
+    // 必须有分类
+    if (!prompt.category) return false;
+    
+    return true;
+  }
+
+  /**
    * Find all prompts with pagination (convenience method)
    */
   async findAllPaginated(page: number, pageSize: number): Promise<PaginatedResult<PromptDTO>> {

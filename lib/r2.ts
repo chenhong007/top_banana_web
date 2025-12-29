@@ -105,11 +105,70 @@ export async function uploadImageToR2(
       url: getPublicUrl(key),
     };
   } catch (error) {
+    console.error('[R2] Upload to R2 error:', error);
     return {
       success: false,
-      error: 'Upload failed',
+      error: error instanceof Error ? error.message : 'Upload failed',
     };
   }
+}
+
+/**
+ * 根据域名获取最佳的请求头配置
+ * 针对不同网站的防盗链策略使用不同的请求头
+ */
+function getHeadersForUrl(parsedUrl: URL): Record<string, string> {
+  const host = parsedUrl.hostname.toLowerCase();
+  
+  // 基础请求头 - 模拟真实 Chrome 浏览器
+  const baseHeaders: Record<string, string> = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    // 添加更多浏览器特征
+    'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'Sec-Fetch-Dest': 'image',
+    'Sec-Fetch-Mode': 'no-cors',
+    'Sec-Fetch-Site': 'cross-site',
+  };
+
+  // GitHub camo (图片代理)
+  if (host.includes('camo.githubusercontent.com')) {
+    return {
+      ...baseHeaders,
+      'Referer': 'https://github.com/',
+      'Origin': 'https://github.com',
+    };
+  }
+
+  // GitHub 原始文件
+  if (host.includes('githubusercontent.com') || host.includes('github.com')) {
+    return {
+      ...baseHeaders,
+      'Referer': 'https://github.com/',
+    };
+  }
+
+  // Linux.do 论坛
+  if (host.includes('linux.do')) {
+    return {
+      ...baseHeaders,
+      'Referer': 'https://linux.do/',
+      'Origin': 'https://linux.do',
+    };
+  }
+
+  // 通用处理 - 使用目标站点自身作为 Referer
+  return {
+    ...baseHeaders,
+    'Referer': parsedUrl.origin + '/',
+  };
 }
 
 /**
@@ -124,35 +183,86 @@ export async function uploadImageFromUrl(imageUrl: string): Promise<R2UploadResu
     try {
       parsedUrl = new URL(imageUrl);
     } catch {
+      console.error('[R2] Invalid URL format:', imageUrl);
       return { success: false, error: 'Invalid URL format' };
     }
 
     // Basic protocol check
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      console.error('[R2] Invalid protocol:', parsedUrl.protocol);
       return { success: false, error: 'Only HTTP/HTTPS protocols are allowed' };
     }
 
-    // 获取图片内容
-    const response = await fetch(imageUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer': parsedUrl.origin,
-      },
-    });
+    // 获取针对该域名优化的请求头
+    const headers = getHeadersForUrl(parsedUrl);
 
-    if (!response.ok) {
-      return { success: false, error: `Failed to fetch image: ${response.status}` };
+    // 获取图片内容，添加超时控制
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+
+    try {
+      console.log('[R2] Fetching:', imageUrl.substring(0, 80), '...');
+      
+      const response = await fetch(imageUrl, {
+        headers,
+        signal: controller.signal,
+        // 跟随重定向
+        redirect: 'follow',
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        console.error('[R2] Fetch failed:', imageUrl, 'Status:', response.status, response.statusText);
+        
+        // 针对 403 提供更详细的错误信息
+        if (response.status === 403) {
+          return { success: false, error: `Access denied (403): 可能是防盗链保护，请尝试手动下载后上传` };
+        }
+        if (response.status === 404) {
+          return { success: false, error: `Image not found (404): 图片可能已被删除` };
+        }
+        
+        return { success: false, error: `Failed to fetch image: ${response.status} ${response.statusText}` };
+      }
+
+      const buffer = Buffer.from(await response.arrayBuffer());
+      
+      if (buffer.length === 0) {
+        console.error('[R2] Empty response body:', imageUrl);
+        return { success: false, error: 'Empty image response' };
+      }
+
+      // 验证是否是真正的图片
+      const contentType = response.headers.get('content-type') || 'image/jpeg';
+      if (!contentType.startsWith('image/') && !contentType.includes('octet-stream')) {
+        console.error('[R2] Not an image:', imageUrl, 'Content-Type:', contentType);
+        return { success: false, error: `Not an image: ${contentType}` };
+      }
+      
+      // 从 URL 提取文件名
+      const urlPath = parsedUrl.pathname;
+      const fileName = urlPath.split('/').pop() || 'image.jpg';
+
+      console.log('[R2] Uploading:', imageUrl.substring(0, 80), '... Size:', buffer.length, 'bytes');
+      
+      const result = await uploadImageToR2(buffer, fileName, contentType);
+      
+      if (!result.success) {
+        console.error('[R2] Upload to R2 failed:', result.error);
+      }
+      
+      return result;
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.error('[R2] Fetch timeout:', imageUrl);
+        return { success: false, error: 'Fetch timeout (30s)' };
+      }
+      throw fetchError;
     }
-
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const contentType = response.headers.get('content-type') || 'image/jpeg';
-    
-    // 从 URL 提取文件名
-    const urlPath = parsedUrl.pathname;
-    const fileName = urlPath.split('/').pop() || 'image.jpg';
-
-    return uploadImageToR2(buffer, fileName, contentType);
   } catch (error) {
+    console.error('[R2] Upload from URL error:', imageUrl, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to upload from URL',
@@ -334,13 +444,26 @@ export function extractKeyFromR2Url(url: string): string | null {
 export function isR2ImageUrl(url: string): boolean {
   if (!url) return false;
   
-  // 检查是否是公开 URL
+  // 检查是否是公开 URL (使用环境变量配置的)
   if (R2_PUBLIC_URL && url.startsWith(R2_PUBLIC_URL)) {
     return true;
   }
   
   // 检查是否是 API 代理格式
   if (url.includes('/api/images/')) {
+    return true;
+  }
+  
+  // 检查是否匹配已知的 R2 公开 URL 模式
+  // 即使当前环境没有配置 R2_PUBLIC_URL，也能识别之前环境上传的图片
+  if (url.includes('images.topai.ink/images/')) {
+    return true;
+  }
+  
+  // 检查是否是通用的 R2 路径模式 (images/ 开头，包含时间戳)
+  // 格式: https://*/images/{timestamp}-{random}-{name}.{ext}
+  const r2PathPattern = /\/images\/\d{13}-[a-z0-9]{6,}-/;
+  if (r2PathPattern.test(url)) {
     return true;
   }
   

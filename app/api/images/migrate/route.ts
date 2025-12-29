@@ -170,6 +170,7 @@ export async function POST(request: NextRequest) {
       // 处理每个需要迁移的图片
       for (const originalUrl of urlsToMigrate) {
         try {
+          console.log(`[Migrate] Processing: ${originalUrl.substring(0, 100)}...`);
           const result = await uploadImageFromUrl(originalUrl);
 
           if (result.success && result.url) {
@@ -179,6 +180,7 @@ export async function POST(request: NextRequest) {
               newUrl: result.url,
             });
             successImageCount++;
+            console.log(`[Migrate] Success: ${originalUrl.substring(0, 60)}... -> ${result.url}`);
 
             // 记录到 Image 表
             try {
@@ -195,6 +197,7 @@ export async function POST(request: NextRequest) {
               // Image 表记录失败不影响整体流程
             }
           } else {
+            console.error(`[Migrate] Failed: ${originalUrl.substring(0, 80)}... Error: ${result.error}`);
             imageResults.push({
               originalUrl,
               error: result.error || '上传失败',
@@ -202,9 +205,11 @@ export async function POST(request: NextRequest) {
             failedImageCount++;
           }
         } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : '迁移失败';
+          console.error(`[Migrate] Exception: ${originalUrl.substring(0, 80)}... Error: ${errorMsg}`);
           imageResults.push({
             originalUrl,
-            error: error instanceof Error ? error.message : '迁移失败',
+            error: errorMsg,
           });
           failedImageCount++;
         }
