@@ -215,6 +215,44 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                 </div>
               )}
               
+              {/* 失败原因详情 */}
+              {batchProgress.failedDetails && batchProgress.failedDetails.totalFailed > 0 && (
+                <div className="mt-3 pt-3 border-t border-red-200">
+                  <p className="text-xs font-medium text-red-700 mb-1">
+                    失败原因明细（共 {batchProgress.failedDetails.totalFailed} 条）:
+                  </p>
+                  
+                  {/* 错误类型汇总 */}
+                  {batchProgress.failedDetails.summary && Object.keys(batchProgress.failedDetails.summary).length > 0 && (
+                    <div className="flex flex-wrap gap-2 text-xs mb-2">
+                      {Object.entries(batchProgress.failedDetails.summary).map(([errorType, count]) => (
+                        <span key={errorType} className="px-2 py-0.5 bg-red-100 text-red-700 rounded">
+                          {errorType}: {count}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* 失败样本 */}
+                  {batchProgress.failedDetails.samples && batchProgress.failedDetails.samples.length > 0 && (
+                    <details className="text-xs">
+                      <summary className="cursor-pointer text-red-600 hover:text-red-700">
+                        查看失败样本（前 {batchProgress.failedDetails.samples.length} 条）
+                      </summary>
+                      <div className="mt-1 max-h-32 overflow-y-auto bg-red-50 rounded p-2 space-y-1">
+                        {batchProgress.failedDetails.samples.map((item, idx) => (
+                          <div key={idx} className="text-red-700">
+                            <span className="text-red-500">#{item.index}</span>{' '}
+                            <span className="font-medium">{item.effect || '(无标题)'}</span>:{' '}
+                            <span className="text-red-600">{item.error}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  )}
+                </div>
+              )}
+              
               {/* 统计校验提示 - 只在完成后且数据不匹配时显示 */}
               {!batchProgress.isRunning && batchProgress.totalItemsCount > 0 && (() => {
                 const totalProcessed = batchProgress.successCount + batchProgress.skippedCount + batchProgress.failedCount;

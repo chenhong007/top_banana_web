@@ -11,6 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
 import { uploadImageFromUrl, isR2Configured } from '@/lib/r2';
 import { checkPromptSimilarity } from '@/lib/text-similarity';
@@ -386,6 +387,16 @@ export async function POST(request: NextRequest) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`${item.title}: ${errorMsg}`);
       }
+    }
+
+    // 自动刷新前端页面缓存，使新导入的数据立即可见
+    try {
+      revalidatePath('/zh', 'page');
+      revalidatePath('/en', 'page');
+      revalidatePath('/', 'page');
+      console.log('[JSON Import] Cache revalidated for home pages');
+    } catch (revalidateError) {
+      console.warn('[JSON Import] Cache revalidation failed:', revalidateError);
     }
 
     return NextResponse.json({

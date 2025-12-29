@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { promptRepository } from '@/repositories';
 import prisma from '@/lib/db';
 import { DEFAULT_CATEGORY } from '@/lib/constants';
@@ -176,6 +177,7 @@ export async function POST(request: NextRequest) {
     let importedCount = 0;
     let failedCount = 0;
     let duplicateStats: Record<DuplicateType, number> | undefined;
+    let failedItems: Array<{ index: number; effect: string; error: string }> | undefined;
     const submittedCount = newPrompts.length; // 本批次提交的总数
 
     if (mode === 'replace') {
@@ -209,6 +211,7 @@ export async function POST(request: NextRequest) {
       const result = await promptRepository.bulkCreate(uniqueInBatch);
       importedCount = result.success;
       failedCount = result.failed;
+      failedItems = result.failedItems;
       
       const totalDuplicates = newPrompts.length - uniqueInBatch.length;
       if (totalDuplicates > 0) {
@@ -236,11 +239,35 @@ export async function POST(request: NextRequest) {
       const result = await promptRepository.bulkCreate(uniqueItems);
       importedCount = result.success;
       failedCount = result.failed;
+      failedItems = result.failedItems;
       duplicateStats = stats.duplicatesByType;
     }
 
     const totalCount = await promptRepository.count();
     const skippedCount = duplicateStats ? Object.values(duplicateStats).reduce((a, b) => a + b, 0) : 0;
+
+    // 自动刷新前端页面缓存，使新导入的数据立即可见
+    try {
+      revalidatePath('/zh', 'page');
+      revalidatePath('/en', 'page');
+      revalidatePath('/', 'page');
+      console.log('[Import] Cache revalidated for home pages');
+    } catch (revalidateError) {
+      console.warn('[Import] Cache revalidation failed:', revalidateError);
+      // 不影响导入结果，只是缓存刷新失败
+    }
+
+    // 汇总失败原因
+    let failedSummary: Record<string, number> | undefined;
+    if (failedItems && failedItems.length > 0) {
+      failedSummary = {};
+      for (const item of failedItems) {
+        const errorType = item.error.includes(':') 
+          ? item.error.split(':')[0] 
+          : item.error.substring(0, 30);
+        failedSummary[errorType] = (failedSummary[errorType] || 0) + 1;
+      }
+    }
 
     return successResponse({
       submitted: submittedCount,     // 本批次提交的总数
@@ -255,6 +282,12 @@ export async function POST(request: NextRequest) {
         byEffect: duplicateStats.effect,
         byPromptSimilarity: duplicateStats.prompt_similarity,
         total: skippedCount,
+      } : undefined,
+      // 新增：失败详情
+      failedDetails: failedCount > 0 ? {
+        summary: failedSummary,                    // 按错误类型汇总
+        samples: failedItems?.slice(0, 10),        // 最多返回10条失败样本
+        totalFailed: failedCount,
       } : undefined,
     });
   });

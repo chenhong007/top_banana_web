@@ -303,77 +303,174 @@ class PromptRepository extends BaseRepository<
   /**
    * Bulk create prompts (optimized with batch processing)
    * Uses smaller batches to avoid transaction timeout issues
+   * v2.0: 改进事务处理，逐条插入避免事务回滚导致的批量失败
    */
-  async bulkCreate(items: CreatePromptInput[]): Promise<{ success: number; failed: number }> {
+  async bulkCreate(items: CreatePromptInput[]): Promise<{ 
+    success: number; 
+    failed: number;
+    failedItems?: Array<{ index: number; effect: string; error: string }>;
+  }> {
     let success = 0;
     let failed = 0;
+    const failedItems: Array<{ index: number; effect: string; error: string }> = [];
 
-    // 分批处理，每批最多 50 条，避免事务超时
+    // 分批处理，每批最多 50 条
     const BATCH_SIZE = 50;
-    const batches: CreatePromptInput[][] = [];
+    const batches: Array<{ items: CreatePromptInput[]; startIndex: number }> = [];
     
     for (let i = 0; i < items.length; i += BATCH_SIZE) {
-      batches.push(items.slice(i, i + BATCH_SIZE));
+      batches.push({
+        items: items.slice(i, i + BATCH_SIZE),
+        startIndex: i,
+      });
     }
+
+    console.log(`[BulkCreate] Starting import: ${items.length} items in ${batches.length} batches`);
 
     // 逐批处理
-    for (const batch of batches) {
-      try {
-        // 每批使用独立的事务，设置 120 秒超时
-        await this.withTransaction(async (tx) => {
-          for (const item of batch) {
-            try {
-              const categoryName = item.category || DEFAULT_CATEGORY;
-              
-              // 使用统一的图片处理工具函数
-              const { primaryImageUrl, imageUrls } = normalizeImageUrls(item.imageUrl, item.imageUrls);
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+      const batch = batches[batchIndex];
+      const batchStartTime = Date.now();
+      let batchSuccess = 0;
+      let batchFailed = 0;
 
-              await tx.prompt.create({
-                data: {
-                  effect: item.effect,
-                  description: item.description,
-                  prompt: item.prompt,
-                  source: item.source,
-                  imageUrl: primaryImageUrl || null,
-                  imageUrls: imageUrls,
-                  tags: {
-                    connectOrCreate: item.tags.map((name) => ({
-                      where: { name },
-                      create: { name },
-                    })),
-                  },
-                  modelTags:
-                    item.modelTags && item.modelTags.length > 0
-                      ? {
-                          connectOrCreate: item.modelTags.map((name) => ({
-                            where: { name },
-                            create: { name },
-                          })),
-                        }
-                      : undefined,
-                  category: {
-                    connectOrCreate: {
-                      where: { name: categoryName },
-                      create: { name: categoryName },
-                    },
-                  },
+      // 逐条插入，不使用事务，避免单条失败导致整批回滚
+      for (let i = 0; i < batch.items.length; i++) {
+        const item = batch.items[i];
+        const globalIndex = batch.startIndex + i;
+
+        try {
+          const categoryName = item.category || DEFAULT_CATEGORY;
+          
+          // 使用统一的图片处理工具函数
+          const { primaryImageUrl, imageUrls } = normalizeImageUrls(item.imageUrl, item.imageUrls);
+
+          await this.prisma.prompt.create({
+            data: {
+              effect: item.effect,
+              description: item.description,
+              prompt: item.prompt,
+              source: item.source,
+              imageUrl: primaryImageUrl || null,
+              imageUrls: imageUrls,
+              tags: {
+                connectOrCreate: item.tags.map((name) => ({
+                  where: { name },
+                  create: { name },
+                })),
+              },
+              modelTags:
+                item.modelTags && item.modelTags.length > 0
+                  ? {
+                      connectOrCreate: item.modelTags.map((name) => ({
+                        where: { name },
+                        create: { name },
+                      })),
+                    }
+                  : undefined,
+              category: {
+                connectOrCreate: {
+                  where: { name: categoryName },
+                  create: { name: categoryName },
                 },
-              });
-              success++;
-            } catch (error) {
-              console.error(`Failed to import prompt "${item.effect}":`, error);
-              failed++;
-            }
+              },
+            },
+          });
+          success++;
+          batchSuccess++;
+        } catch (error) {
+          failed++;
+          batchFailed++;
+          
+          // 提取详细的错误信息
+          const errorMessage = this.extractErrorMessage(error);
+          const errorDetail = {
+            index: globalIndex,
+            effect: item.effect?.substring(0, 50) || '(无标题)',
+            error: errorMessage,
+          };
+          
+          failedItems.push(errorDetail);
+          
+          // 只记录前10条详细错误，避免日志过多
+          if (failedItems.length <= 10) {
+            console.error(`[BulkCreate] Failed item #${globalIndex}:`, {
+              effect: item.effect?.substring(0, 30),
+              source: item.source?.substring(0, 50),
+              error: errorMessage,
+            });
           }
-        }, { timeout: 120000 }); // 120 秒超时
-      } catch (batchError) {
-        // 如果整批事务失败，记录失败数量
-        console.error(`Batch transaction failed:`, batchError);
-        failed += batch.length;
+        }
       }
+
+      const batchDuration = Date.now() - batchStartTime;
+      console.log(`[BulkCreate] Batch ${batchIndex + 1}/${batches.length}: ${batchSuccess} success, ${batchFailed} failed (${batchDuration}ms)`);
     }
 
-    return { success, failed };
+    // 汇总失败原因
+    if (failedItems.length > 0) {
+      const errorSummary = this.summarizeErrors(failedItems);
+      console.error(`[BulkCreate] Import completed with errors:`, {
+        total: items.length,
+        success,
+        failed,
+        errorSummary,
+        sampleErrors: failedItems.slice(0, 5),
+      });
+    } else {
+      console.log(`[BulkCreate] Import completed successfully: ${success} items`);
+    }
+
+    return { 
+      success, 
+      failed,
+      failedItems: failedItems.length > 0 ? failedItems.slice(0, 100) : undefined, // 最多返回100条失败记录
+    };
+  }
+
+  /**
+   * 提取错误信息
+   */
+  private extractErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+      // Prisma 错误通常有 code 属性
+      const prismaError = error as Error & { code?: string; meta?: Record<string, unknown> };
+      
+      if (prismaError.code) {
+        switch (prismaError.code) {
+          case 'P2002':
+            return `唯一约束冲突: ${JSON.stringify(prismaError.meta?.target || 'unknown')}`;
+          case 'P2003':
+            return `外键约束失败: ${JSON.stringify(prismaError.meta?.field_name || 'unknown')}`;
+          case 'P2025':
+            return '记录不存在';
+          case 'P2024':
+            return '数据库连接超时';
+          default:
+            return `Prisma错误[${prismaError.code}]: ${error.message.substring(0, 100)}`;
+        }
+      }
+      return error.message.substring(0, 200);
+    }
+    return String(error).substring(0, 200);
+  }
+
+  /**
+   * 汇总错误类型
+   */
+  private summarizeErrors(failedItems: Array<{ error: string }>): Record<string, number> {
+    const summary: Record<string, number> = {};
+    
+    for (const item of failedItems) {
+      // 提取错误类型（取第一个冒号前的部分，或整个错误信息的前30个字符）
+      const errorType = item.error.includes(':') 
+        ? item.error.split(':')[0] 
+        : item.error.substring(0, 30);
+      
+      summary[errorType] = (summary[errorType] || 0) + 1;
+    }
+    
+    return summary;
   }
 
   /**

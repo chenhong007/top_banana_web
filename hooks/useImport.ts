@@ -26,6 +26,13 @@ interface DuplicateStats {
   total: number;
 }
 
+// 失败详情类型
+interface FailedDetails {
+  summary?: Record<string, number>;  // 按错误类型汇总
+  samples?: Array<{ index: number; effect: string; error: string }>;  // 失败样本
+  totalFailed: number;
+}
+
 // 分批导入进度类型
 interface BatchProgress {
   current: number;
@@ -35,6 +42,7 @@ interface BatchProgress {
   skippedCount: number;      // 因重复被跳过的数量
   totalItemsCount: number;   // 总提交条数（用于验证统计）
   duplicateStats?: DuplicateStats; // 详细的重复统计
+  failedDetails?: FailedDetails;   // 失败详情
   isRunning: boolean;
 }
 
@@ -167,6 +175,7 @@ export function useImport(onSuccess?: () => void) {
     skipped: number;     // 因重复跳过的数量
     failed: number;      // 导入失败的数量
     duplicateStats?: DuplicateStats;
+    failedDetails?: FailedDetails;  // 失败详情
     error?: string;
   }
 
@@ -225,6 +234,7 @@ export function useImport(onSuccess?: () => void) {
         // 使用后端返回的完整统计
         const data = result.data;
         const duplicateStats = data.duplicatesFiltered as DuplicateStats | undefined;
+        const failedDetails = data.failedDetails as FailedDetails | undefined;
         
         return { 
           success: true, 
@@ -233,6 +243,7 @@ export function useImport(onSuccess?: () => void) {
           skipped: data.skipped || 0,
           failed: data.failed || 0,
           duplicateStats,
+          failedDetails,
         };
       } else {
         return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: result.error };
@@ -373,6 +384,12 @@ export function useImport(onSuccess?: () => void) {
       byPromptSimilarity: 0,
       total: 0,
     };
+    // 汇总的失败详情
+    const aggregatedFailedDetails: FailedDetails = {
+      summary: {},
+      samples: [],
+      totalFailed: 0,
+    };
 
     for (let i = 0; i < totalBatches; i++) {
       // 检查是否取消
@@ -401,6 +418,22 @@ export function useImport(onSuccess?: () => void) {
         aggregatedDuplicateStats.total += result.duplicateStats.total;
       }
       
+      // 汇总失败详情
+      if (result.failedDetails) {
+        aggregatedFailedDetails.totalFailed += result.failedDetails.totalFailed;
+        // 合并错误汇总
+        if (result.failedDetails.summary) {
+          for (const [key, count] of Object.entries(result.failedDetails.summary)) {
+            aggregatedFailedDetails.summary![key] = (aggregatedFailedDetails.summary![key] || 0) + count;
+          }
+        }
+        // 只保留前10条失败样本
+        if (result.failedDetails.samples && aggregatedFailedDetails.samples!.length < 10) {
+          const remaining = 10 - aggregatedFailedDetails.samples!.length;
+          aggregatedFailedDetails.samples!.push(...result.failedDetails.samples.slice(0, remaining));
+        }
+      }
+      
       if (!result.success) {
         lastError = result.error || '未知错误';
       }
@@ -413,6 +446,7 @@ export function useImport(onSuccess?: () => void) {
         skippedCount: totalSkipped,
         totalItemsCount: totalItems,
         duplicateStats: aggregatedDuplicateStats.total > 0 ? { ...aggregatedDuplicateStats } : undefined,
+        failedDetails: aggregatedFailedDetails.totalFailed > 0 ? { ...aggregatedFailedDetails } : undefined,
         isRunning: i < totalBatches - 1,
       });
 
@@ -459,6 +493,16 @@ export function useImport(onSuccess?: () => void) {
           }
           if (details.length > 0) {
             message += `\n跳过原因: ${details.join('、')}`;
+          }
+        }
+        
+        // 显示失败原因汇总
+        if (aggregatedFailedDetails.totalFailed > 0 && aggregatedFailedDetails.summary) {
+          const failedReasons = Object.entries(aggregatedFailedDetails.summary)
+            .map(([reason, count]) => `${reason}: ${count}`)
+            .join('、');
+          if (failedReasons) {
+            message += `\n失败原因: ${failedReasons}`;
           }
         }
         
