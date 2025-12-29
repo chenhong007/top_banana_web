@@ -4,11 +4,16 @@
  */
 
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { DataImportMode, ImportSourceType } from '@/types';
 import { readFileAsText } from '@/lib/csv-parser';
 import { DEFAULTS, API_ENDPOINTS, MESSAGES } from '@/lib/constants';
+import { tagKeys } from '@/hooks/queries/useTagsQuery';
+import { categoryKeys } from '@/hooks/queries/useCategoriesQuery';
+import { modelTagKeys } from '@/hooks/queries/useModelTagsQuery';
 
 export function useImport(onSuccess?: () => void) {
+  const queryClient = useQueryClient();
   const [mode, setMode] = useState<ImportSourceType>('csv');
   const [feishuUrl, setFeishuUrl] = useState<string>(DEFAULTS.FEISHU_URL);
   const [cookie, setCookie] = useState<string>('');
@@ -20,6 +25,16 @@ export function useImport(onSuccess?: () => void) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  /**
+   * 使标签、分类和模型标签的缓存失效
+   * 导入时可能创建了新的标签/分类/模型标签，需要刷新这些列表
+   */
+  const invalidateRelatedQueries = () => {
+    queryClient.invalidateQueries({ queryKey: tagKeys.all });
+    queryClient.invalidateQueries({ queryKey: categoryKeys.all });
+    queryClient.invalidateQueries({ queryKey: modelTagKeys.all });
+  };
 
   const handleJsonFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -87,6 +102,7 @@ export function useImport(onSuccess?: () => void) {
 
       if (importResult.success) {
         setSuccess(MESSAGES.SUCCESS.IMPORT(importResult.data.imported));
+        invalidateRelatedQueries();
         setTimeout(() => {
           onSuccess?.();
         }, 1500);
@@ -124,6 +140,7 @@ export function useImport(onSuccess?: () => void) {
 
       if (result.success) {
         setSuccess(MESSAGES.SUCCESS.IMPORT(result.data.imported));
+        invalidateRelatedQueries();
         setTimeout(() => {
           onSuccess?.();
         }, 1500);
@@ -186,6 +203,7 @@ export function useImport(onSuccess?: () => void) {
 
       if (importResult.success) {
         setSuccess(MESSAGES.SUCCESS.IMPORT_CSV(parseResult.data.total, importResult.data.imported));
+        invalidateRelatedQueries();
         setTimeout(() => {
           onSuccess?.();
         }, 2000);

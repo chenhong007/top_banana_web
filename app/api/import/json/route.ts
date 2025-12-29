@@ -14,9 +14,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { uploadImageFromUrl, isR2Configured } from '@/lib/r2';
 import { checkPromptSimilarity } from '@/lib/text-similarity';
+import fs from 'fs';
+import path from 'path';
 
-// 导入 prompts.json 数据
-import promptsData from '@/data/prompts.json';
+// 动态加载 prompts.json 数据（避免静态导入大文件）
+function loadPromptsData(): { items: JsonPromptItem[] } {
+  const jsonPath = path.join(process.cwd(), 'data', 'prompts.json');
+  const rawData = fs.readFileSync(jsonPath, 'utf-8');
+  return JSON.parse(rawData);
+}
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // Vercel Pro: 最大 300 秒
@@ -293,8 +299,9 @@ export async function POST(request: NextRequest) {
       errors: [],
     };
 
-    // 加载数据
-    const items = (promptsData as { items: JsonPromptItem[] }).items;
+    // 加载数据（动态读取）
+    const promptsData = loadPromptsData();
+    const items = promptsData.items;
     stats.total = items.length;
 
     // 应用 offset 和 limit
@@ -412,7 +419,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const items = (promptsData as { items: JsonPromptItem[] }).items;
+    const promptsData = loadPromptsData();
+    const items = promptsData.items;
     const existingCount = await prisma.prompt.count();
 
     return NextResponse.json({
