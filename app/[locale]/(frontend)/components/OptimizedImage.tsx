@@ -139,19 +139,6 @@ export default function OptimizedImage({
     return false;
   }, [src, optimizedSrc]);
 
-  // Debug logging
-  useEffect(() => {
-    console.log('[OptimizedImage Debug]', {
-      originalSrc: src,
-      optimizedSrc,
-      useNextImage,
-      R2_CDN_URL,
-      isInView,
-      isLoaded,
-      hasError
-    });
-  }, [src, optimizedSrc, useNextImage, hasError, isInView, isLoaded]);
-
   // 使用 useIsomorphicLayoutEffect 确保尽早检测视口（仅用于非优先图片的懒加载）
   useIsomorphicLayoutEffect(() => {
     // priority 图片始终立即加载
