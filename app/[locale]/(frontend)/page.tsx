@@ -2,8 +2,9 @@ import { promptRepository } from '@/repositories';
 import { setRequestLocale } from 'next-intl/server';
 import HomeClient from './HomeClient';
 
-// Dynamic rendering to fetch data from database
-export const dynamic = 'force-dynamic';
+// Use ISR (Incremental Static Regeneration)
+// Revalidate every hour
+export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ locale: string }>;

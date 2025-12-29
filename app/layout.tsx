@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { ToastProvider } from '@/components/shared/ToastContainer';
 import { QueryProvider } from '@/lib/query-client';
 import { Analytics } from '@vercel/analytics/next';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'AI 提示词库',
@@ -44,7 +41,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.nlark.com" />
         <link rel="dns-prefetch" href="https://cdn.nlark.com" />
       </head>
-      <body className={inter.className}>
+      <body>
         <QueryProvider>
           <ToastProvider>{children}</ToastProvider>
         </QueryProvider>
