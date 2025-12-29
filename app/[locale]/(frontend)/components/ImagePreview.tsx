@@ -106,10 +106,13 @@ export default function ImagePreview({
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black/90 backdrop-blur-md" />
 
-          {/* Close button */}
+          {/* Close button - z-[60] 确保在所有内容之上 */}
           <button
-            onClick={onCloseModal}
-            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-200 backdrop-blur-sm z-10 group"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCloseModal();
+            }}
+            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-200 backdrop-blur-sm z-[60] group cursor-pointer"
             aria-label="Close preview"
           >
             <X className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
