@@ -30,7 +30,7 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import { Footer } from './components/Footer';
 
 // Hooks
-import { useSearch } from '@/hooks/useSearch';
+import { useOptimizedSearch } from '@/hooks/useOptimizedSearch';
 import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/hooks/useAuth';
 import { usePromptsInfiniteQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
@@ -123,6 +123,7 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
   }, [currentDomain]);
 
   // Search and filter with server-provided options where available
+  // Using optimized search with debounce, preprocessing, early termination, and useTransition
   const {
     searchTerm,
     setSearchTerm,
@@ -136,7 +137,8 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
     allCategories: derivedCategories,
     allModelTags: derivedModelTags,
     filteredPrompts,
-  } = useSearch(prompts);
+    isSearching,
+  } = useOptimizedSearch(prompts);
 
   // Prefer server data for filter options, fallback to derived from prompts
   const allTags = serverTags.length > 0 ? serverTags : derivedTags;
@@ -315,6 +317,7 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
               onPreview={handleImagePreview}
               databaseTotal={databaseTotal}
               databaseTotalPages={databaseTotalPages}
+              isSearching={isSearching}
             />
             
             {/* Infinite Scroll Loader */}

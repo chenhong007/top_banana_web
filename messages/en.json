@@ -162,7 +162,8 @@
     "tryOther": "Try different search criteria"
   },
   "loading": {
-    "text": "Loading..."
+    "text": "Loading...",
+    "searching": "Searching..."
   },
   "seo": {
     "aboutTitle": "About AI Prompt Library - Your Source for AI Creativity",

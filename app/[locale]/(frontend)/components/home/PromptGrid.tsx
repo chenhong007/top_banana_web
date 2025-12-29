@@ -6,7 +6,7 @@
  * Enhanced with fade-in animations
  */
 
-import { FileQuestion } from 'lucide-react';
+import { FileQuestion, Search } from 'lucide-react';
 import { useRef, useCallback } from 'react';
 import PromptCard from '../PromptCard';
 import Pagination from '../Pagination';
@@ -36,9 +36,11 @@ interface PromptGridProps {
   databaseTotal?: number;
   /** 数据库真实总页数（用于分页显示） */
   databaseTotalPages?: number;
+  /** 搜索进行中状态（用于显示搜索指示器） */
+  isSearching?: boolean;
 }
 
-export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview, databaseTotal, databaseTotalPages }: PromptGridProps) {
+export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview, databaseTotal, databaseTotalPages, isSearching }: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
   const tPagination = useTranslations('pagination');
@@ -91,9 +93,18 @@ export default function PromptGrid({ loading, filteredPrompts, pagination, onPre
     <div ref={gridRef} className="space-y-8 scroll-mt-4">
       {/* Results count - 显示数据库真实总量 */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {tPagination('total', { count: databaseTotal ?? filteredPrompts.length })}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-muted-foreground">
+            {tPagination('total', { count: databaseTotal ?? filteredPrompts.length })}
+          </p>
+          {/* 搜索进行中指示器 */}
+          {isSearching && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground animate-pulse">
+              <Search className="w-3 h-3" />
+              <span>{tLoading('searching')}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Grid */}

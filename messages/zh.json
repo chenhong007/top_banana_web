@@ -162,7 +162,8 @@
     "tryOther": "尝试其他搜索条件"
   },
   "loading": {
-    "text": "加载中..."
+    "text": "加载中...",
+    "searching": "搜索中..."
   },
   "seo": {
     "aboutTitle": "关于 AI 提示词库 - 您的 AI 创作灵感源泉",
