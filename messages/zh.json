@@ -7,7 +7,8 @@
     "title": "全球最热门banana玩法大全",
     "subtitle": "top ai prompts",
     "admin": "管理后台",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "searchingInLoaded": "正在已加载的数据中搜索..."
   },
   "hero": {
     "badge": "探索全球精选优秀实践",

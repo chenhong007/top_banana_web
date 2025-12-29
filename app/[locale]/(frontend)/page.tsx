@@ -39,8 +39,9 @@ export default async function Home({ params }: Props) {
   // Enable static rendering
   setRequestLocale(locale);
 
-  // Read prompts from database using repository
-  const prompts = await promptRepository.findAll();
+  // Read prompts from database using repository (Paginated: fetch first 20)
+  const paginatedResult = await promptRepository.findAllPaginated(1, 20);
+  const prompts = paginatedResult.data;
 
   // 预加载首屏前12张图片（服务端渲染时注入 link preload）
   const preloadImages = prompts
@@ -62,7 +63,7 @@ export default async function Home({ params }: Props) {
           fetchpriority={index < 6 ? 'high' : 'low'}
         />
       ))}
-      <HomeClient initialPrompts={prompts} />
+      <HomeClient initialPrompts={prompts} initialPagination={paginatedResult} />
     </>
   );
 }

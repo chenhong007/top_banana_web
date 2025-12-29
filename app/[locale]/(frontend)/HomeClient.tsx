@@ -7,11 +7,12 @@
  * Enhanced with modern glass effects and animations
  */
 
-import { Sparkles, Settings, LogOut } from 'lucide-react';
+import { Sparkles, Settings, LogOut, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useInView } from 'react-intersection-observer';
 
 // Sub-components
 import {
@@ -31,27 +32,50 @@ import { Footer } from './components/Footer';
 import { useSearch } from '@/hooks/useSearch';
 import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/hooks/useAuth';
-import { usePromptsQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
+import { usePromptsInfiniteQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
 
 // Types and config
 import { PromptItem } from '@/types';
 import { ADMIN_CONFIG } from '@/lib/constants';
+import { PaginatedResponse } from '@/services/prompt.service';
 
 interface HomeClientProps {
   initialPrompts: PromptItem[];
+  initialPagination?: PaginatedResponse<PromptItem>;
 }
 
-export default function HomeClient({ initialPrompts }: HomeClientProps) {
+export default function HomeClient({ initialPrompts, initialPagination }: HomeClientProps) {
   const t = useTranslations('header');
 
-  // Use React Query with initial data from server
-  const { data: prompts = initialPrompts, isLoading: promptsLoading } = usePromptsQuery(initialPrompts);
+  // Use React Query Infinite Query
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    isLoading: promptsLoading 
+  } = usePromptsInfiniteQuery(initialPagination);
+  
+  // Flatten prompts from all pages
+  const prompts = useMemo(() => {
+    return data?.pages.flatMap(page => page.data) || initialPrompts;
+  }, [data, initialPrompts]);
+
   const { data: serverTags = [] } = useTagsQuery();
   const { data: serverCategories = [] } = useCategoriesQuery();
   const { data: serverModelTags = [] } = useModelTagsQuery();
   
-  const loading = promptsLoading;
+  const loading = promptsLoading && !data;
   const router = useRouter();
+
+  // Infinite scroll trigger
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
 
   // Authentication state
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -115,6 +139,15 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
   };
 
   // Pagination with configurable page size
+  // Note: We use usePagination hook to handle pagination of the *filtered* list on the client side.
+  // The "Infinite Scroll" fetches data from server, adding to the pool.
+  // The client-side pagination here splits the *currently loaded* filtered pool into pages for display.
+  // Ideally, if we have infinite scroll, we shouldn't have pages numbers, but just a long list.
+  // However, the design uses PromptGrid which might use pagination.
+  // Let's keep the existing client-side pagination for now as it's part of the UI, 
+  // but usually infinite scroll replaces numbered pagination.
+  // If the user wants "remainder loaded by client scrolling", they typically want infinite scroll behavior.
+  // If we keep usePagination, it will paginate the currently loaded items.
   const pagination = usePagination(filteredPrompts);
 
   // Reset to first page when filters change
@@ -259,6 +292,27 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
               pagination={pagination} 
               onPreview={handleImagePreview}
             />
+            
+            {/* Infinite Scroll Loader */}
+            {hasNextPage && (
+              <div ref={ref} className="flex justify-center py-8">
+                {isFetchingNextPage ? (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                     <Loader2 className="h-6 w-6 animate-spin" />
+                     <span>Loading more...</span>
+                  </div>
+                ) : (
+                  <div className="h-4" /> // Spacer for intersection observer
+                )}
+              </div>
+            )}
+            
+            {/* 提示用户：正在使用客户端筛选 + 滚动加载 */}
+            {(searchTerm || selectedTag || selectedCategory || selectedModelTag) && hasNextPage && (
+              <div className="text-center text-xs text-muted-foreground pb-2">
+                {t('searchingInLoaded')}
+              </div>
+            )}
           </div>
         </div>
       </main>

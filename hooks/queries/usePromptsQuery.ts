@@ -5,8 +5,8 @@
  * React Query hooks for fetching and mutating prompts
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { promptService } from '@/services/prompt.service';
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
+import { promptService, PaginatedResponse } from '@/services/prompt.service';
 import { CreatePromptRequest, PromptItem } from '@/types';
 
 // Query keys
@@ -16,6 +16,7 @@ export const promptKeys = {
   list: (filters: Record<string, unknown>) => [...promptKeys.lists(), filters] as const,
   details: () => [...promptKeys.all, 'detail'] as const,
   detail: (id: string) => [...promptKeys.details(), id] as const,
+  infinite: () => [...promptKeys.all, 'infinite'] as const,
 };
 
 /**
@@ -25,10 +26,40 @@ export const promptKeys = {
 export function usePromptsQuery(initialData?: PromptItem[]) {
   return useQuery({
     queryKey: promptKeys.lists(),
-    queryFn: () => promptService.getAll(),
+    queryFn: async () => {
+      const result = await promptService.getAll();
+      // Handle both array and paginated response
+      if (Array.isArray(result)) return result;
+      return result.data;
+    },
     initialData,
     // If initial data is provided, don't refetch immediately
     staleTime: initialData ? 60 * 1000 : 0,
+  });
+}
+
+/**
+ * Hook to fetch prompts with infinite scrolling
+ * @param initialData - Optional initial paginated data
+ */
+export function usePromptsInfiniteQuery(initialData?: PaginatedResponse<PromptItem>) {
+  return useInfiniteQuery({
+    queryKey: promptKeys.infinite(),
+    queryFn: async ({ pageParam = 1 }) => {
+      return promptService.getPaginated(pageParam, 20);
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.pagination.hasNext) {
+        return lastPage.pagination.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
+    initialData: initialData ? {
+      pages: [initialData],
+      pageParams: [1]
+    } : undefined,
+    staleTime: 60 * 1000, // 1 minute stale time
   });
 }
 
@@ -54,6 +85,7 @@ export function useCreatePromptMutation() {
     onSuccess: () => {
       // Invalidate and refetch prompts list
       queryClient.invalidateQueries({ queryKey: promptKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: promptKeys.infinite() });
     },
   });
 }
@@ -72,6 +104,7 @@ export function useUpdatePromptMutation() {
       queryClient.setQueryData(promptKeys.detail(updatedPrompt.id), updatedPrompt);
       // Invalidate the list to reflect changes
       queryClient.invalidateQueries({ queryKey: promptKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: promptKeys.infinite() });
     },
   });
 }
@@ -89,6 +122,7 @@ export function useDeletePromptMutation() {
       queryClient.removeQueries({ queryKey: promptKeys.detail(id) });
       // Invalidate the list
       queryClient.invalidateQueries({ queryKey: promptKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: promptKeys.infinite() });
     },
   });
 }
@@ -112,6 +146,21 @@ export function useInteractPromptMutation() {
         (oldData) => {
           if (!oldData) return oldData;
           return oldData.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p));
+        }
+      );
+      
+      // Update infinite query data
+      queryClient.setQueryData(
+        promptKeys.infinite(),
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: PaginatedResponse<PromptItem>) => ({
+              ...page,
+              data: page.data.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p))
+            }))
+          };
         }
       );
     },
@@ -147,4 +196,3 @@ export function usePromptsWithOptimisticUpdates() {
     isInteracting: interactMutation.isPending,
   };
 }
-
