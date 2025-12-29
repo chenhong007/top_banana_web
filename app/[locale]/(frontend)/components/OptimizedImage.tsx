@@ -62,15 +62,33 @@ export default function OptimizedImage({
       }
       // 优先使用 R2 CDN 直连（更快）
       if (R2_CDN_URL) {
-        return `${R2_CDN_URL}/${key}`;
+        // 移除可能存在的开头的斜杠，避免双重斜杠
+        const cleanKey = key.startsWith('/') ? key.slice(1) : key;
+        return `${R2_CDN_URL}/${cleanKey}`;
       }
       return `/api/images/${key}`;
     }
     
-    // 如果是 R2 公开 URL，直接返回
-    if (src.includes('.r2.cloudflarestorage.com') || 
-        src.includes('.r2.dev') ||
-        (src.includes('images/') && !src.startsWith('http'))) {
+    // 如果是 R2 公开 URL (r2.dev 或 r2.cloudflarestorage.com)，尝试替换为自定义 CDN
+    if (src.includes('.r2.cloudflarestorage.com') || src.includes('.r2.dev')) {
+      if (R2_CDN_URL) {
+        try {
+          // 提取路径部分
+          const urlObj = new URL(src);
+          const path = urlObj.pathname;
+          // 移除开头的斜杠
+          const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+          return `${R2_CDN_URL}/${cleanPath}`;
+        } catch (e) {
+          // 如果解析失败，返回原链接
+          return src;
+        }
+      }
+      return src;
+    }
+
+    // 其他 images/ 路径处理
+    if (src.includes('images/') && !src.startsWith('http')) {
       return src;
     }
     

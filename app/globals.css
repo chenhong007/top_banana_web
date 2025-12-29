@@ -131,7 +131,7 @@
   }
 
   .tag-badge {
-    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-colors;
+    @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors;
     background: hsl(var(--muted) / 0.8);
     color: hsl(var(--muted-foreground));
   }

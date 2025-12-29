@@ -23,6 +23,7 @@ import {
   PromptGrid,
   Sidebar,
 } from './components/home';
+import ImagePreview from './components/ImagePreview';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import { Footer } from './components/Footer';
 
@@ -137,6 +138,23 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
     pagination.resetPagination();
   };
 
+  // Image Preview State
+  const [previewImage, setPreviewImage] = useState<{
+    src: string;
+    alt: string;
+    isOpen: boolean;
+  } | null>(null);
+
+  const handleImagePreview = (src: string, alt: string) => {
+    setPreviewImage({ src, alt, isOpen: true });
+  };
+
+  const handleClosePreview = () => {
+    setPreviewImage(prev => prev ? { ...prev, isOpen: false } : null);
+    // Delay clearing the state to allow animation to finish if needed, or just keep it null
+    setTimeout(() => setPreviewImage(null), 300);
+  };
+
   return (
     <>
       {/* Header */}
@@ -235,10 +253,27 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
             </div>
 
             {/* Prompts Grid */}
-            <PromptGrid loading={loading} filteredPrompts={filteredPrompts} pagination={pagination} />
+            <PromptGrid 
+              loading={loading} 
+              filteredPrompts={filteredPrompts} 
+              pagination={pagination} 
+              onPreview={handleImagePreview}
+            />
           </div>
         </div>
       </main>
+
+      {/* Global Image Preview */}
+      {previewImage && (
+        <ImagePreview
+          src={previewImage.src}
+          alt={previewImage.alt}
+          isModalOpen={previewImage.isOpen}
+          onCloseModal={handleClosePreview}
+          // We removed hover preview logic for global state simplicity and performance
+          isHovering={false}
+        />
+      )}
 
       {/* Footer */}
       <Footer />

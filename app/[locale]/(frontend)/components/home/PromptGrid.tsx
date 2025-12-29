@@ -31,9 +31,10 @@ interface PromptGridProps {
   loading: boolean;
   filteredPrompts: PromptItem[];
   pagination: PaginationData;
+  onPreview: (src: string, alt: string) => void;
 }
 
-export default function PromptGrid({ loading, filteredPrompts, pagination }: PromptGridProps) {
+export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview }: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
   const gridRef = useRef<HTMLDivElement>(null);
@@ -99,6 +100,7 @@ export default function PromptGrid({ loading, filteredPrompts, pagination }: Pro
             index={index}
             // 首屏前12张图片最高优先级加载（覆盖4行，确保首屏快速显示）
             priority={pagination.currentPage === 1 && index < 12}
+            onPreview={onPreview}
           />
         ))}
       </div>

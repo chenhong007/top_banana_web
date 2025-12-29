@@ -3,7 +3,7 @@
  * Manages search and filter logic
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useDeferredValue } from 'react';
 import { PromptItem } from '@/types';
 
 export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
@@ -11,6 +11,12 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedModelTag, setSelectedModelTag] = useState<string>('');
+
+  // Defer the search term and filter selections to prevent blocking the UI
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const deferredSelectedTag = useDeferredValue(selectedTag);
+  const deferredSelectedCategory = useDeferredValue(selectedCategory);
+  const deferredSelectedModelTag = useDeferredValue(selectedModelTag);
 
   // Get all unique tags (场景/用途标签)
   const allTags = useMemo(() => {
@@ -37,25 +43,26 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
   }, [prompts]);
 
   // Filter prompts based on search, tag, category, and model tag
+  // using deferred values
   const filteredPrompts = useMemo(() => {
     if (!prompts) return [];
     return prompts.filter(prompt => {
       const matchesSearch = 
-        (prompt.effect || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (prompt.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (prompt.prompt || '').toLowerCase().includes(searchTerm.toLowerCase());
+        (prompt.effect || '').toLowerCase().includes(deferredSearchTerm.toLowerCase()) ||
+        (prompt.description || '').toLowerCase().includes(deferredSearchTerm.toLowerCase()) ||
+        (prompt.prompt || '').toLowerCase().includes(deferredSearchTerm.toLowerCase());
       
-      const matchesTag = !selectedTag || (prompt.tags || []).includes(selectedTag);
+      const matchesTag = !deferredSelectedTag || (prompt.tags || []).includes(deferredSelectedTag);
       
-      const matchesCategory = !selectedCategory || prompt.category === selectedCategory;
+      const matchesCategory = !deferredSelectedCategory || prompt.category === deferredSelectedCategory;
       
-      const matchesModelTag = !selectedModelTag || (prompt.modelTags || []).includes(selectedModelTag);
+      const matchesModelTag = !deferredSelectedModelTag || (prompt.modelTags || []).includes(deferredSelectedModelTag);
       
       return matchesSearch && matchesTag && matchesCategory && matchesModelTag;
     });
-  }, [prompts, searchTerm, selectedTag, selectedCategory, selectedModelTag]);
+  }, [prompts, deferredSearchTerm, deferredSelectedTag, deferredSelectedCategory, deferredSelectedModelTag]);
 
-  // Notify when filters change
+  // Notify when filters change (using immediate values to reset pagination quickly)
   useEffect(() => {
     onFilterChange?.();
   }, [searchTerm, selectedTag, selectedCategory, selectedModelTag, onFilterChange]);
@@ -84,4 +91,3 @@ export function useSearch(prompts: PromptItem[], onFilterChange?: () => void) {
     hasFilters: searchTerm !== '' || selectedTag !== '' || selectedCategory !== '' || selectedModelTag !== '',
   };
 }
-
