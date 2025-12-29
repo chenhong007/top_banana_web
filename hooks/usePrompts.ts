@@ -27,7 +27,11 @@ export function usePrompts() {
     try {
       setLoading(true);
       const data = await promptService.getAll();
-      setPrompts(data);
+      if (Array.isArray(data)) {
+        setPrompts(data);
+      } else {
+        setPrompts(data.data);
+      }
     } catch (error) {
       console.error('Failed to fetch prompts:', error);
       toast.showError('获取数据失败：' + formatErrorMessage(error));

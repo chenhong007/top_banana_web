@@ -1,6 +1,8 @@
 import { promptRepository } from '@/repositories';
 import { setRequestLocale } from 'next-intl/server';
 import HomeClient from './HomeClient';
+import { PaginatedResponse } from '@/services/prompt.service';
+import { PromptItem } from '@/types';
 
 // Use ISR (Incremental Static Regeneration)
 // Revalidate every hour
@@ -44,6 +46,20 @@ export default async function Home({ params }: Props) {
   const paginatedResult = await promptRepository.findAllPaginated(1, 20);
   const prompts = paginatedResult.data;
 
+  // Transform PaginatedResult to PaginatedResponse for client component
+  const initialPagination: PaginatedResponse<PromptItem> = {
+    success: true,
+    data: prompts as unknown as PromptItem[],
+    pagination: {
+      page: paginatedResult.page,
+      pageSize: paginatedResult.pageSize,
+      total: paginatedResult.total,
+      totalPages: paginatedResult.totalPages,
+      hasNext: paginatedResult.page < paginatedResult.totalPages,
+      hasPrev: paginatedResult.page > 1
+    }
+  };
+
   // 预加载首屏前12张图片（服务端渲染时注入 link preload）
   const preloadImages = prompts
     .slice(0, 12)
@@ -64,7 +80,7 @@ export default async function Home({ params }: Props) {
           fetchpriority={index < 6 ? 'high' : 'low'}
         />
       ))}
-      <HomeClient initialPrompts={prompts} initialPagination={paginatedResult} />
+      <HomeClient initialPrompts={prompts as unknown as PromptItem[]} initialPagination={initialPagination} />
     </>
   );
 }
