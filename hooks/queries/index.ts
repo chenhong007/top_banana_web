@@ -5,10 +5,12 @@
 
 export {
   usePromptsQuery,
+  usePromptsInfiniteQuery,
   usePromptQuery,
   useCreatePromptMutation,
   useUpdatePromptMutation,
   useDeletePromptMutation,
+  useInteractPromptMutation,
   usePromptsWithOptimisticUpdates,
   promptKeys,
 } from './usePromptsQuery';
