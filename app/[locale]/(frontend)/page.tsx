@@ -6,9 +6,9 @@ import { PromptItem } from '@/types';
 import SeoJsonLd, { CollectionJsonLd } from '@/components/seo/JsonLd';
 
 // Use ISR (Incremental Static Regeneration)
-// 60秒刷新一次，确保数据更新能快速反映到前端
+// 从环境变量获取缓存时间，Vercel 后台可配置 REVALIDATE_SECONDS
 // 导入数据后会自动调用 revalidatePath 触发重新生成
-export const revalidate = 60;
+export const revalidate = Number(process.env.REVALIDATE_SECONDS) || 60;
 
 type Props = {
   params: Promise<{ locale: string }>;
