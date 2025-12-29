@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n/config';
 
@@ -11,6 +11,26 @@ type Props = {
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Omit<Props, 'children'>) {
+  const { locale } = await params;
+  
+  if (!locales.includes(locale as Locale)) {
+    return {};
+  }
+
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+ 
+  return {
+    title: t('title'),
+    description: t('description'),
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      type: 'website',
+    },
+  };
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
@@ -33,4 +53,3 @@ export default async function LocaleLayout({ children, params }: Props) {
     </NextIntlClientProvider>
   );
 }
-
