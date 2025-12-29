@@ -45,7 +45,35 @@ export default async function Home({ params }: Props) {
   setRequestLocale(locale);
 
   // Read prompts from database using repository (Paginated: fetch first 20)
-  const paginatedResult = await promptRepository.findAllPaginated(1, 20);
+  // 添加优雅降级：构建时如果数据库不可用，返回空数据，运行时通过 ISR 获取真实数据
+  let paginatedResult: {
+    data: PromptItem[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
+  
+  try {
+    const result = await promptRepository.findAllPaginated(1, 20);
+    paginatedResult = {
+      data: result.data as unknown as PromptItem[],
+      total: result.total,
+      page: result.page,
+      pageSize: result.pageSize,
+      totalPages: result.totalPages,
+    };
+  } catch (error) {
+    console.warn('[Home] Database unavailable during build, using empty data. ISR will fetch real data at runtime.');
+    paginatedResult = {
+      data: [],
+      total: 0,
+      page: 1,
+      pageSize: 20,
+      totalPages: 0,
+    };
+  }
+  
   const prompts = paginatedResult.data;
 
   // Transform PaginatedResult to PaginatedResponse for client component
