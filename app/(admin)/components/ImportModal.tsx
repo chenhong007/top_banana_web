@@ -1,6 +1,6 @@
 'use client';
 
-import { X, Upload } from 'lucide-react';
+import { X, Upload, XCircle } from 'lucide-react';
 import ImportTabs from './import/ImportTabs';
 import CsvImportForm from './import/CsvImportForm';
 import FeishuImportForm from './import/FeishuImportForm';
@@ -40,6 +40,8 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
     handleJsonFileChange,
     handleImport,
     resetState,
+    batchProgress,
+    cancelBatchImport,
   } = useImport(onImportSuccess);
 
   if (!isOpen) return null;
@@ -106,12 +108,47 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
           <div className="mt-4">
             <StatusMessage error={error} success={success} />
           </div>
+
+          {/* 分批导入进度条 */}
+          {batchProgress.total > 0 && (
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-blue-800">
+                  分批导入进度
+                </span>
+                <span className="text-sm text-blue-600">
+                  {batchProgress.current} / {batchProgress.total} 批次
+                </span>
+              </div>
+              <div className="w-full bg-blue-200 rounded-full h-2 mb-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-xs text-blue-700">
+                <span>成功: {batchProgress.successCount} 条</span>
+                {batchProgress.failedCount > 0 && (
+                  <span className="text-red-600">失败: {batchProgress.failedCount} 条</span>
+                )}
+                {batchProgress.isRunning && (
+                  <button
+                    onClick={cancelBatchImport}
+                    className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                  >
+                    <XCircle className="w-3 h-3" />
+                    取消导入
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 p-6 border-t bg-gray-50">
-          <button onClick={handleClose} className={BUTTON_STYLES.ghost}>
-            取消
+          <button onClick={handleClose} className={BUTTON_STYLES.ghost} disabled={loading}>
+            {loading ? '导入中...' : '取消'}
           </button>
           <button
             onClick={handleImport}
@@ -126,7 +163,7 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
             {loading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                导入中...
+                {batchProgress.total > 0 ? `导入中 (${batchProgress.current}/${batchProgress.total})` : '导入中...'}
               </>
             ) : (
               <>

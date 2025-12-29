@@ -1,9 +1,10 @@
 /**
  * useImport Hook
  * Manages data import state and logic for ImportModal
+ * v2.0: 支持分批导入，避免 Vercel 504 超时
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { DataImportMode, ImportSourceType } from '@/types';
 import { readFileAsText } from '@/lib/csv-parser';
@@ -11,6 +12,19 @@ import { DEFAULTS, API_ENDPOINTS, MESSAGES } from '@/lib/constants';
 import { tagKeys } from '@/hooks/queries/useTagsQuery';
 import { categoryKeys } from '@/hooks/queries/useCategoriesQuery';
 import { modelTagKeys } from '@/hooks/queries/useModelTagsQuery';
+
+// 分批导入配置
+const BATCH_SIZE = 50; // 每批导入的数量，避免超时
+const BATCH_DELAY = 500; // 每批之间的延迟（毫秒）
+
+// 分批导入进度类型
+interface BatchProgress {
+  current: number;
+  total: number;
+  successCount: number;
+  failedCount: number;
+  isRunning: boolean;
+}
 
 export function useImport(onSuccess?: () => void) {
   const queryClient = useQueryClient();
@@ -25,6 +39,18 @@ export function useImport(onSuccess?: () => void) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
+  // 分批导入进度状态
+  const [batchProgress, setBatchProgress] = useState<BatchProgress>({
+    current: 0,
+    total: 0,
+    successCount: 0,
+    failedCount: 0,
+    isRunning: false,
+  });
+  
+  // 用于取消导入的 ref
+  const cancelRef = useRef(false);
 
   /**
    * 使标签、分类和模型标签的缓存失效
@@ -116,13 +142,66 @@ export function useImport(onSuccess?: () => void) {
     }
   };
 
+  /**
+   * 分批导入单个批次
+   */
+  const importBatch = async (
+    items: unknown[], 
+    batchMode: DataImportMode, 
+    isFirstBatch: boolean
+  ): Promise<{ success: boolean; imported: number; error?: string }> => {
+    try {
+      // 第一批使用用户选择的模式，后续批次总是使用 merge 模式
+      const actualMode = isFirstBatch ? batchMode : 'merge';
+      
+      const response = await fetch(API_ENDPOINTS.IMPORT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, mode: actualMode }),
+      });
+
+      const responseText = await response.text();
+      
+      if (!response.ok) {
+        if (response.status === 504) {
+          return { success: false, imported: 0, error: '请求超时，请减少批次大小' };
+        }
+        if (response.status === 413) {
+          return { success: false, imported: 0, error: '请求数据过大' };
+        }
+        return { success: false, imported: 0, error: `服务器错误 (${response.status})` };
+      }
+
+      const result = JSON.parse(responseText);
+      if (result.success) {
+        return { success: true, imported: result.data.imported };
+      } else {
+        return { success: false, imported: 0, error: result.error };
+      }
+    } catch (err) {
+      return { 
+        success: false, 
+        imported: 0, 
+        error: err instanceof Error ? err.message : '网络错误' 
+      };
+    }
+  };
+
+  /**
+   * 取消分批导入
+   */
+  const cancelBatchImport = () => {
+    cancelRef.current = true;
+  };
+
   const handleJsonImport = async () => {
     setLoading(true);
     setError('');
     setSuccess('');
+    cancelRef.current = false;
 
     // 步骤1：先解析本地 JSON 数据
-    let items;
+    let items: unknown[];
     try {
       items = JSON.parse(jsonData);
     } catch (parseErr) {
@@ -167,52 +246,91 @@ export function useImport(onSuccess?: () => void) {
       return;
     }
 
-    // 步骤3：发送 API 请求
-    try {
-      const response = await fetch(API_ENDPOINTS.IMPORT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, mode: importMode }),
+    // 步骤3：分批导入
+    const totalItems = items.length;
+    const totalBatches = Math.ceil(totalItems / BATCH_SIZE);
+    
+    // 如果数据量小，直接一次导入
+    if (totalItems <= BATCH_SIZE) {
+      try {
+        const result = await importBatch(items, importMode, true);
+        if (result.success) {
+          setSuccess(MESSAGES.SUCCESS.IMPORT(result.imported));
+          invalidateRelatedQueries();
+          setTimeout(() => onSuccess?.(), 1500);
+        } else {
+          setError(result.error || MESSAGES.ERROR.IMPORT);
+        }
+      } catch (err) {
+        setError(MESSAGES.ERROR.NETWORK(err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // 大数据量：分批导入
+    setBatchProgress({
+      current: 0,
+      total: totalBatches,
+      successCount: 0,
+      failedCount: 0,
+      isRunning: true,
+    });
+
+    let totalImported = 0;
+    let totalFailed = 0;
+    let lastError = '';
+
+    for (let i = 0; i < totalBatches; i++) {
+      // 检查是否取消
+      if (cancelRef.current) {
+        setError(`导入已取消。已成功导入 ${totalImported} 条，失败 ${totalFailed} 条。`);
+        break;
+      }
+
+      const start = i * BATCH_SIZE;
+      const end = Math.min(start + BATCH_SIZE, totalItems);
+      const batch = items.slice(start, end);
+
+      const result = await importBatch(batch, importMode, i === 0);
+      
+      if (result.success) {
+        totalImported += result.imported;
+      } else {
+        totalFailed += batch.length;
+        lastError = result.error || '未知错误';
+      }
+
+      setBatchProgress({
+        current: i + 1,
+        total: totalBatches,
+        successCount: totalImported,
+        failedCount: totalFailed,
+        isRunning: i < totalBatches - 1,
       });
 
-      // 先获取响应文本
-      const responseText = await response.text();
-      
-      // 检查 HTTP 状态码
-      if (!response.ok) {
-        // 检查是否是请求体过大的错误
-        if (response.status === 413 || responseText.includes('Request Entity Too Large') || responseText.includes('PayloadTooLargeError')) {
-          setError(`请求数据过大（${items.length} 条记录）。请尝试分批导入或减少数据量。`);
-        } else {
-          setError(`服务器错误 (${response.status}): ${responseText.substring(0, 200)}`);
-        }
-        setLoading(false);
-        return;
+      // 批次之间添加延迟，避免请求过于频繁
+      if (i < totalBatches - 1) {
+        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
       }
+    }
 
-      // 解析响应 JSON
-      let result;
-      try {
-        result = JSON.parse(responseText);
-      } catch {
-        setError(`服务器响应格式错误: ${responseText.substring(0, 200)}`);
-        setLoading(false);
-        return;
-      }
+    // 完成
+    setBatchProgress(prev => ({ ...prev, isRunning: false }));
+    setLoading(false);
 
-      if (result.success) {
-        setSuccess(MESSAGES.SUCCESS.IMPORT(result.data.imported));
+    if (!cancelRef.current) {
+      if (totalFailed === 0) {
+        setSuccess(`分批导入完成！成功导入 ${totalImported} 条数据。`);
         invalidateRelatedQueries();
-        setTimeout(() => {
-          onSuccess?.();
-        }, 1500);
+        setTimeout(() => onSuccess?.(), 2000);
+      } else if (totalImported > 0) {
+        setSuccess(`分批导入完成。成功: ${totalImported} 条，失败: ${totalFailed} 条。\n最后错误: ${lastError}`);
+        invalidateRelatedQueries();
       } else {
-        setError(result.error || MESSAGES.ERROR.IMPORT);
+        setError(`导入失败。${lastError}`);
       }
-    } catch (err) {
-      setError(MESSAGES.ERROR.NETWORK(err instanceof Error ? err.message : MESSAGES.ERROR.UNKNOWN));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -317,6 +435,9 @@ export function useImport(onSuccess?: () => void) {
     handleFileChange,
     handleImport,
     resetState,
+    // 分批导入相关
+    batchProgress,
+    cancelBatchImport,
   };
 }
 

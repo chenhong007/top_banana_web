@@ -18,8 +18,8 @@ import { requireAuth } from '@/lib/security';
 // Force dynamic rendering to avoid database calls during build
 export const dynamic = 'force-dynamic';
 
-// Increase timeout for large imports (60 seconds)
-export const maxDuration = 60;
+// Increase timeout for large imports (Vercel Pro: 最大 300 秒)
+export const maxDuration = 300;
 
 // POST import prompts from external data (requires authentication)
 export async function POST(request: NextRequest) {
