@@ -1,13 +1,16 @@
 import { PromptItem } from '@/types';
-import { BarChart3, Tag, Clock, Database } from 'lucide-react';
+import { Tag, Clock, Database } from 'lucide-react';
 import { CARD_STYLES } from '@/lib/styles';
 
 interface DashboardStatsProps {
   prompts: PromptItem[];
+  /** 数据库真实总量（来自分页接口） */
+  totalCount?: number;
 }
 
-export default function DashboardStats({ prompts }: DashboardStatsProps) {
-  const totalPrompts = prompts.length;
+export default function DashboardStats({ prompts, totalCount }: DashboardStatsProps) {
+  // 使用数据库真实总量，如果没有则降级使用当前页数据长度
+  const totalPrompts = totalCount ?? prompts.length;
   const uniqueTags = new Set((prompts || []).flatMap(p => p.tags || [])).size;
   
   const lastUpdated = prompts.length > 0 

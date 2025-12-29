@@ -29,7 +29,14 @@ export async function POST(request: NextRequest) {
 
   return handleApiRoute(async () => {
     const body = await request.json();
-    const { items, mode = 'merge' } = body; // mode: 'merge' or 'replace'
+    const { 
+      items, 
+      mode = 'merge',
+      // 新增：快速模式 - 跳过耗时的相似度检查
+      fastMode = false,
+      // 新增：采样大小 - 只检查最近N条记录的相似度
+      sampleSize = 200,
+    } = body; // mode: 'merge' or 'replace'
 
     if (!Array.isArray(items) || items.length === 0) {
       return badRequestResponse('Invalid data format');
@@ -133,12 +140,15 @@ export async function POST(request: NextRequest) {
     } else {
       // Merge with existing data - full duplicate detection
       // Checks: imageUrl, source, effect (exact match), prompt similarity (>90%)
+      // v2.0: 支持快速模式和采样检查
       const { uniqueItems, stats } = await filterDuplicates(newPrompts, {
         checkImageUrl: true,
         checkSource: true,
         checkEffect: true,
-        checkPromptSimilarity: true,
+        checkPromptSimilarity: !fastMode, // 快速模式跳过相似度检查
         similarityThreshold: 0.9,
+        fastMode: fastMode,
+        sampleSize: sampleSize, // 只检查最近N条记录
       });
 
       const result = await promptRepository.bulkCreate(uniqueItems);

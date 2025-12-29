@@ -92,11 +92,22 @@ function getJsonErrorDetails(jsonData: string, error: SyntaxError): {
 }
 
 /**
- * 解析 JSON 数据获取摘要信息
+ * 数据库导出格式的统计信息
  */
-function getJsonSummary(jsonData: string): { 
-  itemCount: number; 
-  isValid: boolean; 
+interface ExportStatistics {
+  prompts: number;
+  categories?: number;
+  modelTags?: number;
+  tags?: number;
+  images?: number;
+}
+
+/**
+ * JSON 摘要信息
+ */
+interface JsonSummaryResult {
+  itemCount: number;
+  isValid: boolean;
   error?: string;
   errorDetails?: {
     line: number;
@@ -104,14 +115,50 @@ function getJsonSummary(jsonData: string): {
     context: string;
     message: string;
   };
-} {
+  // 数据库导出格式的额外信息
+  isExportFormat?: boolean;
+  exportVersion?: string;
+  exportedAt?: string;
+  statistics?: ExportStatistics;
+}
+
+/**
+ * 解析 JSON 数据获取摘要信息
+ * 支持两种格式：
+ * 1. 简单数组格式: [...]
+ * 2. 数据库导出格式: { version, exportedAt, statistics, data: { prompts: [...] } }
+ */
+function getJsonSummary(jsonData: string): JsonSummaryResult {
   if (!jsonData) return { itemCount: 0, isValid: false };
   try {
-    const items = JSON.parse(jsonData);
-    if (Array.isArray(items)) {
-      return { itemCount: items.length, isValid: true };
+    const parsed = JSON.parse(jsonData);
+    
+    // 格式1: 简单数组
+    if (Array.isArray(parsed)) {
+      return { itemCount: parsed.length, isValid: true };
     }
-    return { itemCount: 0, isValid: false, error: '数据格式错误：需要数组格式' };
+    
+    // 格式2: 数据库导出格式 { version, data: { prompts: [...] } }
+    if (parsed && typeof parsed === 'object' && parsed.data?.prompts && Array.isArray(parsed.data.prompts)) {
+      return { 
+        itemCount: parsed.data.prompts.length, 
+        isValid: true,
+        isExportFormat: true,
+        exportVersion: parsed.version,
+        exportedAt: parsed.exportedAt,
+        statistics: parsed.statistics,
+      };
+    }
+    
+    // 格式3: 兼容 { prompts: [...] }
+    if (parsed && typeof parsed === 'object' && parsed.prompts && Array.isArray(parsed.prompts)) {
+      return { 
+        itemCount: parsed.prompts.length, 
+        isValid: true,
+      };
+    }
+    
+    return { itemCount: 0, isValid: false, error: '数据格式错误：需要数组格式，或包含 data.prompts 的数据库导出格式' };
   } catch (e) {
     if (e instanceof SyntaxError) {
       const errorDetails = getJsonErrorDetails(jsonData, e);
@@ -177,6 +224,11 @@ export default function JsonImportForm({
             <div className="flex-1">
               <p className="text-sm font-medium text-green-800">
                 文件已加载成功
+                {jsonSummary.isExportFormat && (
+                  <span className="ml-2 text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded">
+                    数据库导出格式 v{jsonSummary.exportVersion || '?'}
+                  </span>
+                )}
               </p>
               <div className="mt-2 space-y-1 text-sm text-green-700">
                 {jsonFile && (
@@ -186,9 +238,22 @@ export default function JsonImportForm({
                   </div>
                 )}
                 <div>文件大小: {formatFileSize(jsonData.length)}</div>
+                {jsonSummary.exportedAt && (
+                  <div>导出时间: {new Date(jsonSummary.exportedAt).toLocaleString('zh-CN')}</div>
+                )}
                 <div className="font-medium">
                   共 {jsonSummary.itemCount.toLocaleString()} 条数据待导入
                 </div>
+                {/* 数据库导出格式的详细统计 */}
+                {jsonSummary.statistics && (
+                  <div className="mt-2 pt-2 border-t border-green-200 text-xs text-green-600">
+                    <span className="font-medium">原始统计: </span>
+                    {jsonSummary.statistics.categories && `${jsonSummary.statistics.categories} 个分类 · `}
+                    {jsonSummary.statistics.modelTags && `${jsonSummary.statistics.modelTags} 个模型标签 · `}
+                    {jsonSummary.statistics.tags && `${jsonSummary.statistics.tags} 个标签 · `}
+                    {jsonSummary.statistics.images && `${jsonSummary.statistics.images} 张图片`}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -242,6 +307,13 @@ export default function JsonImportForm({
 
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <p className="text-sm text-gray-700">
+          <strong>支持的格式：</strong>
+        </p>
+        <ul className="text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1">
+          <li><strong>数据库导出格式</strong> - 包含 version, data.prompts 的完整备份</li>
+          <li><strong>简单数组格式</strong> - 直接的 prompt 对象数组</li>
+        </ul>
+        <p className="text-sm text-gray-700 mt-3">
           <strong>支持的字段：</strong>
         </p>
         <ul className="text-sm text-gray-600 mt-2 ml-4 list-disc space-y-1">

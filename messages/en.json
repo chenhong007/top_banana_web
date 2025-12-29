@@ -134,6 +134,7 @@
     "perPage": "Per page",
     "items": "items",
     "total": "{count} total",
+    "totalWithLoaded": "{total} total ({loaded} loaded)",
     "previous": "Previous",
     "next": "Next"
   },

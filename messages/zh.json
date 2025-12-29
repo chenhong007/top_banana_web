@@ -134,6 +134,7 @@
     "perPage": "每页显示",
     "items": "条",
     "total": "共 {count} 条",
+    "totalWithLoaded": "共 {total} 条（已加载 {loaded} 条）",
     "previous": "上一页",
     "next": "下一页"
   },

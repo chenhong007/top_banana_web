@@ -63,6 +63,15 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
     return data?.pages.flatMap(page => page.data) || initialPrompts;
   }, [data, initialPrompts]);
 
+  // 获取数据库真实总量（从第一页的分页信息中获取）
+  const databaseTotal = useMemo(() => {
+    const firstPage = data?.pages[0];
+    if (firstPage?.pagination?.total) {
+      return firstPage.pagination.total;
+    }
+    return initialPagination?.pagination?.total;
+  }, [data, initialPagination]);
+
   const { data: serverTags = [] } = useTagsQuery();
   const { data: serverCategories = [] } = useCategoriesQuery();
   const { data: serverModelTags = [] } = useModelTagsQuery();
@@ -294,6 +303,7 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
               filteredPrompts={filteredPrompts} 
               pagination={pagination} 
               onPreview={handleImagePreview}
+              databaseTotal={databaseTotal}
             />
             
             {/* Infinite Scroll Loader */}

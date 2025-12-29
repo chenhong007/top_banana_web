@@ -14,8 +14,17 @@ import { categoryKeys } from '@/hooks/queries/useCategoriesQuery';
 import { modelTagKeys } from '@/hooks/queries/useModelTagsQuery';
 
 // 分批导入配置
-const BATCH_SIZE = 50; // 每批导入的数量，避免超时
-const BATCH_DELAY = 500; // 每批之间的延迟（毫秒）
+const BATCH_SIZE = 100; // 每批导入的数量，避免超时（优化后可以增大）
+const BATCH_DELAY = 300; // 每批之间的延迟（毫秒）（优化后可以减少）
+
+// 重复统计类型
+interface DuplicateStats {
+  byImageUrl: number;
+  bySource: number;
+  byEffect: number;
+  byPromptSimilarity: number;
+  total: number;
+}
 
 // 分批导入进度类型
 interface BatchProgress {
@@ -23,6 +32,8 @@ interface BatchProgress {
   total: number;
   successCount: number;
   failedCount: number;
+  skippedCount: number;      // 因重复被跳过的数量
+  duplicateStats?: DuplicateStats; // 详细的重复统计
   isRunning: boolean;
 }
 
@@ -39,6 +50,8 @@ export function useImport(onSuccess?: () => void) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  // 新增：快速模式 - 跳过相似度检查，大幅提升导入速度
+  const [fastMode, setFastMode] = useState(false);
   
   // 分批导入进度状态
   const [batchProgress, setBatchProgress] = useState<BatchProgress>({
@@ -46,6 +59,8 @@ export function useImport(onSuccess?: () => void) {
     total: 0,
     successCount: 0,
     failedCount: 0,
+    skippedCount: 0,
+    duplicateStats: undefined,
     isRunning: false,
   });
   
@@ -142,6 +157,15 @@ export function useImport(onSuccess?: () => void) {
     }
   };
 
+  // 单批次导入结果类型
+  interface BatchResult {
+    success: boolean;
+    imported: number;
+    skipped: number;
+    duplicateStats?: DuplicateStats;
+    error?: string;
+  }
+
   /**
    * 分批导入单个批次
    */
@@ -149,7 +173,7 @@ export function useImport(onSuccess?: () => void) {
     items: unknown[], 
     batchMode: DataImportMode, 
     isFirstBatch: boolean
-  ): Promise<{ success: boolean; imported: number; error?: string }> => {
+  ): Promise<BatchResult> => {
     try {
       // 第一批使用用户选择的模式，后续批次总是使用 merge 模式
       const actualMode = isFirstBatch ? batchMode : 'merge';
@@ -157,31 +181,47 @@ export function useImport(onSuccess?: () => void) {
       const response = await fetch(API_ENDPOINTS.IMPORT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, mode: actualMode }),
+        body: JSON.stringify({ 
+          items, 
+          mode: actualMode,
+          // 快速模式：跳过相似度检查，大幅提升导入速度
+          fastMode: fastMode,
+          // 采样检查：只检查最近200条记录
+          sampleSize: 200,
+        }),
       });
 
       const responseText = await response.text();
       
       if (!response.ok) {
         if (response.status === 504) {
-          return { success: false, imported: 0, error: '请求超时，请减少批次大小' };
+          return { success: false, imported: 0, skipped: 0, error: '请求超时，请减少批次大小' };
         }
         if (response.status === 413) {
-          return { success: false, imported: 0, error: '请求数据过大' };
+          return { success: false, imported: 0, skipped: 0, error: '请求数据过大' };
         }
-        return { success: false, imported: 0, error: `服务器错误 (${response.status})` };
+        return { success: false, imported: 0, skipped: 0, error: `服务器错误 (${response.status})` };
       }
 
       const result = JSON.parse(responseText);
       if (result.success) {
-        return { success: true, imported: result.data.imported };
+        // 计算被跳过的数量（重复的）
+        const duplicateStats = result.data.duplicatesFiltered as DuplicateStats | undefined;
+        const skipped = duplicateStats?.total || 0;
+        return { 
+          success: true, 
+          imported: result.data.imported,
+          skipped,
+          duplicateStats,
+        };
       } else {
-        return { success: false, imported: 0, error: result.error };
+        return { success: false, imported: 0, skipped: 0, error: result.error };
       }
     } catch (err) {
       return { 
         success: false, 
         imported: 0, 
+        skipped: 0,
         error: err instanceof Error ? err.message : '网络错误' 
       };
     }
@@ -203,7 +243,25 @@ export function useImport(onSuccess?: () => void) {
     // 步骤1：先解析本地 JSON 数据
     let items: unknown[];
     try {
-      items = JSON.parse(jsonData);
+      const parsed = JSON.parse(jsonData);
+      
+      // 支持两种格式：
+      // 1. 数据库导出格式: { version, data: { prompts: [...] } }
+      // 2. 简单数组格式: [...]
+      if (Array.isArray(parsed)) {
+        items = parsed;
+      } else if (parsed && typeof parsed === 'object' && parsed.data?.prompts && Array.isArray(parsed.data.prompts)) {
+        // 数据库导出格式，提取 prompts 数组
+        items = parsed.data.prompts;
+        console.log(`[Import] 检测到数据库导出格式 (v${parsed.version || 'unknown'})，共 ${items.length} 条 prompts`);
+      } else if (parsed && typeof parsed === 'object' && parsed.prompts && Array.isArray(parsed.prompts)) {
+        // 兼容直接 { prompts: [...] } 格式
+        items = parsed.prompts;
+      } else {
+        setError('JSON 格式错误：需要数组格式，或包含 data.prompts 的数据库导出格式');
+        setLoading(false);
+        return;
+      }
     } catch (parseErr) {
       // JSON 解析错误 - 提供详细的错误位置信息
       if (parseErr instanceof SyntaxError) {
@@ -239,9 +297,9 @@ export function useImport(onSuccess?: () => void) {
       return;
     }
 
-    // 步骤2：验证数据格式
-    if (!Array.isArray(items)) {
-      setError(MESSAGES.ERROR.IMPORT_JSON_FORMAT);
+    // 步骤2：验证数据格式（此时 items 已经是数组）
+    if (!Array.isArray(items) || items.length === 0) {
+      setError('没有可导入的数据');
       setLoading(false);
       return;
     }
@@ -275,17 +333,28 @@ export function useImport(onSuccess?: () => void) {
       total: totalBatches,
       successCount: 0,
       failedCount: 0,
+      skippedCount: 0,
+      duplicateStats: undefined,
       isRunning: true,
     });
 
     let totalImported = 0;
     let totalFailed = 0;
+    let totalSkipped = 0;
     let lastError = '';
+    // 汇总的重复统计
+    const aggregatedDuplicateStats: DuplicateStats = {
+      byImageUrl: 0,
+      bySource: 0,
+      byEffect: 0,
+      byPromptSimilarity: 0,
+      total: 0,
+    };
 
     for (let i = 0; i < totalBatches; i++) {
       // 检查是否取消
       if (cancelRef.current) {
-        setError(`导入已取消。已成功导入 ${totalImported} 条，失败 ${totalFailed} 条。`);
+        setError(`导入已取消。已成功导入 ${totalImported} 条，跳过重复 ${totalSkipped} 条，失败 ${totalFailed} 条。`);
         break;
       }
 
@@ -297,6 +366,16 @@ export function useImport(onSuccess?: () => void) {
       
       if (result.success) {
         totalImported += result.imported;
+        totalSkipped += result.skipped;
+        
+        // 汇总重复统计
+        if (result.duplicateStats) {
+          aggregatedDuplicateStats.byImageUrl += result.duplicateStats.byImageUrl;
+          aggregatedDuplicateStats.bySource += result.duplicateStats.bySource;
+          aggregatedDuplicateStats.byEffect += result.duplicateStats.byEffect;
+          aggregatedDuplicateStats.byPromptSimilarity += result.duplicateStats.byPromptSimilarity;
+          aggregatedDuplicateStats.total += result.duplicateStats.total;
+        }
       } else {
         totalFailed += batch.length;
         lastError = result.error || '未知错误';
@@ -307,6 +386,8 @@ export function useImport(onSuccess?: () => void) {
         total: totalBatches,
         successCount: totalImported,
         failedCount: totalFailed,
+        skippedCount: totalSkipped,
+        duplicateStats: aggregatedDuplicateStats.total > 0 ? { ...aggregatedDuplicateStats } : undefined,
         isRunning: i < totalBatches - 1,
       });
 
@@ -321,12 +402,54 @@ export function useImport(onSuccess?: () => void) {
     setLoading(false);
 
     if (!cancelRef.current) {
+      // 构建详细的结果消息
+      const buildResultMessage = () => {
+        const parts: string[] = [];
+        parts.push(`成功导入 ${totalImported} 条`);
+        
+        if (totalSkipped > 0) {
+          parts.push(`跳过重复 ${totalSkipped} 条`);
+        }
+        
+        if (totalFailed > 0) {
+          parts.push(`失败 ${totalFailed} 条`);
+        }
+        
+        let message = `分批导入完成！${parts.join('，')}。`;
+        
+        // 如果有被跳过的，说明详细原因
+        if (aggregatedDuplicateStats.total > 0) {
+          const details: string[] = [];
+          if (aggregatedDuplicateStats.byEffect > 0) {
+            details.push(`标题重复: ${aggregatedDuplicateStats.byEffect}`);
+          }
+          if (aggregatedDuplicateStats.bySource > 0) {
+            details.push(`来源重复: ${aggregatedDuplicateStats.bySource}`);
+          }
+          if (aggregatedDuplicateStats.byImageUrl > 0) {
+            details.push(`图片URL重复: ${aggregatedDuplicateStats.byImageUrl}`);
+          }
+          if (aggregatedDuplicateStats.byPromptSimilarity > 0) {
+            details.push(`提示词相似: ${aggregatedDuplicateStats.byPromptSimilarity}`);
+          }
+          if (details.length > 0) {
+            message += `\n跳过原因: ${details.join('、')}`;
+          }
+        }
+        
+        if (totalFailed > 0 && lastError) {
+          message += `\n最后错误: ${lastError}`;
+        }
+        
+        return message;
+      };
+
       if (totalFailed === 0) {
-        setSuccess(`分批导入完成！成功导入 ${totalImported} 条数据。`);
+        setSuccess(buildResultMessage());
         invalidateRelatedQueries();
         setTimeout(() => onSuccess?.(), 2000);
-      } else if (totalImported > 0) {
-        setSuccess(`分批导入完成。成功: ${totalImported} 条，失败: ${totalFailed} 条。\n最后错误: ${lastError}`);
+      } else if (totalImported > 0 || totalSkipped > 0) {
+        setSuccess(buildResultMessage());
         invalidateRelatedQueries();
       } else {
         setError(`导入失败。${lastError}`);
@@ -438,6 +561,9 @@ export function useImport(onSuccess?: () => void) {
     // 分批导入相关
     batchProgress,
     cancelBatchImport,
+    // 快速模式相关
+    fastMode,
+    setFastMode,
   };
 }
 

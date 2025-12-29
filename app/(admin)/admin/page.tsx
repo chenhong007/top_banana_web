@@ -60,9 +60,9 @@ export default function AdminPage() {
           }}
         />
 
-        {/* Stats Section */}
+        {/* Stats Section - 传递数据库真实总量 */}
         {!loading && prompts.length > 0 && (
-          <DashboardStats prompts={prompts} />
+          <DashboardStats prompts={prompts} totalCount={pagination.total} />
         )}
 
         {isEditing && (

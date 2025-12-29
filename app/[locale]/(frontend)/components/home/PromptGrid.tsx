@@ -32,9 +32,11 @@ interface PromptGridProps {
   filteredPrompts: PromptItem[];
   pagination: PaginationData;
   onPreview: (src: string, alt: string) => void;
+  /** 数据库真实总量（用于显示，而非已加载数量） */
+  databaseTotal?: number;
 }
 
-export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview }: PromptGridProps) {
+export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview, databaseTotal }: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
   const tPagination = useTranslations('pagination');
@@ -85,10 +87,10 @@ export default function PromptGrid({ loading, filteredPrompts, pagination, onPre
   // Grid with prompts
   return (
     <div ref={gridRef} className="space-y-8 scroll-mt-4">
-      {/* Results count */}
+      {/* Results count - 显示数据库真实总量 */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          {tPagination('total', { count: filteredPrompts.length })}
+          {tPagination('total', { count: databaseTotal ?? filteredPrompts.length })}
         </p>
       </div>
 

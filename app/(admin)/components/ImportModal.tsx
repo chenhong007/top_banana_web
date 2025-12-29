@@ -42,6 +42,8 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
     resetState,
     batchProgress,
     cancelBatchImport,
+    fastMode,
+    setFastMode,
   } = useImport(onImportSuccess);
 
   if (!isOpen) return null;
@@ -105,6 +107,25 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
             />
           </div>
 
+          {/* 快速模式开关 */}
+          <div className="mt-4 flex items-start gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <input
+              type="checkbox"
+              id="fastMode"
+              checked={fastMode}
+              onChange={(e) => setFastMode(e.target.checked)}
+              className="mt-1 w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
+            />
+            <div>
+              <label htmlFor="fastMode" className="text-sm font-medium text-amber-800 cursor-pointer">
+                ⚡ 快速模式（推荐大数据量使用）
+              </label>
+              <p className="text-xs text-amber-700 mt-0.5">
+                只检查来源URL是否重复，没有来源的数据直接导入。跳过标题、图片、相似度检查，速度极快。
+              </p>
+            </div>
+          </div>
+
           <div className="mt-4">
             <StatusMessage error={error} success={success} />
           </div>
@@ -126,21 +147,53 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                   style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-xs text-blue-700">
-                <span>成功: {batchProgress.successCount} 条</span>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-700">
+                <span className="text-green-600">✓ 成功: {batchProgress.successCount} 条</span>
+                {batchProgress.skippedCount > 0 && (
+                  <span className="text-amber-600">⏭ 跳过重复: {batchProgress.skippedCount} 条</span>
+                )}
                 {batchProgress.failedCount > 0 && (
-                  <span className="text-red-600">失败: {batchProgress.failedCount} 条</span>
+                  <span className="text-red-600">✗ 失败: {batchProgress.failedCount} 条</span>
                 )}
                 {batchProgress.isRunning && (
                   <button
                     onClick={cancelBatchImport}
-                    className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                    className="flex items-center gap-1 text-red-600 hover:text-red-700 ml-auto"
                   >
                     <XCircle className="w-3 h-3" />
                     取消导入
                   </button>
                 )}
               </div>
+              
+              {/* 详细的重复原因统计 */}
+              {batchProgress.duplicateStats && batchProgress.duplicateStats.total > 0 && (
+                <div className="mt-3 pt-3 border-t border-blue-200">
+                  <p className="text-xs font-medium text-amber-700 mb-1">跳过原因明细（数据库已有相同数据）:</p>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {batchProgress.duplicateStats.byEffect > 0 && (
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded">
+                        标题相同: {batchProgress.duplicateStats.byEffect}
+                      </span>
+                    )}
+                    {batchProgress.duplicateStats.bySource > 0 && (
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded">
+                        来源相同: {batchProgress.duplicateStats.bySource}
+                      </span>
+                    )}
+                    {batchProgress.duplicateStats.byImageUrl > 0 && (
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded">
+                        图片URL相同: {batchProgress.duplicateStats.byImageUrl}
+                      </span>
+                    )}
+                    {batchProgress.duplicateStats.byPromptSimilarity > 0 && (
+                      <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded">
+                        提示词相似(&gt;90%): {batchProgress.duplicateStats.byPromptSimilarity}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
