@@ -5,7 +5,8 @@
 
 'use client';
 
-import { Plus, Home, Download, Sparkles, LogOut, Tags } from 'lucide-react';
+import { Plus, Home, Download, Sparkles, LogOut, Tags, HardDrive, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BUTTON_STYLES, CONTAINER_STYLES } from '@/lib/styles';
@@ -17,6 +18,8 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
   const router = useRouter();
+  const [isBackingUp, setIsBackingUp] = useState(false);
+  const [backupMessage, setBackupMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const handleLogout = async () => {
     try {
@@ -25,6 +28,39 @@ export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
       router.refresh();
     } catch (error) {
       console.error('Logout failed:', error);
+    }
+  };
+
+  const handleBackup = async () => {
+    if (isBackingUp) return;
+    
+    setIsBackingUp(true);
+    setBackupMessage(null);
+    
+    try {
+      const response = await fetch('/api/backup', { method: 'POST' });
+      const data = await response.json();
+      
+      if (data.success) {
+        setBackupMessage({
+          type: 'success',
+          text: `备份成功! ${data.backup.statistics.prompts} 条提示词已保存`,
+        });
+        // 3秒后清除消息
+        setTimeout(() => setBackupMessage(null), 3000);
+      } else {
+        setBackupMessage({
+          type: 'error',
+          text: data.error || '备份失败',
+        });
+      }
+    } catch (error) {
+      setBackupMessage({
+        type: 'error',
+        text: '备份请求失败',
+      });
+    } finally {
+      setIsBackingUp(false);
     }
   };
 
@@ -56,6 +92,19 @@ export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
               <Download className="w-4 h-4" />
               <span>导入数据</span>
             </button>
+            <button 
+              onClick={handleBackup} 
+              disabled={isBackingUp}
+              className={BUTTON_STYLES.success}
+              title="备份数据到云端"
+            >
+              {isBackingUp ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <HardDrive className="w-4 h-4" />
+              )}
+              <span>{isBackingUp ? '备份中...' : '备份数据'}</span>
+            </button>
             <button onClick={onCreate} className={BUTTON_STYLES.primary}>
               <Plus className="w-4 h-4" />
               <span>新建提示词</span>
@@ -67,6 +116,17 @@ export default function AdminHeader({ onImport, onCreate }: AdminHeaderProps) {
             </button>
           </div>
         </div>
+        
+        {/* 备份状态提示 */}
+        {backupMessage && (
+          <div className={`mt-3 px-4 py-2 rounded-lg text-sm font-medium ${
+            backupMessage.type === 'success' 
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+              : 'bg-red-50 text-red-700 border border-red-200'
+          }`}>
+            {backupMessage.text}
+          </div>
+        )}
       </div>
     </header>
   );

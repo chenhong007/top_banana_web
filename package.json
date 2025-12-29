@@ -19,7 +19,10 @@
     "docker:build": "docker build -t topai .",
     "docker:run": "docker run -p 3000:3000 --env-file .env topai",
     "postinstall": "prisma generate",
-    "vercel-build": "node -e \"require('fs').rmSync('node_modules/.prisma',{recursive:true,force:true})\" && prisma generate && prisma db push && next build"
+    "vercel-build": "node -e \"require('fs').rmSync('node_modules/.prisma',{recursive:true,force:true})\" && prisma generate && prisma db push && next build",
+    "db:backup": "tsx scripts/backup-to-r2.ts",
+    "db:restore": "tsx scripts/restore-from-r2.ts",
+    "db:restore:latest": "tsx scripts/restore-from-r2.ts --latest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.954.0",
