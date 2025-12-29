@@ -37,6 +37,7 @@ interface PromptGridProps {
 export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview }: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
+  const tPagination = useTranslations('pagination');
   const gridRef = useRef<HTMLDivElement>(null);
 
   // Scroll to top of grid when page changes
@@ -87,7 +88,7 @@ export default function PromptGrid({ loading, filteredPrompts, pagination, onPre
       {/* Results count */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          找到 <span className="font-semibold text-foreground">{filteredPrompts.length}</span> 个提示词
+          {tPagination('total', { count: filteredPrompts.length })}
         </p>
       </div>
 

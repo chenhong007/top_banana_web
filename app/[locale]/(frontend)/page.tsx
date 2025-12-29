@@ -3,6 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import HomeClient from './HomeClient';
 import { PaginatedResponse } from '@/services/prompt.service';
 import { PromptItem } from '@/types';
+import SeoJsonLd, { CollectionJsonLd } from '@/components/seo/JsonLd';
 
 // Use ISR (Incremental Static Regeneration)
 // Revalidate every hour
@@ -66,8 +67,32 @@ export default async function Home({ params }: Props) {
     .map(p => getOptimizedImageUrl(p.imageUrl || ''))
     .filter(Boolean);
 
+  // 准备结构化数据的集合项目
+  const collectionItems = prompts.slice(0, 10).map(p => ({
+    name: p.effect,
+    description: p.description || p.prompt.slice(0, 160),
+    image: p.imageUrl ? getOptimizedImageUrl(p.imageUrl) : undefined,
+  }));
+
+  const collectionName = locale === 'zh' 
+    ? 'AI 提示词精选集' 
+    : 'Curated AI Prompts Collection';
+  
+  const collectionDescription = locale === 'zh'
+    ? '精选优质 AI 提示词，涵盖 Midjourney、Stable Diffusion、DALL-E 等主流模型'
+    : 'Curated AI prompts covering Midjourney, Stable Diffusion, DALL-E and more';
+
   return (
     <>
+      {/* JSON-LD 结构化数据 */}
+      <SeoJsonLd locale={locale as 'zh' | 'en'} />
+      <CollectionJsonLd 
+        name={collectionName}
+        description={collectionDescription}
+        items={collectionItems}
+        locale={locale as 'zh' | 'en'}
+      />
+      
       {/* 首屏图片预加载 - 服务端渲染时注入 */}
       {preloadImages.map((imgUrl, index) => (
         <link

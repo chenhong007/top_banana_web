@@ -11,7 +11,7 @@ import { Sparkles, Settings, LogOut, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useInView } from 'react-intersection-observer';
 
 // Sub-components
@@ -23,6 +23,7 @@ import {
   TagFilter,
   PromptGrid,
   Sidebar,
+  SeoContent,
 } from './components/home';
 import ImagePreview from './components/ImagePreview';
 import LanguageSwitcher from './components/LanguageSwitcher';
@@ -46,6 +47,7 @@ interface HomeClientProps {
 
 export default function HomeClient({ initialPrompts, initialPagination }: HomeClientProps) {
   const t = useTranslations('header');
+  const locale = useLocale();
 
   // Use React Query Infinite Query
   const { 
@@ -193,17 +195,18 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
+          {/* Logo - 链接到首页，增强内链 */}
+          <Link href={`/${locale}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-gold">
               <Sparkles className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight">
+              <div className="text-xl font-bold tracking-tight">
                 <span className="gradient-text">{t('title')}</span>
-              </h1>
+              </div>
               <p className="text-xs text-muted-foreground">{t('subtitle')}</p>
             </div>
-          </div>
+          </Link>
           
           {/* Right side controls */}
           <div className="flex items-center gap-3">
@@ -328,6 +331,9 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
           isHovering={false}
         />
       )}
+
+      {/* SEO Content Section */}
+      <SeoContent />
 
       {/* Footer */}
       <Footer />

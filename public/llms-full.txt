@@ -1,0 +1,297 @@
+# AI Prompts Library (AI 提示词库) - Complete Documentation
+
+> Your ultimate resource for AI-generated content prompts - 10,000+ curated prompts for image, video, and audio generation.
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Prompt Categories](#prompt-categories)
+3. [Supported AI Models](#supported-ai-models)
+4. [Art Styles](#art-styles)
+5. [How to Use Prompts](#how-to-use-prompts)
+6. [Prompt Syntax Guide](#prompt-syntax-guide)
+7. [Best Practices](#best-practices)
+8. [FAQ](#faq)
+
+---
+
+## Overview
+
+AI Prompts Library (topai.ink) is a comprehensive platform dedicated to curating and organizing high-quality AI prompts for creative professionals, designers, and AI enthusiasts worldwide. Our mission is to help users master and effectively utilize cutting-edge AI generative models.
+
+### Mission Statement
+
+We believe AI-assisted creativity should be accessible to everyone. By providing a vast library of proven prompts, we lower the barrier to entry and help creators achieve professional-quality results faster.
+
+### What Sets Us Apart
+
+- **Quality over Quantity**: Every prompt is verified and tested
+- **Complete Parameters**: We include all necessary settings (negative prompts, aspect ratios, etc.)
+- **Source Attribution**: We respect original creators and attribute all prompts
+- **Regular Updates**: New prompts added daily from the global AI art community
+
+---
+
+## Prompt Categories
+
+### Text-to-Image (文生图)
+
+Generate stunning images from text descriptions. Our collection includes prompts for:
+
+- Character design and portraits
+- Landscape and scenery
+- Product photography
+- Abstract and conceptual art
+- Architectural visualization
+- Fashion and clothing design
+- Food photography
+- Logo and branding
+
+### Text-to-Video (文生视频)
+
+Create dynamic video content from text prompts:
+
+- Short-form video content
+- Animation sequences
+- Music videos
+- Cinematic scenes
+- Product showcases
+- Tutorial-style content
+
+### Text-to-Audio (文生音频)
+
+Generate music and audio from text:
+
+- Background music
+- Sound effects
+- Voice synthesis
+- Musical compositions
+- Ambient soundscapes
+
+### Image Restoration (图像修复)
+
+Enhance and repair images:
+
+- Upscaling and resolution enhancement
+- Color correction
+- Noise reduction
+- Old photo restoration
+- Object removal
+
+---
+
+## Supported AI Models
+
+### Image Generation Models
+
+#### Midjourney
+
+- **Version**: V6 and earlier versions
+- **Strengths**: Exceptional artistic quality, photorealistic rendering
+- **Common Parameters**: --ar (aspect ratio), --s (stylization), --c (chaos), --q (quality)
+- **Best For**: Professional artwork, marketing materials, concept art
+
+#### Stable Diffusion
+
+- **Versions**: SDXL, SD 1.5, and various fine-tuned models
+- **Strengths**: Open-source, highly customizable, extensive community models
+- **Common Parameters**: CFG scale, steps, sampler, negative prompts
+- **Best For**: Bulk generation, specific style matching, custom workflows
+
+#### DALL-E 3
+
+- **Provider**: OpenAI
+- **Strengths**: Excellent text understanding, natural language prompts
+- **Best For**: Quick concepts, text-in-image, intuitive prompting
+
+#### Niji Journey
+
+- **Type**: Anime-specialized Midjourney model
+- **Strengths**: High-quality anime and manga-style illustrations
+- **Best For**: Character design, manga illustrations, anime scenes
+
+### Video Generation Models
+
+#### Runway Gen-2/Gen-3
+
+- **Strengths**: Industry-leading video quality
+- **Best For**: Professional video production, creative projects
+
+#### Pika Labs
+
+- **Strengths**: Accessible, creative animations
+- **Best For**: Social media content, experimental videos
+
+#### Sora (OpenAI)
+
+- **Strengths**: Long-form coherent video generation
+- **Best For**: Cinematic content, storytelling
+
+### Audio Generation Models
+
+#### Suno AI
+
+- **Strengths**: Full song generation with vocals
+- **Best For**: Music creation, jingles, background music
+
+---
+
+## Art Styles
+
+Our prompt library covers a wide range of artistic styles:
+
+### Digital Art Styles
+
+- **Anime/Manga**: Japanese animation style, 2D illustrations
+- **3D Rendering**: Photorealistic 3D, CGI, Unreal Engine style
+- **Pixel Art**: Retro gaming aesthetics
+- **Vector Art**: Clean, scalable graphics
+- **Digital Painting**: Painterly digital techniques
+
+### Traditional Art Styles
+
+- **Oil Painting**: Classic oil painting techniques
+- **Watercolor**: Soft, flowing watercolor effects
+- **Sketch/Line Art**: Pencil drawings, ink illustrations
+- **Mixed Media**: Combination of multiple techniques
+
+### Photography Styles
+
+- **Portrait Photography**: Professional headshots, creative portraits
+- **Landscape Photography**: Nature, cityscapes, architecture
+- **Product Photography**: Commercial, e-commerce ready
+- **Fashion Photography**: Editorial, catalog, street style
+- **Macro Photography**: Extreme close-ups, detailed textures
+
+### Specialized Styles
+
+- **Concept Art**: Game and film pre-production art
+- **UI/UX Design**: Interface elements, app designs
+- **Logo Design**: Brand marks, typography-based designs
+- **Infographic**: Data visualization, explanatory graphics
+
+---
+
+## How to Use Prompts
+
+### Step 1: Find Your Prompt
+
+1. Use the search bar to find prompts by keyword
+2. Filter by category (Image, Video, Audio)
+3. Filter by AI model (Midjourney, SD, etc.)
+4. Filter by style or tag
+
+### Step 2: Understand the Prompt
+
+Each prompt card includes:
+- **Preview Image/Video**: What the prompt produces
+- **Full Prompt Text**: The complete prompt to copy
+- **Negative Prompt** (if applicable): What to exclude
+- **Parameters**: Technical settings used
+- **Tags**: Categorization and style indicators
+- **Source**: Original creator attribution
+
+### Step 3: Copy and Use
+
+1. Click the copy button to copy the prompt
+2. Paste into your AI tool of choice
+3. Adjust parameters as needed for your use case
+
+### Step 4: Iterate and Customize
+
+- Modify keywords to match your vision
+- Adjust style descriptors
+- Change aspect ratios for different purposes
+- Experiment with parameter values
+
+---
+
+## Prompt Syntax Guide
+
+### Midjourney Syntax
+
+```
+[subject description], [style descriptors], [lighting], [camera settings] --ar [ratio] --s [0-1000] --c [0-100]
+```
+
+**Common Parameters:**
+- `--ar 16:9` - Aspect ratio
+- `--s 750` - Stylization (0-1000)
+- `--c 50` - Chaos/variation (0-100)
+- `--q 2` - Quality (0.25, 0.5, 1, 2)
+- `--v 6` - Version
+
+### Stable Diffusion Syntax
+
+**Positive Prompt:**
+```
+[subject], [style], [quality tags: masterpiece, best quality, ultra detailed]
+```
+
+**Negative Prompt:**
+```
+[unwanted elements: lowres, bad anatomy, blurry, watermark]
+```
+
+**Common Settings:**
+- CFG Scale: 7-12 (how closely to follow prompt)
+- Steps: 20-50 (generation iterations)
+- Sampler: DPM++ 2M Karras, Euler a
+
+---
+
+## Best Practices
+
+### For Better Results
+
+1. **Be Specific**: Detailed prompts yield better results
+2. **Use Quality Tags**: Include "masterpiece", "high quality", etc.
+3. **Describe Lighting**: "soft lighting", "golden hour", "studio lighting"
+4. **Specify Composition**: "close-up", "full body", "bird's eye view"
+5. **Include Style References**: Artist names, art movements, media types
+
+### Common Mistakes to Avoid
+
+1. Overly long prompts (diminishing returns)
+2. Contradictory descriptions
+3. Ignoring negative prompts
+4. Not testing different seeds
+5. Using copyrighted character names directly
+
+---
+
+## FAQ
+
+### General Questions
+
+**Q: Are these prompts free to use?**
+A: Yes, all prompts are free for personal and educational use. Commercial use should respect original creator attributions.
+
+**Q: How often is the library updated?**
+A: We add new prompts daily, with major updates weekly.
+
+**Q: Can I submit my own prompts?**
+A: We welcome community contributions. Contact us through our website.
+
+### Technical Questions
+
+**Q: Why do results vary from the preview?**
+A: AI generation has inherent randomness. Results depend on seed values, model versions, and platform-specific implementations.
+
+**Q: How do I get the exact same result?**
+A: Use the same seed value, model version, and all parameters. Note that some platforms don't support seed specification.
+
+---
+
+## Links
+
+- **Homepage (Chinese)**: https://www.topai.ink/zh
+- **Homepage (English)**: https://www.topai.ink/en
+- **Sitemap**: https://www.topai.ink/sitemap.xml
+- **Robots.txt**: https://www.topai.ink/robots.txt
+
+---
+
+*This document is designed for Large Language Models to comprehensively understand our website content and services. For human visitors, please visit our website directly at https://www.topai.ink*
+
+*Last Updated: 2024*

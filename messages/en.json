@@ -3,6 +3,102 @@
     "title": "AI Prompt Library - Top 10000+ AI Art, Video & Audio Prompts Collection",
     "description": "Curated collection of top AI prompts covering Midjourney, Stable Diffusion, Runway and more. Explore image generation, video creation, and music production cases to empower your creativity."
   },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "help": "Help Center",
+    "backToHome": "Back to Home"
+  },
+  "aboutPage": {
+    "title": "About Us",
+    "metaTitle": "About Us - AI Prompt Library",
+    "metaDescription": "Learn about the vision and mission of AI Prompt Library. We are dedicated to providing the highest quality AI prompt resources for creators worldwide.",
+    "heroTitle": "Bridging Creativity and AI",
+    "heroDescription": "We are dedicated to providing creators, designers, and AI enthusiasts worldwide with the finest prompt resources",
+    "missionTitle": "Our Mission",
+    "missionText": "The mission of AI Prompt Library is to make the art of AI creation accessible to everyone. We believe that excellent prompts are the key to unlocking AI's potential, and our task is to forge that key for you.",
+    "whatWeDoTitle": "What We Do",
+    "whatWeDoItems": {
+      "item1Title": "Curated Prompts",
+      "item1Text": "We collect and curate the highest quality AI prompts from around the world, covering image generation, video creation, music production, and more.",
+      "item2Title": "Model Coverage",
+      "item2Text": "Supporting prompts for mainstream AI models including Midjourney, Stable Diffusion, DALL-E, Runway, Sora, Suno, and more.",
+      "item3Title": "Continuous Updates",
+      "item3Text": "Our team continuously tracks the latest developments in AI, ensuring you always have access to the newest and most effective prompts."
+    },
+    "valuesTitle": "Our Values",
+    "valuesItems": {
+      "value1Title": "Open Sharing",
+      "value1Text": "Knowledge should be shared. We firmly believe that open sharing enables the entire community to progress together.",
+      "value2Title": "Quality First",
+      "value2Text": "Every prompt is carefully selected to ensure we provide users with the highest quality content.",
+      "value3Title": "Innovation Driven",
+      "value3Text": "Staying at the forefront of AI technology development, constantly exploring new possibilities."
+    },
+    "contactTitle": "Contact Us",
+    "contactText": "If you have any questions, suggestions, or collaboration interests, feel free to reach out to us:"
+  },
+  "helpPage": {
+    "title": "Help Center",
+    "metaTitle": "Help Center - AI Prompt Library",
+    "metaDescription": "Learn how to use AI Prompt Library, master prompt searching, copying, and usage tips to maximize your AI creative potential.",
+    "heroTitle": "We're Here to Help",
+    "heroDescription": "Quickly learn how to use AI Prompt Library and unleash your creative potential",
+    "gettingStartedTitle": "Getting Started",
+    "gettingStartedItems": {
+      "item1Title": "Browse Prompts",
+      "item1Text": "Browse our curated prompt cards on the homepage. Each card displays an effect preview and complete prompt content.",
+      "item2Title": "Search & Filter",
+      "item2Text": "Use the search box to enter keywords, or filter by category, model, and tags to quickly find the prompts you need.",
+      "item3Title": "Copy & Use",
+      "item3Text": "Click the copy button on the card to copy the prompt to your clipboard, then paste it into your AI tool."
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faqItems": {
+      "q1": "How do I copy a prompt?",
+      "a1": "Click the 'Copy' button on the prompt card, and the prompt will be automatically copied to your clipboard. You can also click the card for details and copy from there.",
+      "q2": "Which AI models are supported?",
+      "a2": "Our prompts cover mainstream models including Midjourney, Stable Diffusion, DALL-E 3, Runway Gen-2, Sora, and Suno AI. Each prompt indicates which model it's designed for.",
+      "q3": "Can I use prompts commercially?",
+      "a3": "The prompts collected on this site are for learning and communication purposes only, prohibited for commercial use. For commercial use, please contact the original author for permission.",
+      "q4": "How can I submit my prompt?",
+      "a4": "We currently don't support direct user submissions, but you can contact us through our official channels to share your excellent work.",
+      "q5": "Why do some images load slowly?",
+      "a5": "Some images are sourced from external links, and loading speed may be affected by network conditions. We are continuously optimizing the image loading experience."
+    },
+    "tipsTitle": "Tips & Tricks",
+    "tipsItems": {
+      "tip1Title": "Use Filters Wisely",
+      "tip1Text": "Combining multiple filter conditions helps you find your desired prompt style more precisely.",
+      "tip2Title": "Modify & Adapt",
+      "tip2Text": "After copying a prompt, we recommend tweaking it according to your specific needs for the best results.",
+      "tip3Title": "Mind Model Versions",
+      "tip3Text": "Different model versions may interpret prompts differently. Pay attention to the model indicated for each prompt."
+    },
+    "stillNeedHelpTitle": "Still Need Help?",
+    "stillNeedHelpText": "If your question isn't answered above, please contact us through our official channels and we'll respond as soon as possible."
+  },
+  "seoKeywords": {
+    "list": [
+      "AI Prompts",
+      "Midjourney Prompts",
+      "Stable Diffusion Prompts",
+      "DALL-E Prompts",
+      "AI Art",
+      "AI Artwork",
+      "Text to Image",
+      "Text to Video",
+      "Runway Prompts",
+      "Sora Prompts",
+      "Suno Prompts",
+      "AI Music",
+      "Prompt Engineering",
+      "AI Creation",
+      "Image Generation",
+      "Video Generation",
+      "Artificial Intelligence Art"
+    ]
+  },
   "header": {
     "title": "Top AI Prompts Collection",
     "subtitle": "top ai prompts",
@@ -66,5 +162,14 @@
   },
   "loading": {
     "text": "Loading..."
+  },
+  "seo": {
+    "aboutTitle": "About AI Prompt Library - Your Source for AI Creativity",
+    "aboutText1": "AI Prompt Library is a professional platform gathering high-quality prompts for AI art, video, and audio generation from around the globe. We are dedicated to providing inspiration for creators, designers, and AI enthusiasts, helping you better master advanced AI models like Midjourney, Stable Diffusion, Runway, and Sora.",
+    "aboutText2": "Whether you are looking for anime styles, photorealistic photography, 3D rendering effects, or need professional LOGO design and UI interface inspiration, you can find suitable Prompts here. Our database is updated in real-time, containing tens of thousands of verified high-quality prompt cases, making your AI creation more efficient and precise.",
+    "categoriesTitle": "Covering Mainstream AI Models and Styles",
+    "categoriesText": "We deeply integrate prompt resources for various popular AI tools, including but not limited to: Midjourney V6 for photorealism and artistic creation, Niji Journey for anime illustrations, Stable Diffusion XL (SDXL) for precise control, DALL-E 3 for semantic understanding, and AI video generation instructions for Runway Gen-2 and Pika Labs. In addition, we also provide Prompt guides for audio generation models like Suno AI.",
+    "usageTitle": "How to Use AI Prompts?",
+    "usageText": "Browse our curated list, search by keywords, or filter by tags to find the image, video, or audio effects you like. Click on a card to view the complete Prompt parameters (including Negative Prompts, Aspect Ratio --ar, Stylize --s, etc.). One-click copy the Prompt to your AI tool to generate similar high-quality works. We recommend tweaking the prompts to spark even more creativity."
   }
 }

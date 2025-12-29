@@ -10,4 +10,6 @@ export { default as ModelTagFilter } from './ModelTagFilter';
 export { default as TagFilter } from './TagFilter';
 export { default as PromptGrid } from './PromptGrid';
 export { default as Sidebar } from './Sidebar';
+export { default as SeoContent } from './SeoContent';
+
 

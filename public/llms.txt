@@ -1,0 +1,68 @@
+# AI Prompts Library (AI 提示词库)
+
+> Your ultimate resource for AI-generated content prompts - 10,000+ curated prompts for image, video, and audio generation.
+
+## Overview
+
+AI Prompts Library (topai.ink) is a comprehensive platform that curates high-quality AI prompts for creative professionals, designers, and AI enthusiasts. We help users master and effectively use cutting-edge AI models like Midjourney, Stable Diffusion, Runway, Sora, and more.
+
+## What We Offer
+
+### Prompt Categories
+- **Text-to-Image**: Prompts for AI image generation (Midjourney, Stable Diffusion, DALL-E)
+- **Text-to-Video**: Prompts for AI video creation (Runway Gen-2, Pika Labs, Sora)
+- **Text-to-Audio**: Prompts for AI music and audio generation (Suno AI)
+- **Image Restoration**: Prompts for AI-powered image enhancement and repair
+
+### Supported AI Models
+- Midjourney V6 (realistic photography, artistic creation)
+- Niji Journey (anime illustrations)
+- Stable Diffusion XL (SDXL)
+- DALL-E 3
+- Runway Gen-2
+- Pika Labs
+- Sora
+- Suno AI
+- And many more...
+
+### Art Styles Covered
+- Anime/2D illustration
+- Realistic photography
+- 3D rendering
+- Logo design
+- UI/UX design
+- Abstract art
+- Portrait photography
+- Landscape photography
+- Product visualization
+
+## How to Use
+
+1. Browse our curated prompt collection
+2. Search by keywords or filter by tags
+3. View complete prompt parameters (including negative prompts, aspect ratios, stylization settings)
+4. One-click copy prompts to use in your AI tools
+5. Customize and iterate on prompts for your creative needs
+
+## Key Features
+
+- 10,000+ verified high-quality prompts
+- Daily updates with new prompts
+- Bilingual support (Chinese/English)
+- Complete prompt parameters included
+- Source attribution for all prompts
+- Mobile-friendly responsive design
+- Advanced search and filtering
+
+## Languages
+
+- Chinese (中文): https://www.topai.ink/zh
+- English: https://www.topai.ink/en
+
+## Contact
+
+Website: https://www.topai.ink
+
+---
+
+*This file is designed for Large Language Models to better understand our website content. For human visitors, please visit our website directly.*

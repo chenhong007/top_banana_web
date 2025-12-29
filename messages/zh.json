@@ -3,6 +3,102 @@
     "title": "AI 提示词库 - 全球精选 10000+ AI 绘画、视频、音频提示词大全",
     "description": "汇集全球优质 AI 提示词（Prompts），涵盖 Midjourney、Stable Diffusion、Runway 等主流模型的绘画、视频、音频生成案例，助您释放创意潜能。"
   },
+  "nav": {
+    "home": "首页",
+    "about": "关于我们",
+    "help": "帮助中心",
+    "backToHome": "返回首页"
+  },
+  "aboutPage": {
+    "title": "关于我们",
+    "metaTitle": "关于我们 - AI 提示词库",
+    "metaDescription": "了解 AI 提示词库的愿景与使命，我们致力于为全球创作者提供最优质的 AI 提示词资源。",
+    "heroTitle": "连接创意与 AI 的桥梁",
+    "heroDescription": "我们致力于为全球创作者、设计师和 AI 爱好者提供最优质的提示词资源",
+    "missionTitle": "我们的使命",
+    "missionText": "AI 提示词库的使命是让每个人都能轻松掌握 AI 创作的艺术。我们相信，优秀的提示词是释放 AI 潜能的钥匙，而我们的任务就是为您打造这把钥匙。",
+    "whatWeDoTitle": "我们做什么",
+    "whatWeDoItems": {
+      "item1Title": "精选提示词",
+      "item1Text": "我们从全球各地收集并精选最优质的 AI 提示词，涵盖图像生成、视频创作、音乐制作等多个领域。",
+      "item2Title": "模型覆盖",
+      "item2Text": "支持 Midjourney、Stable Diffusion、DALL-E、Runway、Sora、Suno 等主流 AI 模型的提示词。",
+      "item3Title": "持续更新",
+      "item3Text": "我们的团队持续追踪 AI 领域的最新发展，确保您始终能获取到最新、最有效的提示词。"
+    },
+    "valuesTitle": "我们的价值观",
+    "valuesItems": {
+      "value1Title": "开放分享",
+      "value1Text": "知识应该被分享，我们坚信开放共享能让整个社区一起进步。",
+      "value2Title": "品质至上",
+      "value2Text": "每一条提示词都经过精心筛选，确保为用户提供最高质量的内容。",
+      "value3Title": "创新驱动",
+      "value3Text": "紧跟 AI 技术发展前沿，不断探索新的可能性。"
+    },
+    "contactTitle": "联系我们",
+    "contactText": "如果您有任何问题、建议或合作意向，欢迎通过以下方式联系我们："
+  },
+  "helpPage": {
+    "title": "帮助中心",
+    "metaTitle": "帮助中心 - AI 提示词库",
+    "metaDescription": "了解如何使用 AI 提示词库，掌握提示词的搜索、复制和使用技巧，充分发挥 AI 创作潜能。",
+    "heroTitle": "我们在这里帮助您",
+    "heroDescription": "快速了解如何使用 AI 提示词库，释放您的创意潜能",
+    "gettingStartedTitle": "快速开始",
+    "gettingStartedItems": {
+      "item1Title": "浏览提示词",
+      "item1Text": "在首页浏览我们精选的提示词卡片，每张卡片都展示了效果预览和完整的提示词内容。",
+      "item2Title": "搜索筛选",
+      "item2Text": "使用搜索框输入关键词，或通过分类、模型、标签进行筛选，快速找到您需要的提示词。",
+      "item3Title": "复制使用",
+      "item3Text": "点击卡片上的复制按钮，即可将提示词复制到剪贴板，然后粘贴到您的 AI 工具中使用。"
+    },
+    "faqTitle": "常见问题",
+    "faqItems": {
+      "q1": "如何复制提示词？",
+      "a1": "点击提示词卡片上的「复制」按钮，提示词会自动复制到您的剪贴板。您也可以点击卡片查看详情后复制。",
+      "q2": "支持哪些 AI 模型？",
+      "a2": "我们的提示词涵盖 Midjourney、Stable Diffusion、DALL-E 3、Runway Gen-2、Sora、Suno AI 等主流模型。每个提示词都会标注适用的模型。",
+      "q3": "提示词可以商用吗？",
+      "a3": "本站收集的提示词仅供学习交流使用，禁止用于商业用途。如需商用，请联系原作者获取授权。",
+      "q4": "如何提交我的提示词？",
+      "a4": "目前我们暂不支持用户直接提交，但您可以通过公众号联系我们分享您的优秀作品。",
+      "q5": "为什么有些图片加载较慢？",
+      "a5": "部分图片来源于外部链接，加载速度可能受网络环境影响。我们正在持续优化图片加载体验。"
+    },
+    "tipsTitle": "使用技巧",
+    "tipsItems": {
+      "tip1Title": "善用筛选器",
+      "tip1Text": "结合多个筛选条件可以更精准地找到您需要的提示词风格。",
+      "tip2Title": "参考并修改",
+      "tip2Text": "复制提示词后，建议根据您的具体需求进行微调，以获得最佳效果。",
+      "tip3Title": "关注模型版本",
+      "tip3Text": "不同模型版本对提示词的理解可能有差异，请注意查看提示词标注的适用模型。"
+    },
+    "stillNeedHelpTitle": "还需要帮助？",
+    "stillNeedHelpText": "如果您的问题没有在上述内容中找到答案，请通过公众号联系我们，我们会尽快回复。"
+  },
+  "seoKeywords": {
+    "list": [
+      "AI提示词",
+      "Midjourney提示词",
+      "Stable Diffusion提示词",
+      "DALL-E提示词",
+      "AI绘画",
+      "AI艺术",
+      "文生图",
+      "文生视频",
+      "Runway提示词",
+      "Sora提示词",
+      "Suno提示词",
+      "AI音乐",
+      "Prompt工程",
+      "AI创作",
+      "图像生成",
+      "视频生成",
+      "人工智能艺术"
+    ]
+  },
   "header": {
     "title": "全球最热门banana玩法大全",
     "subtitle": "top ai prompts",
@@ -66,5 +162,14 @@
   },
   "loading": {
     "text": "加载中..."
+  },
+  "seo": {
+    "aboutTitle": "关于 AI 提示词库 - 您的 AI 创作灵感源泉",
+    "aboutText1": "AI 提示词库是一个汇集全球优质 AI 绘画、视频、音频生成提示词的专业平台。我们致力于为创作者、设计师和 AI 爱好者提供灵感，帮助您更好地掌握和使用 Midjourney, Stable Diffusion, Runway, Sora 等前沿 AI 模型。",
+    "aboutText2": "无论您是寻找二次元动漫风格、写实摄影风格、3D 渲染效果，还是需要专业的 LOGO 设计、UI 界面灵感，这里都能找到适合的 Prompt。我们的数据库实时更新，收录了数万个经过验证的高质量提示词案例，让您的 AI 创作更加高效、精准。",
+    "categoriesTitle": "覆盖主流 AI 模型与风格",
+    "categoriesText": "本站深度整合了各类热门 AI 工具的提示词资源，包括但不限于：Midjourney V6 的写实摄影与艺术创作、Niji Journey 的动漫插画、Stable Diffusion XL (SDXL) 的精准控制、DALL-E 3 的语义理解、以及 Runway Gen-2 和 Pika Labs 的 AI 视频生成指令。此外，我们还提供 Suno AI 等音频生成模型的 Prompt 指南。",
+    "usageTitle": "如何使用 AI 提示词？",
+    "usageText": "浏览我们的精选列表，通过关键词搜索或标签筛选找到您喜欢的图像、视频或音频效果。点击卡片即可查看完整的 Prompt 参数（包括负面提示词 Negative Prompt、宽高比 --ar、风格化 --s 等）。一键复制 Prompt 到您的 AI 工具中，即可生成类似的高质量作品。我们建议您在此基础上进行微调，以激发更多创意火花。"
   }
 }
