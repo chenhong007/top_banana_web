@@ -304,6 +304,7 @@ class PromptRepository extends BaseRepository<
    * Bulk create prompts (optimized with batch processing)
    * Uses smaller batches to avoid transaction timeout issues
    * v2.0: 改进事务处理，逐条插入避免事务回滚导致的批量失败
+   * v2.1: 预先创建关联数据 + 重试机制，避免 connectOrCreate 竞争条件
    */
   async bulkCreate(items: CreatePromptInput[]): Promise<{ 
     success: number; 
@@ -314,7 +315,70 @@ class PromptRepository extends BaseRepository<
     let failed = 0;
     const failedItems: Array<{ index: number; effect: string; error: string }> = [];
 
-    // 分批处理，每批最多 50 条
+    // === 步骤1: 预先收集并创建所有唯一的 tags, modelTags, categories ===
+    console.log(`[BulkCreate] Step 1: Pre-creating related entities...`);
+    
+    const allTags = new Set<string>();
+    const allModelTags = new Set<string>();
+    const allCategories = new Set<string>();
+    
+    for (const item of items) {
+      if (item.tags) {
+        for (const tag of item.tags) {
+          if (tag && tag.trim()) allTags.add(tag.trim());
+        }
+      }
+      if (item.modelTags) {
+        for (const modelTag of item.modelTags) {
+          if (modelTag && modelTag.trim()) allModelTags.add(modelTag.trim());
+        }
+      }
+      const categoryName = (item.category || DEFAULT_CATEGORY).trim();
+      if (categoryName) allCategories.add(categoryName);
+    }
+    
+    // 批量预创建 tags（忽略已存在的）
+    for (const tagName of allTags) {
+      try {
+        await this.prisma.tag.upsert({
+          where: { name: tagName },
+          update: {},
+          create: { name: tagName },
+        });
+      } catch {
+        // 忽略冲突错误
+      }
+    }
+    
+    // 批量预创建 modelTags（忽略已存在的）
+    for (const modelTagName of allModelTags) {
+      try {
+        await this.prisma.modelTag.upsert({
+          where: { name: modelTagName },
+          update: {},
+          create: { name: modelTagName },
+        });
+      } catch {
+        // 忽略冲突错误
+      }
+    }
+    
+    // 批量预创建 categories（忽略已存在的）
+    for (const categoryName of allCategories) {
+      try {
+        await this.prisma.category.upsert({
+          where: { name: categoryName },
+          update: {},
+          create: { name: categoryName },
+        });
+      } catch {
+        // 忽略冲突错误
+      }
+    }
+    
+    console.log(`[BulkCreate] Pre-created: ${allTags.size} tags, ${allModelTags.size} modelTags, ${allCategories.size} categories`);
+
+    // === 步骤2: 分批处理导入 ===
     const BATCH_SIZE = 50;
     const batches: Array<{ items: CreatePromptInput[]; startIndex: number }> = [];
     
@@ -325,7 +389,7 @@ class PromptRepository extends BaseRepository<
       });
     }
 
-    console.log(`[BulkCreate] Starting import: ${items.length} items in ${batches.length} batches`);
+    console.log(`[BulkCreate] Step 2: Importing ${items.length} items in ${batches.length} batches`);
 
     // 逐批处理
     for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
@@ -334,56 +398,75 @@ class PromptRepository extends BaseRepository<
       let batchSuccess = 0;
       let batchFailed = 0;
 
-      // 逐条插入，不使用事务，避免单条失败导致整批回滚
+      // 逐条插入，带重试机制
       for (let i = 0; i < batch.items.length; i++) {
         const item = batch.items[i];
         const globalIndex = batch.startIndex + i;
 
-        try {
-          const categoryName = item.category || DEFAULT_CATEGORY;
-          
-          // 使用统一的图片处理工具函数
-          const { primaryImageUrl, imageUrls } = normalizeImageUrls(item.imageUrl, item.imageUrls);
+        // 尝试最多3次
+        let lastError: unknown = null;
+        let succeeded = false;
+        
+        for (let attempt = 0; attempt < 3 && !succeeded; attempt++) {
+          try {
+            const categoryName = (item.category || DEFAULT_CATEGORY).trim();
+            
+            // 使用统一的图片处理工具函数
+            const { primaryImageUrl, imageUrls } = normalizeImageUrls(item.imageUrl, item.imageUrls);
 
-          await this.prisma.prompt.create({
-            data: {
-              effect: item.effect,
-              description: item.description,
-              prompt: item.prompt,
-              source: item.source,
-              imageUrl: primaryImageUrl || null,
-              imageUrls: imageUrls,
-              tags: {
-                connectOrCreate: item.tags.map((name) => ({
-                  where: { name },
-                  create: { name },
-                })),
-              },
-              modelTags:
-                item.modelTags && item.modelTags.length > 0
-                  ? {
-                      connectOrCreate: item.modelTags.map((name) => ({
-                        where: { name },
-                        create: { name },
-                      })),
-                    }
-                  : undefined,
-              category: {
-                connectOrCreate: {
-                  where: { name: categoryName },
-                  create: { name: categoryName },
+            // 过滤掉空的 tag 名称
+            const validTags = (item.tags || []).filter((name): name is string => 
+              typeof name === 'string' && name.trim().length > 0
+            ).map(name => name.trim());
+            
+            const validModelTags = (item.modelTags || []).filter((name): name is string => 
+              typeof name === 'string' && name.trim().length > 0
+            ).map(name => name.trim());
+
+            await this.prisma.prompt.create({
+              data: {
+                effect: item.effect,
+                description: item.description || '',
+                prompt: item.prompt,
+                source: item.source || 'unknown',
+                imageUrl: primaryImageUrl || null,
+                imageUrls: imageUrls,
+                tags: validTags.length > 0 ? {
+                  connect: validTags.map((name) => ({ name })),
+                } : undefined,
+                modelTags: validModelTags.length > 0 ? {
+                  connect: validModelTags.map((name) => ({ name })),
+                } : undefined,
+                category: {
+                  connect: { name: categoryName },
                 },
               },
-            },
-          });
-          success++;
-          batchSuccess++;
-        } catch (error) {
+            });
+            succeeded = true;
+            success++;
+            batchSuccess++;
+          } catch (error) {
+            lastError = error;
+            
+            // 如果是唯一约束冲突（P2002）或记录不存在（P2025），等待一下再重试
+            const prismaError = error as Error & { code?: string };
+            if (prismaError.code === 'P2002' || prismaError.code === 'P2025') {
+              // 短暂等待后重试
+              await new Promise(resolve => setTimeout(resolve, 50 * (attempt + 1)));
+              continue;
+            }
+            
+            // 其他错误直接跳出重试循环
+            break;
+          }
+        }
+        
+        if (!succeeded) {
           failed++;
           batchFailed++;
           
           // 提取详细的错误信息
-          const errorMessage = this.extractErrorMessage(error);
+          const errorMessage = this.extractErrorMessage(lastError);
           const errorDetail = {
             index: globalIndex,
             effect: item.effect?.substring(0, 50) || '(无标题)',
@@ -397,6 +480,9 @@ class PromptRepository extends BaseRepository<
             console.error(`[BulkCreate] Failed item #${globalIndex}:`, {
               effect: item.effect?.substring(0, 30),
               source: item.source?.substring(0, 50),
+              tags: item.tags,
+              modelTags: item.modelTags,
+              category: item.category,
               error: errorMessage,
             });
           }

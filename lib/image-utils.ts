@@ -45,22 +45,41 @@ export interface NormalizedImageUrls {
  * // => { primaryImageUrl: undefined, imageUrls: [] }
  */
 export function normalizeImageUrls(
-  imageUrl: string | null | undefined,
+  imageUrl: string | string[] | null | undefined,
   imageUrls: string[] | null | undefined
 ): NormalizedImageUrls {
-  // Prioritize imageUrls array if it exists and has items
-  if (imageUrls && imageUrls.length > 0) {
-    return {
-      primaryImageUrl: imageUrls[0],
-      imageUrls: imageUrls,
-    };
+  // 收集所有有效的图片URL
+  const allUrls: string[] = [];
+  
+  // 1. 处理 imageUrls 数组
+  if (Array.isArray(imageUrls)) {
+    for (const url of imageUrls) {
+      if (typeof url === 'string' && url.trim()) {
+        allUrls.push(url.trim());
+      }
+    }
+  }
+  
+  // 2. 处理 imageUrl（可能是字符串或数组）
+  if (Array.isArray(imageUrl)) {
+    // imageUrl 是数组的情况
+    for (const url of imageUrl) {
+      if (typeof url === 'string' && url.trim() && !allUrls.includes(url.trim())) {
+        allUrls.push(url.trim());
+      }
+    }
+  } else if (typeof imageUrl === 'string' && imageUrl.trim()) {
+    // imageUrl 是字符串的情况，添加到开头
+    if (!allUrls.includes(imageUrl.trim())) {
+      allUrls.unshift(imageUrl.trim());
+    }
   }
 
-  // Fall back to imageUrl if provided
-  if (imageUrl) {
+  // 返回结果
+  if (allUrls.length > 0) {
     return {
-      primaryImageUrl: imageUrl,
-      imageUrls: [imageUrl],
+      primaryImageUrl: allUrls[0],
+      imageUrls: allUrls,
     };
   }
 
@@ -79,7 +98,7 @@ export function normalizeImageUrls(
  * @returns Primary image URL or undefined
  */
 export function getPrimaryImageUrl(
-  imageUrl: string | null | undefined,
+  imageUrl: string | string[] | null | undefined,
   imageUrls: string[] | null | undefined
 ): string | undefined {
   return normalizeImageUrls(imageUrl, imageUrls).primaryImageUrl;
@@ -93,7 +112,7 @@ export function getPrimaryImageUrl(
  * @returns Array of image URLs (may be empty)
  */
 export function getImageUrlsArray(
-  imageUrl: string | null | undefined,
+  imageUrl: string | string[] | null | undefined,
   imageUrls: string[] | null | undefined
 ): string[] {
   return normalizeImageUrls(imageUrl, imageUrls).imageUrls;
