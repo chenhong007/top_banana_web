@@ -19,6 +19,13 @@ export default function AdminPage() {
     prompts,
     loading,
     refetch,
+    // 分页相关
+    pagination,
+    currentPage,
+    goToPage,
+    nextPage,
+    prevPage,
+    // 表单相关
     formData,
     setFormData,
     isCreating,
@@ -93,6 +100,11 @@ export default function AdminPage() {
             prompts={prompts}
             onEdit={startEdit}
             onDelete={onDelete}
+            pagination={pagination}
+            currentPage={currentPage}
+            onPageChange={goToPage}
+            onNextPage={nextPage}
+            onPrevPage={prevPage}
           />
         )}
       </main>

@@ -61,7 +61,7 @@ export default function JsonImportForm({
           <input
             ref={fileInputRef}
             type="file"
-            accept=".json"
+            accept=".json,application/json,*/*"
             onChange={onFileChange}
             className="hidden"
           />

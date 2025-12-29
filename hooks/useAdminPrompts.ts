@@ -2,16 +2,20 @@
  * useAdminPrompts Hook
  * React Query based hook for Admin page prompt management
  * Replaces the legacy usePrompts + usePromptForm combination
+ * 
+ * 优化：使用分页加载数据，避免一次性加载全部数据导致性能问题
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { PromptItem, CreatePromptRequest } from '@/types';
 import { useToast } from '@/components/shared/ToastContainer';
 import { formatErrorMessage } from '@/lib/error-handler';
+import { useQuery } from '@tanstack/react-query';
+import { promptService, PaginatedResponse } from '@/services/prompt.service';
 import {
-  usePromptsQuery,
+  promptKeys,
   useCreatePromptMutation,
   useUpdatePromptMutation,
   useDeletePromptMutation,
@@ -29,18 +33,66 @@ const initialFormData: CreatePromptRequest = {
   category: '',
 };
 
+// 后台管理每页显示条数
+const ADMIN_PAGE_SIZE = 50;
+
 /**
  * Hook combining prompts data fetching and form management for Admin page
  * Uses React Query for data fetching and mutations
+ * 使用分页来优化大数据量下的加载性能
  */
 export function useAdminPrompts() {
   const toast = useToast();
   
-  // React Query hooks
-  const { data: prompts = [], isLoading, refetch } = usePromptsQuery();
+  // 分页状态
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // 使用分页查询获取数据
+  const { 
+    data: paginatedData, 
+    isLoading, 
+    refetch 
+  } = useQuery({
+    queryKey: [...promptKeys.lists(), { page: currentPage, pageSize: ADMIN_PAGE_SIZE }],
+    queryFn: async () => {
+      return promptService.getPaginated(currentPage, ADMIN_PAGE_SIZE);
+    },
+    staleTime: 30 * 1000, // 30秒内不重新请求
+  });
+
+  // 提取数据和分页信息
+  const prompts = paginatedData?.data || [];
+  const pagination = paginatedData?.pagination || {
+    page: 1,
+    pageSize: ADMIN_PAGE_SIZE,
+    total: 0,
+    totalPages: 1,
+    hasNext: false,
+    hasPrev: false,
+  };
+
   const createMutation = useCreatePromptMutation();
   const updateMutation = useUpdatePromptMutation();
   const deleteMutation = useDeletePromptMutation();
+  
+  // 分页控制函数
+  const goToPage = useCallback((page: number) => {
+    if (page >= 1 && page <= pagination.totalPages) {
+      setCurrentPage(page);
+    }
+  }, [pagination.totalPages]);
+
+  const nextPage = useCallback(() => {
+    if (pagination.hasNext) {
+      setCurrentPage(prev => prev + 1);
+    }
+  }, [pagination.hasNext]);
+
+  const prevPage = useCallback(() => {
+    if (pagination.hasPrev) {
+      setCurrentPage(prev => prev - 1);
+    }
+  }, [pagination.hasPrev]);
 
   // Form state
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -170,6 +222,13 @@ export function useAdminPrompts() {
     prompts,
     loading: isLoading,
     refetch,
+
+    // Pagination
+    pagination,
+    currentPage,
+    goToPage,
+    nextPage,
+    prevPage,
 
     // Form state
     formData,

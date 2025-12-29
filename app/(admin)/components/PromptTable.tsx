@@ -1,27 +1,92 @@
 /**
  * PromptTable Component
  * Table for displaying and managing prompts
+ * 支持分页功能以优化大数据量下的性能
  */
 
 import { PromptItem } from '@/types';
-import { Edit2, Trash2, Search, Filter } from 'lucide-react';
-import { CARD_STYLES, TABLE_STYLES, ICON_BUTTON_STYLES, BADGE_STYLES, INPUT_STYLES } from '@/lib/styles';
+import { Edit2, Trash2, Search, Filter, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { CARD_STYLES, TABLE_STYLES, ICON_BUTTON_STYLES, BADGE_STYLES, INPUT_STYLES, BUTTON_STYLES } from '@/lib/styles';
 import { useState } from 'react';
+
+interface PaginationInfo {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
 
 interface PromptTableProps {
   prompts: PromptItem[];
   onEdit: (prompt: PromptItem) => void;
   onDelete: (id: string) => void;
+  // 分页相关属性（可选，支持向后兼容）
+  pagination?: PaginationInfo;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
+  onNextPage?: () => void;
+  onPrevPage?: () => void;
 }
 
-export default function PromptTable({ prompts, onEdit, onDelete }: PromptTableProps) {
+export default function PromptTable({ 
+  prompts, 
+  onEdit, 
+  onDelete,
+  pagination,
+  currentPage = 1,
+  onPageChange,
+  onNextPage,
+  onPrevPage,
+}: PromptTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
+  // 本地搜索过滤（在当前页数据中搜索）
   const filteredPrompts = prompts.filter(p => 
     (p.effect || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
     (p.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (p.tags || []).some(t => (t || '').toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  // 是否启用分页
+  const hasPagination = !!pagination && !!onPageChange;
+
+  // 生成页码按钮数组
+  const getPageNumbers = () => {
+    if (!pagination) return [1];
+    const { totalPages } = pagination;
+    const pages: (number | string)[] = [];
+    
+    if (totalPages <= 7) {
+      // 显示所有页码
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // 显示部分页码 + 省略号
+      pages.push(1);
+      
+      if (currentPage > 3) {
+        pages.push('...');
+      }
+      
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      
+      if (currentPage < totalPages - 2) {
+        pages.push('...');
+      }
+      
+      pages.push(totalPages);
+    }
+    
+    return pages;
+  };
 
   return (
     <div className={CARD_STYLES.base}>
@@ -127,14 +192,87 @@ export default function PromptTable({ prompts, onEdit, onDelete }: PromptTablePr
         </table>
       </div>
       
-      {/* Footer */}
-      <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 text-xs text-gray-500 flex justify-between items-center">
-        <span>显示 {filteredPrompts.length} 条记录</span>
-        <div className="flex gap-1">
-          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">上一页</span>
-          <span className="px-2 py-1 rounded bg-white border shadow-sm font-medium text-blue-600">1</span>
-          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">下一页</span>
+      {/* Footer with Pagination */}
+      <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 text-sm text-gray-600 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span>
+            {hasPagination ? (
+              <>
+                显示第 {(currentPage - 1) * (pagination?.pageSize || 50) + 1} - {Math.min(currentPage * (pagination?.pageSize || 50), pagination?.total || 0)} 条，
+                共 <span className="font-semibold text-gray-900">{pagination?.total?.toLocaleString()}</span> 条记录
+              </>
+            ) : (
+              <>显示 {filteredPrompts.length} 条记录</>
+            )}
+          </span>
         </div>
+        
+        {hasPagination && pagination && (
+          <div className="flex items-center gap-1">
+            {/* 首页 */}
+            <button
+              onClick={() => onPageChange?.(1)}
+              disabled={currentPage === 1}
+              className="p-2 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              title="首页"
+            >
+              <ChevronsLeft className="w-4 h-4" />
+            </button>
+            
+            {/* 上一页 */}
+            <button
+              onClick={onPrevPage}
+              disabled={!pagination.hasPrev}
+              className="p-2 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              title="上一页"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            
+            {/* 页码 */}
+            <div className="flex gap-1 mx-2">
+              {getPageNumbers().map((page, idx) => (
+                typeof page === 'number' ? (
+                  <button
+                    key={idx}
+                    onClick={() => onPageChange?.(page)}
+                    className={`min-w-[36px] h-9 px-3 rounded-lg font-medium transition-colors ${
+                      page === currentPage
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ) : (
+                  <span key={idx} className="px-2 py-2 text-gray-400">
+                    {page}
+                  </span>
+                )
+              ))}
+            </div>
+            
+            {/* 下一页 */}
+            <button
+              onClick={onNextPage}
+              disabled={!pagination.hasNext}
+              className="p-2 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              title="下一页"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            
+            {/* 末页 */}
+            <button
+              onClick={() => onPageChange?.(pagination.totalPages)}
+              disabled={currentPage === pagination.totalPages}
+              className="p-2 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              title="末页"
+            >
+              <ChevronsRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
