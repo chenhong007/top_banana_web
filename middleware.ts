@@ -6,59 +6,36 @@ import { routing } from './i18n/routing';
 const TOKEN_NAME = 'admin_token';
 
 // ============================================
+// Optimization: Pre-compute Constants
+// ============================================
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
+// ============================================
 // Bot Detection for Middleware
 // ============================================
 
 /**
- * Known bot user agents (case-insensitive patterns)
+ * Known bot user agent patterns (case-insensitive)
+ * Optimized: Combined into single Regex for O(1) matching instead of O(N)
  */
-const BOT_USER_AGENTS = [
-  /bot/i,
-  /crawler/i,
-  /spider/i,
-  /scraper/i,
-  /curl/i,
-  /wget/i,
-  /python-requests/i,
-  /python-urllib/i,
-  /axios/i,
-  /node-fetch/i,
-  /go-http-client/i,
-  /java\//i,
-  /httpie/i,
-  /postman/i,
-  /insomnia/i,
-  /scrapy/i,
-  /phantomjs/i,
-  /headlesschrome/i,
-  /selenium/i,
-  /puppeteer/i,
-  /playwright/i,
-  /webdriver/i,
-  /httrack/i,
-  /libwww/i,
-  /lwp-/i,
-  /mechanize/i,
-  /aiohttp/i,
-  /httpx/i,
+const BOT_PATTERNS = [
+  'bot', 'crawler', 'spider', 'scraper', 'curl', 'wget', 
+  'python-requests', 'python-urllib', 'axios', 'node-fetch', 
+  'go-http-client', 'java/', 'httpie', 'postman', 'insomnia', 
+  'scrapy', 'phantomjs', 'headlesschrome', 'selenium', 'puppeteer', 
+  'playwright', 'webdriver', 'httrack', 'libwww', 'lwp-', 
+  'mechanize', 'aiohttp', 'httpx'
 ];
 
-/**
- * Good bots that should be allowed (search engines)
- */
-const ALLOWED_BOTS = [
-  /googlebot/i,
-  /bingbot/i,
-  /baiduspider/i,
-  /yandexbot/i,
-  /duckduckbot/i,
-  /slurp/i,
-  /facebookexternalhit/i,
-  /twitterbot/i,
-  /linkedinbot/i,
-  /whatsapp/i,
-  /telegrambot/i,
+const ALLOWED_BOT_PATTERNS = [
+  'googlebot', 'bingbot', 'baiduspider', 'yandexbot', 
+  'duckduckbot', 'slurp', 'facebookexternalhit', 'twitterbot', 
+  'linkedinbot', 'whatsapp', 'telegrambot'
 ];
+
+// Compiled Regex for performance
+const BOT_REGEX = new RegExp(BOT_PATTERNS.join('|'), 'i');
+const ALLOWED_BOT_REGEX = new RegExp(ALLOWED_BOT_PATTERNS.join('|'), 'i');
 
 /**
  * Check if user agent indicates a malicious bot
@@ -66,50 +43,43 @@ const ALLOWED_BOTS = [
 function isMaliciousBot(userAgent: string | null): boolean {
   if (!userAgent) return true; // Empty UA is suspicious
   
-  // Allow good bots (search engines)
-  for (const pattern of ALLOWED_BOTS) {
-    if (pattern.test(userAgent)) {
-      return false;
-    }
+  // Allow good bots (search engines) - Check first
+  if (ALLOWED_BOT_REGEX.test(userAgent)) {
+    return false;
   }
   
   // Block known bad bots
-  for (const pattern of BOT_USER_AGENTS) {
-    if (pattern.test(userAgent)) {
-      return true;
-    }
-  }
-  
-  return false;
+  return BOT_REGEX.test(userAgent);
 }
+
+// ============================================
+// Security Headers
+// ============================================
+
+// Pre-compute CSP header to avoid rebuilding on every request
+const CSP_HEADER = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${IS_PRODUCTION ? '' : " 'unsafe-eval'"}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: https: blob:",
+  "font-src 'self' data:",
+  "connect-src 'self' https:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  ...(IS_PRODUCTION ? ["upgrade-insecure-requests"] : []),
+].join('; ') + ';';
 
 /**
  * Apply security headers to response
  */
 function applySecurityHeaders(response: NextResponse): NextResponse {
-  const isProduction = process.env.NODE_ENV === 'production';
-
   // Content Security Policy
-  // - Keep 'unsafe-inline' to avoid breaking Next.js without a nonce pipeline.
-  // - Remove 'unsafe-eval' in production to reduce XSS blast radius.
-  const csp = [
-    "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${isProduction ? '' : " 'unsafe-eval'"}`,
-    "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https: blob:",
-    "font-src 'self' data:",
-    "connect-src 'self' https:",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'none'",
-    ...(isProduction ? ["upgrade-insecure-requests"] : []),
-  ].join('; ') + ';';
-
-  response.headers.set('Content-Security-Policy', csp);
+  response.headers.set('Content-Security-Policy', CSP_HEADER);
 
   // HSTS (only meaningful on HTTPS; enable in production)
-  if (isProduction) {
+  if (IS_PRODUCTION) {
     response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   }
   
@@ -136,6 +106,10 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   return response;
 }
 
+// ============================================
+// Access Control & Auth
+// ============================================
+
 // Admin access control configuration - 在模块级别读取一次
 const SHOW_ADMIN_ENTRY = process.env.NEXT_PUBLIC_SHOW_ADMIN_ENTRY !== 'false';
 const ADMIN_ALLOWED_DOMAINS = (process.env.NEXT_PUBLIC_ADMIN_ALLOWED_DOMAINS || '')
@@ -152,21 +126,37 @@ const AUTH_ROUTES = ['/login'];
 // Create next-intl middleware
 const intlMiddleware = createMiddleware(routing);
 
+// Optimization: Cache the crypto key
+let cachedKey: CryptoKey | null = null;
+
 /**
- * 使用 Web Crypto API 创建 HMAC-SHA256 签名（Edge Runtime 兼容）
+ * Get or create the CryptoKey for HMAC signing
  */
-async function createSignature(payload: string, secret: string): Promise<string> {
+async function getSecretKey(secret: string): Promise<CryptoKey> {
+  if (cachedKey) return cachedKey;
+  
   const encoder = new TextEncoder();
   const keyData = encoder.encode(secret);
-  const messageData = encoder.encode(payload);
   
-  const key = await crypto.subtle.importKey(
+  cachedKey = await crypto.subtle.importKey(
     'raw',
     keyData,
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign']
   );
+  
+  return cachedKey;
+}
+
+/**
+ * 使用 Web Crypto API 创建 HMAC-SHA256 签名（Edge Runtime 兼容）
+ */
+async function createSignature(payload: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const messageData = encoder.encode(payload);
+  
+  const key = await getSecretKey(secret);
   
   const signature = await crypto.subtle.sign('HMAC', key, messageData);
   
