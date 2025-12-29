@@ -34,9 +34,11 @@ interface PromptGridProps {
   onPreview: (src: string, alt: string) => void;
   /** 数据库真实总量（用于显示，而非已加载数量） */
   databaseTotal?: number;
+  /** 数据库真实总页数（用于分页显示） */
+  databaseTotalPages?: number;
 }
 
-export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview, databaseTotal }: PromptGridProps) {
+export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview, databaseTotal, databaseTotalPages }: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
   const tPagination = useTranslations('pagination');
@@ -108,17 +110,17 @@ export default function PromptGrid({ loading, filteredPrompts, pagination, onPre
         ))}
       </div>
 
-      {/* Pagination */}
-      {pagination.totalPages > 1 && (
+      {/* Pagination - 使用数据库真实总量和总页数 */}
+      {(databaseTotalPages ?? pagination.totalPages) > 1 && (
         <div className="flex justify-center pt-8">
           <Pagination
             currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            totalItems={pagination.totalItems}
+            totalPages={databaseTotalPages ?? pagination.totalPages}
+            totalItems={databaseTotal ?? pagination.totalItems}
             pageSize={pagination.pageSize}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
-            hasNextPage={pagination.hasNextPage}
+            hasNextPage={databaseTotalPages ? pagination.currentPage < databaseTotalPages : pagination.hasNextPage}
             hasPreviousPage={pagination.hasPreviousPage}
           />
         </div>

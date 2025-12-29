@@ -33,6 +33,7 @@ interface BatchProgress {
   successCount: number;
   failedCount: number;
   skippedCount: number;      // 因重复被跳过的数量
+  totalItemsCount: number;   // 总提交条数（用于验证统计）
   duplicateStats?: DuplicateStats; // 详细的重复统计
   isRunning: boolean;
 }
@@ -60,6 +61,7 @@ export function useImport(onSuccess?: () => void) {
     successCount: 0,
     failedCount: 0,
     skippedCount: 0,
+    totalItemsCount: 0,
     duplicateStats: undefined,
     isRunning: false,
   });
@@ -160,8 +162,10 @@ export function useImport(onSuccess?: () => void) {
   // 单批次导入结果类型
   interface BatchResult {
     success: boolean;
-    imported: number;
-    skipped: number;
+    submitted: number;   // 本批次提交的总数
+    imported: number;    // 成功导入的数量
+    skipped: number;     // 因重复跳过的数量
+    failed: number;      // 导入失败的数量
     duplicateStats?: DuplicateStats;
     error?: string;
   }
@@ -174,6 +178,8 @@ export function useImport(onSuccess?: () => void) {
     batchMode: DataImportMode, 
     isFirstBatch: boolean
   ): Promise<BatchResult> => {
+    const batchSize = items.length;
+    
     try {
       // 第一批使用用户选择的模式，后续批次总是使用 merge 模式
       const actualMode = isFirstBatch ? batchMode : 'merge';
@@ -195,33 +201,38 @@ export function useImport(onSuccess?: () => void) {
       
       if (!response.ok) {
         if (response.status === 504) {
-          return { success: false, imported: 0, skipped: 0, error: '请求超时，请减少批次大小' };
+          return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: '请求超时，请减少批次大小' };
         }
         if (response.status === 413) {
-          return { success: false, imported: 0, skipped: 0, error: '请求数据过大' };
+          return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: '请求数据过大' };
         }
-        return { success: false, imported: 0, skipped: 0, error: `服务器错误 (${response.status})` };
+        return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: `服务器错误 (${response.status})` };
       }
 
       const result = JSON.parse(responseText);
       if (result.success) {
-        // 计算被跳过的数量（重复的）
-        const duplicateStats = result.data.duplicatesFiltered as DuplicateStats | undefined;
-        const skipped = duplicateStats?.total || 0;
+        // 使用后端返回的完整统计
+        const data = result.data;
+        const duplicateStats = data.duplicatesFiltered as DuplicateStats | undefined;
+        
         return { 
           success: true, 
-          imported: result.data.imported,
-          skipped,
+          submitted: data.submitted || batchSize,
+          imported: data.imported || 0,
+          skipped: data.skipped || 0,
+          failed: data.failed || 0,
           duplicateStats,
         };
       } else {
-        return { success: false, imported: 0, skipped: 0, error: result.error };
+        return { success: false, submitted: batchSize, imported: 0, skipped: 0, failed: batchSize, error: result.error };
       }
     } catch (err) {
       return { 
         success: false, 
+        submitted: batchSize,
         imported: 0, 
         skipped: 0,
+        failed: batchSize,
         error: err instanceof Error ? err.message : '网络错误' 
       };
     }
@@ -334,6 +345,7 @@ export function useImport(onSuccess?: () => void) {
       successCount: 0,
       failedCount: 0,
       skippedCount: 0,
+      totalItemsCount: totalItems,
       duplicateStats: undefined,
       isRunning: true,
     });
@@ -364,20 +376,21 @@ export function useImport(onSuccess?: () => void) {
 
       const result = await importBatch(batch, importMode, i === 0);
       
-      if (result.success) {
-        totalImported += result.imported;
-        totalSkipped += result.skipped;
-        
-        // 汇总重复统计
-        if (result.duplicateStats) {
-          aggregatedDuplicateStats.byImageUrl += result.duplicateStats.byImageUrl;
-          aggregatedDuplicateStats.bySource += result.duplicateStats.bySource;
-          aggregatedDuplicateStats.byEffect += result.duplicateStats.byEffect;
-          aggregatedDuplicateStats.byPromptSimilarity += result.duplicateStats.byPromptSimilarity;
-          aggregatedDuplicateStats.total += result.duplicateStats.total;
-        }
-      } else {
-        totalFailed += batch.length;
+      // 累加统计 - 使用后端返回的精确数据
+      totalImported += result.imported;
+      totalSkipped += result.skipped;
+      totalFailed += result.failed;
+      
+      // 汇总重复统计
+      if (result.duplicateStats) {
+        aggregatedDuplicateStats.byImageUrl += result.duplicateStats.byImageUrl;
+        aggregatedDuplicateStats.bySource += result.duplicateStats.bySource;
+        aggregatedDuplicateStats.byEffect += result.duplicateStats.byEffect;
+        aggregatedDuplicateStats.byPromptSimilarity += result.duplicateStats.byPromptSimilarity;
+        aggregatedDuplicateStats.total += result.duplicateStats.total;
+      }
+      
+      if (!result.success) {
         lastError = result.error || '未知错误';
       }
 
@@ -387,6 +400,7 @@ export function useImport(onSuccess?: () => void) {
         successCount: totalImported,
         failedCount: totalFailed,
         skippedCount: totalSkipped,
+        totalItemsCount: totalItems,
         duplicateStats: aggregatedDuplicateStats.total > 0 ? { ...aggregatedDuplicateStats } : undefined,
         isRunning: i < totalBatches - 1,
       });

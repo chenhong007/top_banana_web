@@ -147,7 +147,12 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                   style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
                 />
               </div>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-700">
+              
+              {/* 数据统计汇总 */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs mb-2">
+                <span className="text-gray-600 font-medium">
+                  📊 总提交: {batchProgress.totalItemsCount} 条
+                </span>
                 <span className="text-green-600">✓ 成功: {batchProgress.successCount} 条</span>
                 {batchProgress.skippedCount > 0 && (
                   <span className="text-amber-600">⏭ 跳过重复: {batchProgress.skippedCount} 条</span>
@@ -155,16 +160,31 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                 {batchProgress.failedCount > 0 && (
                   <span className="text-red-600">✗ 失败: {batchProgress.failedCount} 条</span>
                 )}
-                {batchProgress.isRunning && (
+              </div>
+              
+              {/* 待处理数量 */}
+              {batchProgress.isRunning && (() => {
+                const processed = batchProgress.successCount + batchProgress.skippedCount + batchProgress.failedCount;
+                const remaining = batchProgress.totalItemsCount - processed;
+                return remaining > 0 ? (
+                  <div className="text-xs text-gray-500 mb-2">
+                    ⏳ 待处理: {remaining} 条
+                  </div>
+                ) : null;
+              })()}
+              
+              {/* 取消按钮 */}
+              {batchProgress.isRunning && (
+                <div className="flex justify-end">
                   <button
                     onClick={cancelBatchImport}
-                    className="flex items-center gap-1 text-red-600 hover:text-red-700 ml-auto"
+                    className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700"
                   >
                     <XCircle className="w-3 h-3" />
                     取消导入
                   </button>
-                )}
-              </div>
+                </div>
+              )}
               
               {/* 详细的重复原因统计 */}
               {batchProgress.duplicateStats && batchProgress.duplicateStats.total > 0 && (
@@ -194,6 +214,22 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                   </div>
                 </div>
               )}
+              
+              {/* 统计校验提示 - 只在完成后且数据不匹配时显示 */}
+              {!batchProgress.isRunning && batchProgress.totalItemsCount > 0 && (() => {
+                const totalProcessed = batchProgress.successCount + batchProgress.skippedCount + batchProgress.failedCount;
+                const diff = batchProgress.totalItemsCount - totalProcessed;
+                if (diff !== 0) {
+                  return (
+                    <div className="mt-3 pt-3 border-t border-red-200 text-xs text-red-600">
+                      ⚠️ 统计异常: 总提交 {batchProgress.totalItemsCount} 条，
+                      已处理 {totalProcessed} 条（成功 {batchProgress.successCount} + 跳过 {batchProgress.skippedCount} + 失败 {batchProgress.failedCount}），
+                      差异 {diff} 条
+                    </div>
+                  );
+                }
+                return null;
+              })()}
             </div>
           )}
         </div>

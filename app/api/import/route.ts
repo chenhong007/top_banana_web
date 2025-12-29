@@ -95,7 +95,9 @@ export async function POST(request: NextRequest) {
     }
 
     let importedCount = 0;
+    let failedCount = 0;
     let duplicateStats: Record<DuplicateType, number> | undefined;
+    const submittedCount = newPrompts.length; // 本批次提交的总数
 
     if (mode === 'replace') {
       // Delete all existing data first
@@ -127,6 +129,7 @@ export async function POST(request: NextRequest) {
       
       const result = await promptRepository.bulkCreate(uniqueInBatch);
       importedCount = result.success;
+      failedCount = result.failed;
       
       const totalDuplicates = newPrompts.length - uniqueInBatch.length;
       if (totalDuplicates > 0) {
@@ -153,21 +156,26 @@ export async function POST(request: NextRequest) {
 
       const result = await promptRepository.bulkCreate(uniqueItems);
       importedCount = result.success;
+      failedCount = result.failed;
       duplicateStats = stats.duplicatesByType;
     }
 
     const totalCount = await promptRepository.count();
+    const skippedCount = duplicateStats ? Object.values(duplicateStats).reduce((a, b) => a + b, 0) : 0;
 
     return successResponse({
-      imported: importedCount,
-      total: totalCount,
+      submitted: submittedCount,     // 本批次提交的总数
+      imported: importedCount,       // 成功导入的数量
+      skipped: skippedCount,         // 因重复跳过的数量
+      failed: failedCount,           // 导入失败的数量（数据库错误等）
+      total: totalCount,             // 数据库中的总数
       mode,
       duplicatesFiltered: duplicateStats ? {
         byImageUrl: duplicateStats.imageUrl,
         bySource: duplicateStats.source,
         byEffect: duplicateStats.effect,
         byPromptSimilarity: duplicateStats.prompt_similarity,
-        total: Object.values(duplicateStats).reduce((a, b) => a + b, 0),
+        total: skippedCount,
       } : undefined,
     });
   });
