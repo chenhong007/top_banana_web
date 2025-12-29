@@ -200,9 +200,11 @@ export default function OptimizedImage({
       className={`relative overflow-hidden ${className}`}
       style={fill ? { width: '100%', height: '100%' } : { width, height }}
     >
-      {/* 简洁的背景占位符 - 所有未加载完成的图片都显示占位符 */}
+      {/* 骨架屏加载效果 - 所有未加载完成的图片都显示 */}
       {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-muted/20" />
+        <div className="absolute inset-0 bg-muted/20">
+           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent bg-[length:200%_100%] animate-shimmer" />
+        </div>
       )}
 
       {/* 图片内容 */}

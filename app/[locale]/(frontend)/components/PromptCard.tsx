@@ -1,10 +1,9 @@
 'use client';
 
 import { PromptItem } from '@/types';
-import { Tag, Calendar, ExternalLink, Copy, Check, Zap, FolderOpen, Cpu, ThumbsUp, Heart, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { Tag, Calendar, ExternalLink, Copy, Check, Zap, ThumbsUp, Heart, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState } from 'react';
 import OptimizedImage from './OptimizedImage';
-import ImagePreview from './ImagePreview';
 import { useInteractPromptMutation } from '@/hooks/queries/usePromptsQuery';
 import { useTranslations, useLocale } from 'next-intl';
 
@@ -32,18 +31,15 @@ interface PromptCardProps {
   index?: number;
   /** 是否优先加载图片（首屏图片应设为 true） */
   priority?: boolean;
+  onPreview?: (src: string, alt: string) => void;
 }
 
-export default function PromptCard({ prompt, index = 0, priority = false }: PromptCardProps) {
+export default function PromptCard({ prompt, index = 0, priority = false, onPreview }: PromptCardProps) {
   const t = useTranslations('card');
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
-  const imageRef = useRef<HTMLDivElement>(null);
   const interactMutation = useInteractPromptMutation();
 
   const copyPrompt = async () => {
@@ -70,86 +66,14 @@ export default function PromptCard({ prompt, index = 0, priority = false }: Prom
     interactMutation.mutate({ id: prompt.id, type: 'heart' });
   };
 
-  const handleImageMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!prompt.imageUrl || imageError) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    setHoverPosition({
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2,
-    });
-    setIsHovering(true);
-  };
-
-  const handleImageMouseLeave = () => {
-    setIsHovering(false);
-  };
-
-  // 监听滚动事件，滚动时取消放大显示
-  useEffect(() => {
-    if (!isHovering) return;
-
-    const handleScroll = () => {
-      setIsHovering(false);
-    };
-
-    // 监听 window 滚动和所有可能的滚动容器
-    window.addEventListener('scroll', handleScroll, true);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll, true);
-    };
-  }, [isHovering]);
-
-  // 监听鼠标移动，检测是否离开了图片区域
-  const handleMouseMoveCheck = useCallback(() => {
-    if (!isHovering || !imageRef.current) return;
-    
-    // 使用 requestAnimationFrame 来优化性能
-    requestAnimationFrame(() => {
-      if (!imageRef.current) return;
-      const rect = imageRef.current.getBoundingClientRect();
-      const mouseX = (window as typeof window & { _lastMouseX?: number })._lastMouseX ?? 0;
-      const mouseY = (window as typeof window & { _lastMouseY?: number })._lastMouseY ?? 0;
-      
-      // 检查鼠标是否在图片区域内
-      if (
-        mouseX < rect.left ||
-        mouseX > rect.right ||
-        mouseY < rect.top ||
-        mouseY > rect.bottom
-      ) {
-        setIsHovering(false);
-      }
-    });
-  }, [isHovering]);
-
-  // 全局鼠标位置跟踪
-  useEffect(() => {
-    if (!isHovering) return;
-
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      (window as typeof window & { _lastMouseX?: number })._lastMouseX = e.clientX;
-      (window as typeof window & { _lastMouseY?: number })._lastMouseY = e.clientY;
-      handleMouseMoveCheck();
-    };
-
-    window.addEventListener('mousemove', handleGlobalMouseMove);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleGlobalMouseMove);
-    };
-  }, [isHovering, handleMouseMoveCheck]);
-
   const handleImageClick = (e: React.MouseEvent) => {
     if (!prompt.imageUrl || imageError) return;
     e.preventDefault();
     e.stopPropagation();
-    setIsHovering(false);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    
+    if (onPreview) {
+      onPreview(prompt.imageUrl, prompt.effect);
+    }
   };
 
   const getModelColor = (modelName: string) => {
@@ -172,10 +96,7 @@ export default function PromptCard({ prompt, index = 0, priority = false }: Prom
     >
       {/* Image */}
       <div 
-        ref={imageRef}
         className="relative aspect-[4/3] overflow-hidden cursor-pointer"
-        onMouseEnter={handleImageMouseEnter}
-        onMouseLeave={handleImageMouseLeave}
         onClick={handleImageClick}
       >
         {prompt.imageUrl && !imageError ? (
@@ -329,18 +250,6 @@ export default function PromptCard({ prompt, index = 0, priority = false }: Prom
           </div>
         </div>
       </div>
-
-      {/* Image Preview Component */}
-      {prompt.imageUrl && !imageError && (
-        <ImagePreview
-          src={prompt.imageUrl}
-          alt={prompt.effect}
-          isHovering={isHovering}
-          isModalOpen={isModalOpen}
-          onCloseModal={handleCloseModal}
-          hoverPosition={hoverPosition}
-        />
-      )}
     </article>
   );
 }
