@@ -254,6 +254,9 @@ export async function POST(request: NextRequest) {
       r.images.every(img => img.newUrl)
     ).length;
 
+    // 基于获取的 Prompt 数量判断是否有下一页（而不是过滤后的数量）
+    const hasMorePrompts = prompts.length === limit;
+
     return NextResponse.json({
       success: true,
       data: {
@@ -275,8 +278,8 @@ export async function POST(request: NextRequest) {
           failed: failedImageCount,
         },
         results,
-        // 提供下一页信息
-        nextOffset: promptsToMigrate.length === limit ? offset + limit : null,
+        // 基于获取的总数判断是否有下一页
+        nextOffset: hasMorePrompts ? offset + limit : null,
       },
     });
   } catch (error) {
