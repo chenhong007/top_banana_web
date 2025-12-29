@@ -103,21 +103,6 @@ export default function OptimizedImage({
 
   // 检查是否已经加载过，避免重复动画
   const alreadyLoaded = loadedImages.has(optimizedSrc);
-  
-  // Debug logging
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development' || hasError) {
-      console.log('[OptimizedImage Debug]', {
-        originalSrc: src,
-        optimizedSrc,
-        useNextImage,
-        R2_CDN_URL,
-        isInView,
-        isLoaded,
-        hasError
-      });
-    }
-  }, [src, optimizedSrc, useNextImage, hasError, isInView, isLoaded]);
 
   // priority 图片或已加载过的图片跳过加载动画
   const [isLoaded, setIsLoaded] = useState(alreadyLoaded);
@@ -153,6 +138,21 @@ export default function OptimizedImage({
     }
     return false;
   }, [src, optimizedSrc]);
+
+  // Debug logging
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' || hasError) {
+      console.log('[OptimizedImage Debug]', {
+        originalSrc: src,
+        optimizedSrc,
+        useNextImage,
+        R2_CDN_URL,
+        isInView,
+        isLoaded,
+        hasError
+      });
+    }
+  }, [src, optimizedSrc, useNextImage, hasError, isInView, isLoaded]);
 
   // 使用 useIsomorphicLayoutEffect 确保尽早检测视口（仅用于非优先图片的懒加载）
   useIsomorphicLayoutEffect(() => {
