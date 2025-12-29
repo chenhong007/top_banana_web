@@ -72,16 +72,6 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
     return initialPagination?.pagination?.total;
   }, [data, initialPagination]);
 
-  // 获取数据库真实总页数（基于数据库总量和当前页面大小计算）
-  const databaseTotalPages = useMemo(() => {
-    const firstPage = data?.pages[0];
-    const total = firstPage?.pagination?.total ?? initialPagination?.pagination?.total;
-    if (total && pagination.pageSize) {
-      return Math.ceil(total / pagination.pageSize);
-    }
-    return initialPagination?.pagination?.totalPages;
-  }, [data, initialPagination, pagination.pageSize]);
-
   const { data: serverTags = [] } = useTagsQuery();
   const { data: serverCategories = [] } = useCategoriesQuery();
   const { data: serverModelTags = [] } = useModelTagsQuery();
@@ -170,6 +160,16 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
   // If the user wants "remainder loaded by client scrolling", they typically want infinite scroll behavior.
   // If we keep usePagination, it will paginate the currently loaded items.
   const pagination = usePagination(filteredPrompts);
+
+  // 获取数据库真实总页数（基于数据库总量和当前页面大小计算）
+  const databaseTotalPages = useMemo(() => {
+    const firstPage = data?.pages[0];
+    const total = firstPage?.pagination?.total ?? initialPagination?.pagination?.total;
+    if (total && pagination.pageSize) {
+      return Math.ceil(total / pagination.pageSize);
+    }
+    return initialPagination?.pagination?.totalPages;
+  }, [data, initialPagination, pagination.pageSize]);
 
   // Reset to first page when filters change
   const handleSearchChange = (value: string) => {
