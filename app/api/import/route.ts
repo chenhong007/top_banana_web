@@ -5,7 +5,7 @@
  * v2.0: 支持自动下载外部图片并上传到 R2 存储
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { promptRepository } from '@/repositories';
 import prisma from '@/lib/db';
@@ -16,7 +16,7 @@ import {
   handleApiRoute,
 } from '@/lib/api-utils';
 import { filterDuplicates, DuplicateType } from '@/lib/duplicate-checker';
-import { requireAuth } from '@/lib/security';
+import { requireAuth, verifyImportSecret } from '@/lib/security';
 import { uploadImageFromUrl, isR2Configured, isR2ImageUrl } from '@/lib/r2';
 
 // Force dynamic rendering to avoid database calls during build
@@ -92,13 +92,25 @@ async function processImageUrls(
 }
 
 // POST import prompts from external data (requires authentication)
+// Supports both cookie authentication and IMPORT_SECRET
 export async function POST(request: NextRequest) {
-  // Check authentication
+  // Clone request to read body for secret verification
+  const body = await request.json();
+  
+  // Check authentication: either cookie auth or IMPORT_SECRET
   const authError = requireAuth(request);
-  if (authError) return authError;
+  if (authError) {
+    // If cookie auth fails, try IMPORT_SECRET
+    const secretAuth = verifyImportSecret(request, body);
+    if (!secretAuth.success) {
+      return NextResponse.json(
+        { success: false, error: `Unauthorized: ${secretAuth.error || 'Please login or provide valid secret'}` },
+        { status: 401 }
+      );
+    }
+  }
 
   return handleApiRoute(async () => {
-    const body = await request.json();
     const { 
       items, 
       mode = 'merge',
@@ -128,6 +140,7 @@ export async function POST(request: NextRequest) {
     // - imageUrls/图片列表 → imageUrls (图片数组) - 可选，支持多个图片
     // - modelTags/模型标签 → modelTags (默认: ['Banana'])
     // - category/生成类型 → category (默认: '文生图')
+    // - createdAt/updateDate/创建时间 → createdAt (可选，ISO 日期字符串)
     
     // 第一步：解析所有数据字段
     const parsedItems = items.map((item: Record<string, unknown>) => {
@@ -207,6 +220,9 @@ export async function POST(request: NextRequest) {
       // 确保 category 有值，如果为空则默认设置为 '文生图'
       const categoryWithDefault = category.trim() || DEFAULT_CATEGORY;
 
+      // 创建时间字段映射 (createdAt/updateDate/创建时间)
+      const createdAt = (item.createdAt || item.updateDate || item.创建时间 || '') as string;
+
       return {
         effect,
         description: description || '',
@@ -216,6 +232,7 @@ export async function POST(request: NextRequest) {
         source: source || 'unknown',
         imageUrls, // 先保存原始 URL，后面会处理
         category: categoryWithDefault,
+        createdAt: createdAt || undefined, // ISO date string or undefined
       };
     });
 

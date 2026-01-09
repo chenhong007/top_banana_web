@@ -30,6 +30,7 @@ export interface CreatePromptInput {
   imageUrl?: string; // 单图 URL (向后兼容)
   imageUrls?: string[]; // 多图 URL 数组 (新增支持多图)
   category?: string; // 生成类型 (optional, defaults to '文生图')
+  createdAt?: string; // ISO date string, optional for import with custom date
 }
 
 /**

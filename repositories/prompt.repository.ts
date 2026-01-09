@@ -548,6 +548,10 @@ class PromptRepository extends BaseRepository<
               typeof name === 'string' && name.trim().length > 0
             ).map(name => name.trim());
 
+            // Parse createdAt if provided
+            const createdAtDate = item.createdAt ? new Date(item.createdAt) : undefined;
+            const validCreatedAt = createdAtDate && !isNaN(createdAtDate.getTime()) ? createdAtDate : undefined;
+
             await this.prisma.prompt.create({
               data: {
                 effect: item.effect,
@@ -565,6 +569,7 @@ class PromptRepository extends BaseRepository<
                 category: {
                   connect: { name: categoryName },
                 },
+                ...(validCreatedAt && { createdAt: validCreatedAt }),
               },
             });
             succeeded = true;
