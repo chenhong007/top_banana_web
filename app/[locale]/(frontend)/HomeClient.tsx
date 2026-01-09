@@ -342,6 +342,7 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
               databaseTotal={databaseTotal}
               databaseTotalPages={databaseTotalPages}
               isSearching={isSearching}
+              enableInfiniteScroll={true}
             />
             
             {/* Infinite Scroll Loader */}

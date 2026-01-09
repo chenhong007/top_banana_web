@@ -38,9 +38,20 @@ interface PromptGridProps {
   databaseTotalPages?: number;
   /** 搜索进行中状态（用于显示搜索指示器） */
   isSearching?: boolean;
+  /** 是否启用无限滚动模式（不进行前端分页切割） */
+  enableInfiniteScroll?: boolean;
 }
 
-export default function PromptGrid({ loading, filteredPrompts, pagination, onPreview, databaseTotal, databaseTotalPages, isSearching }: PromptGridProps) {
+export default function PromptGrid({ 
+  loading, 
+  filteredPrompts, 
+  pagination, 
+  onPreview, 
+  databaseTotal, 
+  databaseTotalPages, 
+  isSearching,
+  enableInfiniteScroll = false
+}: PromptGridProps) {
   const t = useTranslations('empty');
   const tLoading = useTranslations('loading');
   const tPagination = useTranslations('pagination');
@@ -109,7 +120,7 @@ export default function PromptGrid({ loading, filteredPrompts, pagination, onPre
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pagination.paginatedItems.map((prompt, index) => (
+        {(enableInfiniteScroll ? filteredPrompts : pagination.paginatedItems).map((prompt, index) => (
           <PromptCard 
             key={prompt.id} 
             prompt={prompt} 
@@ -122,7 +133,9 @@ export default function PromptGrid({ loading, filteredPrompts, pagination, onPre
       </div>
 
       {/* Pagination - 使用数据库真实总量和总页数 */}
-      {(databaseTotalPages ?? pagination.totalPages) > 1 && (
+      {/* 如果启用了无限滚动，且还有更多数据，则隐藏分页组件（使用无限滚动加载器） */}
+      {/* 只有在非无限滚动模式，或者没有更多数据时（作为底部导航）才显示分页 */}
+      {!enableInfiniteScroll && (databaseTotalPages ?? pagination.totalPages) > 1 && (
         <div className="flex justify-center pt-8">
           <Pagination
             currentPage={pagination.currentPage}
