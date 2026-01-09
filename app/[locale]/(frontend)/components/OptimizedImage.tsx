@@ -32,6 +32,7 @@ const loadedImages = new Set<string>();
  * - 自动处理不同来源的图片 URL
  * - 使用 Intersection Observer 优化加载
  * - 缓存已加载图片状态，避免闪烁
+ * - 支持图片代理失败时自动回退到原图
  */
 export default function OptimizedImage({
   src,
@@ -45,9 +46,25 @@ export default function OptimizedImage({
   objectFit = 'cover',
   onError,
 }: OptimizedImageProps) {
+  // Use src for key, not optimizedSrc since it changes
+  const alreadyLoaded = loadedImages.has(src);
+
+  // priority 图片或已加载过的图片跳过加载动画
+  const [isLoaded, setIsLoaded] = useState(alreadyLoaded);
+  // priority 图片立即在视口中，其他图片默认也是 true 以便快速开始加载
+  const [isInView, setIsInView] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [retryWithOriginal, setRetryWithOriginal] = useState(false);
+  const imgRef = useRef<HTMLDivElement>(null);
+
   // 处理图片 URL - 提前计算避免重复
   const optimizedSrc = useMemo(() => {
     if (!src) return '';
+    
+    // 如果重试原图，直接返回原链接
+    if (retryWithOriginal && (src.startsWith('http') || src.startsWith('//'))) {
+      return src;
+    }
     
     // 如果是本地相对路径 (./data/image/... 或 data/image/...)
     if (src.startsWith('./data/image') || src.startsWith('data/image')) {
@@ -99,17 +116,7 @@ export default function OptimizedImage({
     }
     
     return src;
-  }, [src]);
-
-  // 检查是否已经加载过，避免重复动画
-  const alreadyLoaded = loadedImages.has(optimizedSrc);
-
-  // priority 图片或已加载过的图片跳过加载动画
-  const [isLoaded, setIsLoaded] = useState(alreadyLoaded);
-  // priority 图片立即在视口中，其他图片默认也是 true 以便快速开始加载
-  const [isInView, setIsInView] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const imgRef = useRef<HTMLDivElement>(null);
+  }, [src, retryWithOriginal]);
 
   // 判断是否可以使用 Next.js Image 优化
   const useNextImage = useMemo(() => {
@@ -181,10 +188,18 @@ export default function OptimizedImage({
   const handleLoad = () => {
     setIsLoaded(true);
     // 缓存已加载的图片
-    loadedImages.add(optimizedSrc);
+    loadedImages.add(src);
   };
 
   const handleError = () => {
+    // 如果是代理链接加载失败，且尚未重试，尝试回退到原图
+    if (!retryWithOriginal && (src.startsWith('http') || src.startsWith('//'))) {
+      setRetryWithOriginal(true);
+      setIsLoaded(false);
+      setHasError(false);
+      return;
+    }
+
     setHasError(true);
     onError?.();
   };

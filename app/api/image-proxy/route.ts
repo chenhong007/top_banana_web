@@ -39,8 +39,9 @@ export async function GET(request: NextRequest) {
 
   // Anti-abuse: rate limit by IP
   const clientId = getClientIdentifier(request);
+  // Increase rate limit for image proxy as a single page view can trigger multiple requests
   const rl = consumeRateLimit(`image-proxy:${clientId}`, {
-    maxAttempts: 60,
+    maxAttempts: 300, // Allow 300 requests per minute (approx 5 requests per second)
     windowMs: 60 * 1000,
     blockDurationMs: 5 * 60 * 1000,
   });
@@ -78,16 +79,27 @@ export async function GET(request: NextRequest) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
+    // Build headers - some CDNs require specific Referer
+    const host = url.hostname.toLowerCase();
+    const headers: Record<string, string> = {
+      // Mimic browser request
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+    };
+
+    // YouMind CDN requires specific Referer (防盗链检查)
+    if (host.includes('youmind.com') || host.includes('cms-assets.youmind.com')) {
+      headers['Referer'] = 'https://youmind.com/';
+      headers['Origin'] = 'https://youmind.com';
+    } else {
+      // Default referer for other CDNs
+      headers['Referer'] = url.origin + '/';
+    }
+
     const response = await fetch(imageUrl, {
       signal: controller.signal,
-      headers: {
-        // Mimic browser request
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
-        // Some CDNs check referer
-        'Referer': url.origin + '/',
-      },
+      headers,
     });
     clearTimeout(timeout);
 

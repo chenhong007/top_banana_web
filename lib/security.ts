@@ -147,23 +147,9 @@ export function validateImageUrlForProxy(urlString: string): { valid: boolean; e
     return ssrfCheck;
   }
   
-  try {
-    const url = new URL(urlString);
-    const hostname = url.hostname.toLowerCase();
-    
-    // Check if domain is in allowed list
-    const isAllowed = ALLOWED_IMAGE_DOMAINS.some(domain => 
-      hostname === domain || hostname.endsWith(`.${domain}`)
-    );
-    
-    if (!isAllowed) {
-      return { valid: false, error: `Domain ${hostname} is not in the allowed list` };
-    }
-    
-    return { valid: true };
-  } catch {
-    return { valid: false, error: 'Invalid URL format' };
-  }
+  // Skip domain allowlist check to allow all external images
+  // The SSRF check above already prevents access to internal networks
+  return { valid: true };
 }
 
 /**

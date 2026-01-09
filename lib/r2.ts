@@ -164,6 +164,15 @@ function getHeadersForUrl(parsedUrl: URL): Record<string, string> {
     };
   }
 
+  // YouMind CMS Assets - 重要: 大部分图片来自这里
+  if (host.includes('youmind.com') || host.includes('cms-assets.youmind.com')) {
+    return {
+      ...baseHeaders,
+      'Referer': 'https://youmind.com/',
+      'Origin': 'https://youmind.com',
+    };
+  }
+
   // 通用处理 - 使用目标站点自身作为 Referer
   return {
     ...baseHeaders,
@@ -172,100 +181,161 @@ function getHeadersForUrl(parsedUrl: URL): Record<string, string> {
 }
 
 /**
- * 从 URL 下载图片并上传到 R2
+ * Delay utility for rate limiting
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Upload configuration - adjustable for rate limiting
+ */
+const UPLOAD_CONFIG = {
+  TIMEOUT_MS: 60000,          // 60 seconds timeout (increased from 30s)
+  MAX_RETRIES: 3,             // Max retry attempts
+  RETRY_BASE_DELAY_MS: 2000,  // Base delay for exponential backoff (2s)
+  INTER_REQUEST_DELAY_MS: 500, // Delay between individual requests (500ms)
+};
+
+/**
+ * 可重试的 HTTP 状态码
+ */
+function isRetryableStatus(status: number): boolean {
+  // 429: Too Many Requests, 503: Service Unavailable, 502: Bad Gateway, 504: Gateway Timeout
+  return status === 429 || status === 503 || status === 502 || status === 504;
+}
+
+/**
+ * 从 URL 下载图片并上传到 R2（带重试机制）
  * Note: URL validation should be done before calling this function
  * Use validateUrlForSSRF from @/lib/security for validation
  */
 export async function uploadImageFromUrl(imageUrl: string): Promise<R2UploadResult> {
+  // Parse URL first
+  let parsedUrl: URL;
   try {
-    // Parse URL first
-    let parsedUrl: URL;
-    try {
-      parsedUrl = new URL(imageUrl);
-    } catch {
-      console.error('[R2] Invalid URL format:', imageUrl);
-      return { success: false, error: 'Invalid URL format' };
+    parsedUrl = new URL(imageUrl);
+  } catch {
+    console.error('[R2] Invalid URL format:', imageUrl);
+    return { success: false, error: 'Invalid URL format' };
+  }
+
+  // Basic protocol check
+  if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+    console.error('[R2] Invalid protocol:', parsedUrl.protocol);
+    return { success: false, error: 'Only HTTP/HTTPS protocols are allowed' };
+  }
+
+  // Retry loop with exponential backoff
+  let lastError: string = '';
+  for (let attempt = 0; attempt <= UPLOAD_CONFIG.MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      // Exponential backoff: 2s, 4s, 8s
+      const backoffDelay = UPLOAD_CONFIG.RETRY_BASE_DELAY_MS * Math.pow(2, attempt - 1);
+      console.log(`[R2] Retry attempt ${attempt}/${UPLOAD_CONFIG.MAX_RETRIES} after ${backoffDelay}ms delay...`);
+      await delay(backoffDelay);
     }
 
-    // Basic protocol check
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-      console.error('[R2] Invalid protocol:', parsedUrl.protocol);
-      return { success: false, error: 'Only HTTP/HTTPS protocols are allowed' };
+    const result = await attemptFetchAndUpload(imageUrl, parsedUrl);
+    
+    if (result.success) {
+      return result;
     }
 
-    // 获取针对该域名优化的请求头
+    lastError = result.error || 'Unknown error';
+    
+    // Check if error is retryable
+    const isRetryable = lastError.includes('timeout') || 
+                        lastError.includes('429') || 
+                        lastError.includes('503') || 
+                        lastError.includes('502') ||
+                        lastError.includes('504') ||
+                        lastError.includes('network') ||
+                        lastError.includes('ECONNRESET');
+    
+    if (!isRetryable) {
+      // Non-retryable error, return immediately
+      return result;
+    }
+  }
+
+  console.error(`[R2] All ${UPLOAD_CONFIG.MAX_RETRIES + 1} attempts failed for:`, imageUrl.substring(0, 80));
+  return { success: false, error: `Failed after ${UPLOAD_CONFIG.MAX_RETRIES + 1} attempts: ${lastError}` };
+}
+
+/**
+ * Single attempt to fetch and upload image
+ */
+async function attemptFetchAndUpload(imageUrl: string, parsedUrl: URL): Promise<R2UploadResult> {
+  try {
+    // Get optimized headers for this domain
     const headers = getHeadersForUrl(parsedUrl);
 
-    // 获取图片内容，添加超时控制
+    // Fetch with timeout control
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+    const timeoutId = setTimeout(() => controller.abort(), UPLOAD_CONFIG.TIMEOUT_MS);
 
     try {
-      console.log('[R2] Fetching:', imageUrl.substring(0, 80), '...');
-      
       const response = await fetch(imageUrl, {
         headers,
         signal: controller.signal,
-        // 跟随重定向
         redirect: 'follow',
       });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        console.error('[R2] Fetch failed:', imageUrl, 'Status:', response.status, response.statusText);
+        const statusInfo = `${response.status} ${response.statusText}`;
         
-        // 针对 403 提供更详细的错误信息
+        // Provide detailed error messages
         if (response.status === 403) {
-          return { success: false, error: `Access denied (403): 可能是防盗链保护，请尝试手动下载后上传` };
+          return { success: false, error: `Access denied (403): 防盗链保护` };
         }
         if (response.status === 404) {
-          return { success: false, error: `Image not found (404): 图片可能已被删除` };
+          return { success: false, error: `Not found (404): 图片已删除` };
+        }
+        if (isRetryableStatus(response.status)) {
+          return { success: false, error: `Retryable error (${statusInfo})` };
         }
         
-        return { success: false, error: `Failed to fetch image: ${response.status} ${response.statusText}` };
+        return { success: false, error: `Fetch failed: ${statusInfo}` };
       }
 
       const buffer = Buffer.from(await response.arrayBuffer());
       
       if (buffer.length === 0) {
-        console.error('[R2] Empty response body:', imageUrl);
-        return { success: false, error: 'Empty image response' };
+        return { success: false, error: 'Empty response body' };
       }
 
-      // 验证是否是真正的图片
+      // Validate content type
       const contentType = response.headers.get('content-type') || 'image/jpeg';
       if (!contentType.startsWith('image/') && !contentType.includes('octet-stream')) {
-        console.error('[R2] Not an image:', imageUrl, 'Content-Type:', contentType);
         return { success: false, error: `Not an image: ${contentType}` };
       }
       
-      // 从 URL 提取文件名
+      // Extract filename from URL
       const urlPath = parsedUrl.pathname;
       const fileName = urlPath.split('/').pop() || 'image.jpg';
-
-      console.log('[R2] Uploading:', imageUrl.substring(0, 80), '... Size:', buffer.length, 'bytes');
       
+      // Upload to R2
       const result = await uploadImageToR2(buffer, fileName, contentType);
-      
-      if (!result.success) {
-        console.error('[R2] Upload to R2 failed:', result.error);
-      }
       
       return result;
     } catch (fetchError) {
       clearTimeout(timeoutId);
-      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-        console.error('[R2] Fetch timeout:', imageUrl);
-        return { success: false, error: 'Fetch timeout (30s)' };
+      if (fetchError instanceof Error) {
+        if (fetchError.name === 'AbortError') {
+          return { success: false, error: `timeout (${UPLOAD_CONFIG.TIMEOUT_MS / 1000}s)` };
+        }
+        return { success: false, error: fetchError.message };
       }
       throw fetchError;
     }
   } catch (error) {
-    console.error('[R2] Upload from URL error:', imageUrl, error);
+    console.error('[R2] Upload attempt error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to upload from URL',
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }

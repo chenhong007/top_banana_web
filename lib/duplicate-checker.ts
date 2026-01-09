@@ -183,12 +183,12 @@ export async function checkDuplicatesBatch(
 
   // ========== 快速模式：只检查来源URL ==========
   if (mergedConfig.fastMode) {
-    // 只获取所有现有的 source URLs
+    // 获取所有现有的 source URLs 及其对应的 prompt ID
     const allPrompts = await promptRepository.findAll();
-    const existingSources = new Set<string>();
+    const existingSources = new Map<string, { id: string; effect: string }>();
     for (const p of allPrompts) {
       if (p.source && p.source !== 'unknown' && p.source.trim() !== '') {
-        existingSources.add(p.source);
+        existingSources.set(p.source, { id: p.id, effect: p.effect });
       }
     }
 
@@ -201,11 +201,14 @@ export async function checkDuplicatesBatch(
       // 只检查有来源URL的数据
       if (item.source && item.source !== 'unknown' && item.source.trim() !== '') {
         // 检查数据库中是否存在
-        if (existingSources.has(item.source)) {
+        const existing = existingSources.get(item.source);
+        if (existing) {
           result = {
             isDuplicate: true,
             duplicateType: 'source',
-            message: `已存在相同来源的提示词`,
+            existingPromptId: existing.id,
+            existingPromptEffect: existing.effect,
+            message: `已存在相同来源的提示词: "${existing.effect}"`,
           };
         }
         // 检查批次内是否重复
@@ -451,8 +454,18 @@ export async function checkDuplicatesBatch(
 }
 
 /**
+ * Item that needs image URL update (existing record with new R2 image)
+ */
+export interface ImageUpdateItem {
+  existingPromptId: string;
+  newImageUrl: string;
+  newImageUrls?: string[];
+}
+
+/**
  * Filter out duplicates from a batch of prompts
  * Returns only the unique prompts that should be imported
+ * Also returns items that need image URL updates (duplicates with new R2 images)
  * 
  * @param items Array of prompt data to filter
  * @param config Optional configuration
@@ -464,6 +477,7 @@ export async function filterDuplicates(
 ): Promise<{
   uniqueItems: CreatePromptInput[];
   duplicates: Array<{ item: CreatePromptInput; reason: DuplicateCheckResult }>;
+  imageUpdates: ImageUpdateItem[];
   stats: {
     total: number;
     unique: number;
@@ -474,6 +488,7 @@ export async function filterDuplicates(
 
   const uniqueItems: CreatePromptInput[] = [];
   const duplicates: Array<{ item: CreatePromptInput; reason: DuplicateCheckResult }> = [];
+  const imageUpdates: ImageUpdateItem[] = [];
   const duplicatesByType: Record<DuplicateType, number> = {
     imageUrl: 0,
     source: 0,
@@ -487,6 +502,30 @@ export async function filterDuplicates(
       if (result.duplicateType) {
         duplicatesByType[result.duplicateType]++;
       }
+      
+      // Check if we should update existing record's image URL
+      // Only update if:
+      // 1. We have the existing prompt ID
+      // 2. New item has R2 image URL (already uploaded)
+      // 3. Duplicate was detected by source/effect/similarity (not by imageUrl)
+      if (
+        result.existingPromptId &&
+        result.duplicateType !== 'imageUrl' &&
+        item.imageUrl
+      ) {
+        // Check if new image is an R2 URL (already processed)
+        const isR2Url = item.imageUrl.includes('/api/images/') || 
+                        item.imageUrl.includes('.r2.dev') ||
+                        item.imageUrl.includes('.r2.cloudflarestorage.com');
+        
+        if (isR2Url) {
+          imageUpdates.push({
+            existingPromptId: result.existingPromptId,
+            newImageUrl: item.imageUrl,
+            newImageUrls: item.imageUrls,
+          });
+        }
+      }
     } else {
       uniqueItems.push(item);
     }
@@ -495,6 +534,7 @@ export async function filterDuplicates(
   return {
     uniqueItems,
     duplicates,
+    imageUpdates,
     stats: {
       total: items.length,
       unique: uniqueItems.length,

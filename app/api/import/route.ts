@@ -15,7 +15,7 @@ import {
   badRequestResponse,
   handleApiRoute,
 } from '@/lib/api-utils';
-import { filterDuplicates, DuplicateType } from '@/lib/duplicate-checker';
+import { filterDuplicates, DuplicateType, ImageUpdateItem } from '@/lib/duplicate-checker';
 import { requireAuth, verifyImportSecret } from '@/lib/security';
 import { uploadImageFromUrl, isR2Configured, isR2ImageUrl } from '@/lib/r2';
 
@@ -24,6 +24,22 @@ export const dynamic = 'force-dynamic';
 
 // Increase timeout for large imports (Vercel Pro: 最大 300 秒)
 export const maxDuration = 300;
+
+/**
+ * Rate limiting configuration for image uploads
+ */
+const IMAGE_UPLOAD_CONFIG = {
+  CONCURRENCY: 2,           // Reduced from 5 to 2 to avoid rate limiting
+  INTER_BATCH_DELAY_MS: 1000, // 1 second delay between mini-batches
+  INTER_IMAGE_DELAY_MS: 300,  // 300ms delay between individual images
+};
+
+/**
+ * Delay utility
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
  * 处理图片 URL - 如果是外部 URL，下载并上传到 R2
@@ -39,7 +55,7 @@ async function processImageUrls(
     return { urls: [], uploaded: 0, failed: 0 };
   }
 
-  // 如果跳过 R2 或 R2 未配置，直接返回原始 URL
+  // Skip if R2 is disabled or not configured
   if (skipR2 || !isR2Configured()) {
     return { urls: imageUrls, uploaded: 0, failed: 0 };
   }
@@ -48,35 +64,44 @@ async function processImageUrls(
   let uploaded = 0;
   let failed = 0;
 
-  // 并行处理所有图片（限制并发数为 5）
-  const CONCURRENCY = 5;
+  // Process images with reduced concurrency and delays to avoid rate limiting
+  const CONCURRENCY = IMAGE_UPLOAD_CONFIG.CONCURRENCY;
   for (let i = 0; i < imageUrls.length; i += CONCURRENCY) {
+    // Add delay between batches (skip first batch)
+    if (i > 0) {
+      await delay(IMAGE_UPLOAD_CONFIG.INTER_BATCH_DELAY_MS);
+    }
+
     const batch = imageUrls.slice(i, i + CONCURRENCY);
     const results = await Promise.all(
-      batch.map(async (url) => {
-        // 如果已经是 R2 URL，直接返回
+      batch.map(async (url, index) => {
+        // Stagger requests within batch
+        if (index > 0) {
+          await delay(IMAGE_UPLOAD_CONFIG.INTER_IMAGE_DELAY_MS * index);
+        }
+
+        // Skip if already R2 URL
         if (isR2ImageUrl(url)) {
           return { url, uploaded: false };
         }
 
-        // 如果是外部 URL，下载并上传到 R2
+        // Download and upload external URLs
         if (url.startsWith('http://') || url.startsWith('https://')) {
           try {
             const result = await uploadImageFromUrl(url);
             if (result.success && result.url) {
               return { url: result.url, uploaded: true };
             } else {
-              console.warn(`[Import] Failed to upload image: ${url} - ${result.error}`);
-              // 上传失败时保留原始 URL
-              return { url, uploaded: false, failed: true };
+              // Keep original URL on failure
+              return { url, uploaded: false, failed: true, error: result.error };
             }
           } catch (error) {
-            console.warn(`[Import] Error uploading image: ${url}`, error);
-            return { url, uploaded: false, failed: true };
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+            return { url, uploaded: false, failed: true, error: errorMsg };
           }
         }
 
-        // 其他情况（相对路径等）保持原样
+        // Keep relative paths as-is
         return { url, uploaded: false };
       })
     );
@@ -355,7 +380,8 @@ export async function POST(request: NextRequest) {
       // Checks: imageUrl, source, effect (exact match), prompt similarity (>90%)
       // v2.0: 支持快速模式和采样检查
       // v2.1: 使用 validPrompts（已过滤无效数据）
-      const { uniqueItems, stats } = await filterDuplicates(validPrompts, {
+      // v2.2: 支持更新重复记录的图片URL
+      const { uniqueItems, imageUpdates, stats } = await filterDuplicates(validPrompts, {
         checkImageUrl: true,
         checkSource: true,
         checkEffect: true,
@@ -370,6 +396,27 @@ export async function POST(request: NextRequest) {
       failedCount = result.failed;
       failedItems = result.failedItems;
       duplicateStats = stats.duplicatesByType;
+
+      // v2.2: Update existing records' image URLs if they have new R2 images
+      if (imageUpdates.length > 0) {
+        console.log(`[Import] Updating ${imageUpdates.length} existing records with new R2 images...`);
+        let updatedCount = 0;
+        for (const update of imageUpdates) {
+          try {
+            await promptRepository.update(update.existingPromptId, {
+              imageUrl: update.newImageUrl,
+              imageUrls: update.newImageUrls,
+            });
+            updatedCount++;
+          } catch (error) {
+            console.error(`[Import] Failed to update image for ${update.existingPromptId}:`, error);
+          }
+        }
+        console.log(`[Import] Updated ${updatedCount}/${imageUpdates.length} records with new images`);
+        
+        // Add to image upload stats
+        imageUploadStats.uploaded += updatedCount;
+      }
     }
 
     const totalCount = await promptRepository.count();
