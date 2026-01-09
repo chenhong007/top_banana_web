@@ -46,11 +46,25 @@ export async function GET(request: NextRequest) {
     // Check if pagination is requested (for backwards compatibility)
     const usePagination = searchParams.has('page') || searchParams.has('pageSize');
     
-    if (usePagination) {
+    // Parse filters
+    const search = searchParams.get('search') || undefined;
+    const category = searchParams.get('category') || undefined;
+    const tag = searchParams.get('tag') || undefined;
+    const modelTag = searchParams.get('modelTag') || undefined;
+    
+    if (usePagination || search || category || tag || modelTag) {
       // Return paginated results with optional missing type filter
-      const result = missingType 
-        ? await promptRepository.findPaginatedWithMissingFilter({ page, pageSize }, missingType)
-        : await promptRepository.findAllPaginated(page, pageSize);
+      let result;
+      if (missingType) {
+        result = await promptRepository.findPaginatedWithMissingFilter({ page, pageSize }, missingType);
+      } else if (search || category || tag || modelTag) {
+        result = await promptRepository.findPaginatedWithFilters(
+          { page, pageSize },
+          { search, category, tag, modelTag }
+        );
+      } else {
+        result = await promptRepository.findAllPaginated(page, pageSize);
+      }
       
       const { data: prompts, total, totalPages } = result;
       

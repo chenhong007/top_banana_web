@@ -149,6 +149,65 @@ class PromptRepository extends BaseRepository<
   }
 
   /**
+   * Find prompts with pagination and filters
+   */
+  async findPaginatedWithFilters(
+    options: PaginationOptions,
+    filters: {
+      search?: string;
+      category?: string;
+      tag?: string;
+      modelTag?: string;
+    }
+  ): Promise<PaginatedResult<PromptDTO>> {
+    try {
+      const where: any = {};
+      
+      if (filters.category) {
+        where.category = { name: filters.category };
+      }
+      
+      if (filters.tag) {
+        where.tags = { some: { name: filters.tag } };
+      }
+      
+      if (filters.modelTag) {
+        where.modelTags = { some: { name: filters.modelTag } };
+      }
+      
+      if (filters.search) {
+        const search = filters.search;
+        where.OR = [
+          { effect: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+          { prompt: { contains: search, mode: 'insensitive' } }
+        ];
+      }
+
+      const total = await this.prisma.prompt.count({ where });
+      const { skip, take, page, pageSize, totalPages } = calculatePagination(options, total);
+
+      const prompts = await this.prisma.prompt.findMany({
+        where,
+        include: { tags: true, category: true, modelTags: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take,
+      });
+
+      return {
+        data: prompts.map((p) => this.toDTO(p)),
+        total,
+        page,
+        pageSize,
+        totalPages,
+      };
+    } catch (error) {
+      this.handleError(error, 'PromptRepository.findPaginatedWithFilters');
+    }
+  }
+
+  /**
    * Find prompts with pagination and missing type filter
    * @param options Pagination options
    * @param missingType Type of missing data to filter by

@@ -26,10 +26,17 @@ class PromptService {
   /**
    * Fetch all prompts (with optional pagination)
    */
-  async getAll(page?: number, pageSize?: number): Promise<PromptItem[] | PaginatedResponse<PromptItem>> {
+  async getAll(page?: number, pageSize?: number, filters?: { search?: string; category?: string; tag?: string; modelTag?: string }): Promise<PromptItem[] | PaginatedResponse<PromptItem>> {
     const url = new URL(this.baseUrl, window.location.origin);
     if (page) url.searchParams.set('page', page.toString());
     if (pageSize) url.searchParams.set('pageSize', pageSize.toString());
+    
+    if (filters) {
+      if (filters.search) url.searchParams.set('search', filters.search);
+      if (filters.category) url.searchParams.set('category', filters.category);
+      if (filters.tag) url.searchParams.set('tag', filters.tag);
+      if (filters.modelTag) url.searchParams.set('modelTag', filters.modelTag);
+    }
 
     const response = await fetch(url.toString());
     const result = await response.json();
@@ -49,8 +56,12 @@ class PromptService {
   /**
    * Fetch prompts with pagination specifically
    */
-  async getPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedResponse<PromptItem>> {
-    const result = await this.getAll(page, pageSize);
+  async getPaginated(
+    page: number = 1, 
+    pageSize: number = 20,
+    filters?: { search?: string; category?: string; tag?: string; modelTag?: string }
+  ): Promise<PaginatedResponse<PromptItem>> {
+    const result = await this.getAll(page, pageSize, filters);
     if (Array.isArray(result)) {
       // Should not happen if API is correct, but handle gracefully
       return {

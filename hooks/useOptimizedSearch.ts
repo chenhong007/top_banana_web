@@ -206,5 +206,6 @@ export function useOptimizedSearch(prompts: PromptItem[], onFilterChange?: () =>
     hasFilters: searchTerm !== '' || selectedTag !== '' || selectedCategory !== '' || selectedModelTag !== '',
     // Expose pending state for showing loading indicator
     isSearching: isPending,
+    debouncedSearchTerm,
   };
 }

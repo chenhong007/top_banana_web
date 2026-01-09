@@ -30,7 +30,7 @@ import LanguageSwitcher from './components/LanguageSwitcher';
 import { Footer } from './components/Footer';
 
 // Hooks
-import { useOptimizedSearch } from '@/hooks/useOptimizedSearch';
+import { useDebounce } from '@/hooks/useDebounce';
 import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/hooks/useAuth';
 import { usePromptsInfiniteQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
@@ -48,45 +48,7 @@ interface HomeClientProps {
 export default function HomeClient({ initialPrompts, initialPagination }: HomeClientProps) {
   const t = useTranslations('header');
   const locale = useLocale();
-
-  // Use React Query Infinite Query
-  const { 
-    data, 
-    fetchNextPage, 
-    hasNextPage, 
-    isFetchingNextPage, 
-    isLoading: promptsLoading 
-  } = usePromptsInfiniteQuery(initialPagination);
-  
-  // Flatten prompts from all pages
-  const prompts = useMemo(() => {
-    return data?.pages.flatMap(page => page.data) || initialPrompts;
-  }, [data, initialPrompts]);
-
-  // 获取数据库真实总量（从第一页的分页信息中获取）
-  const databaseTotal = useMemo(() => {
-    const firstPage = data?.pages[0];
-    if (firstPage?.pagination?.total) {
-      return firstPage.pagination.total;
-    }
-    return initialPagination?.pagination?.total;
-  }, [data, initialPagination]);
-
-  const { data: serverTags = [] } = useTagsQuery();
-  const { data: serverCategories = [] } = useCategoriesQuery();
-  const { data: serverModelTags = [] } = useModelTagsQuery();
-  
-  const loading = promptsLoading && !data;
   const router = useRouter();
-
-  // Infinite scroll trigger
-  const { ref, inView } = useInView();
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, fetchNextPage]);
 
   // Authentication state
   const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
@@ -122,23 +84,85 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
     );
   }, [currentDomain]);
 
-  // Search and filter with server-provided options where available
-  // Using optimized search with debounce, preprocessing, early termination, and useTransition
-  const {
-    searchTerm,
-    setSearchTerm,
-    selectedTag,
-    setSelectedTag,
-    selectedCategory,
-    setSelectedCategory,
-    selectedModelTag,
-    setSelectedModelTag,
-    allTags: derivedTags,
-    allCategories: derivedCategories,
-    allModelTags: derivedModelTags,
-    filteredPrompts,
-    isSearching,
-  } = useOptimizedSearch(prompts);
+  // Search and filter state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTag, setSelectedTag] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedModelTag, setSelectedModelTag] = useState<string>('');
+  
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const isSearching = searchTerm !== debouncedSearchTerm;
+
+  const filters = useMemo(() => ({
+    search: debouncedSearchTerm,
+    category: selectedCategory,
+    tag: selectedTag,
+    modelTag: selectedModelTag
+  }), [debouncedSearchTerm, selectedCategory, selectedTag, selectedModelTag]);
+
+  // Use React Query Infinite Query with filters
+  const { 
+    data, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage, 
+    isLoading: promptsLoading 
+  } = usePromptsInfiniteQuery(initialPagination, filters);
+  
+  // Flatten prompts from all pages
+  const prompts = useMemo(() => {
+    return data?.pages.flatMap(page => page.data) || initialPrompts;
+  }, [data, initialPrompts]);
+
+  // 获取数据库真实总量（从第一页的分页信息中获取）
+  const databaseTotal = useMemo(() => {
+    const firstPage = data?.pages[0];
+    if (firstPage?.pagination?.total) {
+      return firstPage.pagination.total;
+    }
+    return initialPagination?.pagination?.total;
+  }, [data, initialPagination]);
+
+  const loading = promptsLoading && !data;
+
+  // Infinite scroll trigger
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  // Server data for filter options
+  const { data: serverTags = [] } = useTagsQuery();
+  const { data: serverCategories = [] } = useCategoriesQuery();
+  const { data: serverModelTags = [] } = useModelTagsQuery();
+
+  // Derived tags/categories from current prompts (fallback)
+  const derivedTags = useMemo(() => {
+    if (!prompts) return [];
+    const set = new Set<string>();
+    prompts.forEach(p => p.tags?.forEach(t => set.add(t)));
+    return Array.from(set).sort();
+  }, [prompts]);
+
+  const derivedCategories = useMemo(() => {
+    if (!prompts) return [];
+    const set = new Set<string>();
+    prompts.forEach(p => p.category && set.add(p.category));
+    return Array.from(set).sort();
+  }, [prompts]);
+
+  const derivedModelTags = useMemo(() => {
+    if (!prompts) return [];
+    const set = new Set<string>();
+    prompts.forEach(p => p.modelTags?.forEach(t => set.add(t)));
+    return Array.from(set).sort();
+  }, [prompts]);
+
+  // With server-side filtering, prompts are already filtered
+  const filteredPrompts = prompts;
 
   // Prefer server data for filter options, fallback to derived from prompts
   const allTags = serverTags.length > 0 ? serverTags : derivedTags;
@@ -331,13 +355,6 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
                 ) : (
                   <div className="h-4" /> // Spacer for intersection observer
                 )}
-              </div>
-            )}
-            
-            {/* 提示用户：正在使用客户端筛选 + 滚动加载 */}
-            {(searchTerm || selectedTag || selectedCategory || selectedModelTag) && hasNextPage && (
-              <div className="text-center text-xs text-muted-foreground pb-2">
-                {t('searchingInLoaded')}
               </div>
             )}
           </div>

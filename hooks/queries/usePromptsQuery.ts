@@ -16,7 +16,7 @@ export const promptKeys = {
   list: (filters: Record<string, unknown>) => [...promptKeys.lists(), filters] as const,
   details: () => [...promptKeys.all, 'detail'] as const,
   detail: (id: string) => [...promptKeys.details(), id] as const,
-  infinite: () => [...promptKeys.all, 'infinite'] as const,
+  infinite: (filters?: Record<string, unknown>) => [...promptKeys.all, 'infinite', ...(filters ? [filters] : [])] as const,
 };
 
 /**
@@ -41,14 +41,18 @@ export function usePromptsQuery(initialData?: PromptItem[]) {
 /**
  * Hook to fetch prompts with infinite scrolling
  * @param initialData - Optional initial paginated data
+ * @param filters - Optional filters
  */
-export function usePromptsInfiniteQuery(initialData?: PaginatedResponse<PromptItem>) {
+export function usePromptsInfiniteQuery(
+  initialData?: PaginatedResponse<PromptItem>,
+  filters?: { search?: string; category?: string; tag?: string; modelTag?: string }
+) {
   return useInfiniteQuery({
-    queryKey: promptKeys.infinite(),
+    queryKey: promptKeys.infinite(filters),
     queryFn: async ({ pageParam = 1 }) => {
-      return promptService.getPaginated(pageParam, 20);
+      return promptService.getPaginated(pageParam, 20, filters);
     },
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: (lastPage: PaginatedResponse<PromptItem>) => {
       if (lastPage.pagination.hasNext) {
         return lastPage.pagination.page + 1;
       }
@@ -103,7 +107,7 @@ export function useUpdatePromptMutation() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<CreatePromptRequest> }) =>
       promptService.update(id, data),
-    onSuccess: (updatedPrompt) => {
+    onSuccess: (updatedPrompt: PromptItem) => {
       // Update the specific prompt in cache
       queryClient.setQueryData(promptKeys.detail(updatedPrompt.id), updatedPrompt);
       // Invalidate the list to reflect changes
@@ -121,7 +125,7 @@ export function useDeletePromptMutation() {
 
   return useMutation({
     mutationFn: (id: string) => promptService.delete(id),
-    onSuccess: (_, id) => {
+    onSuccess: (_: unknown, id: string) => {
       // Remove from cache
       queryClient.removeQueries({ queryKey: promptKeys.detail(id) });
       // Invalidate the list
@@ -140,7 +144,7 @@ export function useInteractPromptMutation() {
   return useMutation({
     mutationFn: ({ id, type }: { id: string; type: 'like' | 'heart' }) =>
       promptService.interact(id, type),
-    onSuccess: (updatedPrompt) => {
+    onSuccess: (updatedPrompt: PromptItem) => {
       // Update the specific prompt in cache
       queryClient.setQueryData(promptKeys.detail(updatedPrompt.id), updatedPrompt);
       
