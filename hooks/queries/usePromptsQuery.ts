@@ -89,7 +89,12 @@ export function usePromptsPaginatedQuery(
     queryKey: promptKeys.paginated(page, pageSize, filters),
     queryFn: () => promptService.getPaginated(page, pageSize, filters),
     placeholderData: keepPreviousData,
-    initialData: (page === 1 && !hasActiveFilters && initialData) ? initialData : undefined,
+    initialData: (
+      page === 1 && 
+      !hasActiveFilters && 
+      initialData && 
+      initialData.pagination?.pageSize === pageSize
+    ) ? initialData : undefined,
     staleTime: 30 * 1000,
   });
 }
