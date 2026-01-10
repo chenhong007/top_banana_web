@@ -82,11 +82,14 @@ export function usePromptsPaginatedQuery(
   filters?: { search?: string; category?: string; tag?: string; modelTag?: string },
   initialData?: PaginatedResponse<PromptItem>
 ) {
+  // Check if any filter is active
+  const hasActiveFilters = filters && Object.values(filters).some(val => val && val.trim() !== '');
+
   return useQuery({
     queryKey: promptKeys.paginated(page, pageSize, filters),
     queryFn: () => promptService.getPaginated(page, pageSize, filters),
     placeholderData: keepPreviousData,
-    initialData: (page === 1 && initialData) ? initialData : undefined,
+    initialData: (page === 1 && !hasActiveFilters && initialData) ? initialData : undefined,
     staleTime: 30 * 1000,
   });
 }
