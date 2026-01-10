@@ -10,6 +10,7 @@ import { BaseRepository } from './base.repository';
 export interface TagDTO {
   id: string;
   name: string;
+  count?: number;
 }
 
 class TagRepository extends BaseRepository<Tag, string, string, TagDTO> {
@@ -31,6 +32,34 @@ class TagRepository extends BaseRepository<Tag, string, string, TagDTO> {
       return tags.map((t) => t.name);
     } catch (error) {
       this.handleError(error, 'TagRepository.findAll');
+      return []; // Return empty array on error
+    }
+  }
+
+  /**
+   * Find all tags with counts
+   */
+  async findAllWithCounts(): Promise<TagDTO[]> {
+    try {
+      const tags = await this.prisma.tag.findMany({
+        include: {
+          _count: {
+            select: { prompts: true },
+          },
+        },
+        orderBy: [
+            { prompts: { _count: 'desc' } },
+            { name: 'asc' }
+        ]
+      });
+      return tags.map((t) => ({
+        id: t.id,
+        name: t.name,
+        count: t._count.prompts,
+      }));
+    } catch (error) {
+      this.handleError(error, 'TagRepository.findAllWithCounts');
+      return [];
     }
   }
 

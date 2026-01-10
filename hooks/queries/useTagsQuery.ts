@@ -8,6 +8,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_ENDPOINTS } from '@/lib/constants';
 
+export interface TagItem {
+  id: string;
+  name: string;
+  count?: number;
+}
+
 // Query keys
 export const tagKeys = {
   all: ['tags'] as const,
@@ -17,7 +23,7 @@ export const tagKeys = {
 /**
  * Fetch all tags from API
  */
-async function fetchTags(): Promise<string[]> {
+async function fetchTags(): Promise<TagItem[]> {
   const response = await fetch(API_ENDPOINTS.TAGS);
   const result = await response.json();
 
@@ -38,4 +44,3 @@ export function useTagsQuery() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
-

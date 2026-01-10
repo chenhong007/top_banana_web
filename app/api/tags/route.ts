@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   }
 
   return handleApiRoute(async () => {
-    const tags = await tagRepository.findAll();
+    const tags = await tagRepository.findAllWithCounts();
     const response = successResponse(tags);
     return addProtectionHeaders(response);
   });

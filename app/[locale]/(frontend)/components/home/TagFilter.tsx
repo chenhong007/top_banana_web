@@ -8,9 +8,10 @@
 
 import { Tag } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { TagItem } from '@/hooks/queries/useTagsQuery';
 
 interface TagFilterProps {
-  tags: string[];
+  tags: (TagItem | string)[];
   selected: string;
   onSelect: (tag: string) => void;
 }
@@ -42,20 +43,28 @@ export default function TagFilter({ tags, selected, onSelect }: TagFilterProps) 
         {t('all')}
       </button>
 
-      {tags.slice(0, 12).map((tag) => (
-        <button
-          key={tag}
-          onClick={() => onSelect(tag === selected ? '' : tag)}
-          className={cn(
-            "tag-badge transition-all text-sm px-4 py-1.5",
-            tag === selected
-              ? "tag-badge-primary"
-              : "hover:bg-primary/10 hover:text-primary"
-          )}
-        >
-          {tag}
-        </button>
-      ))}
+      {tags.slice(0, 30).map((tagItem) => {
+        const tagName = typeof tagItem === 'string' ? tagItem : tagItem.name;
+        const count = typeof tagItem === 'string' ? undefined : tagItem.count;
+        
+        return (
+          <button
+            key={tagName}
+            onClick={() => onSelect(tagName === selected ? '' : tagName)}
+            className={cn(
+              "tag-badge transition-all text-sm px-4 py-1.5 flex items-center gap-1",
+              tagName === selected
+                ? "tag-badge-primary"
+                : "hover:bg-primary/10 hover:text-primary"
+            )}
+          >
+            <span>{tagName}</span>
+            {count !== undefined && (
+              <span className="opacity-70 text-xs">({count})</span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
