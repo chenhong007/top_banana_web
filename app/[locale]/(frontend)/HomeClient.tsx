@@ -90,7 +90,7 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(DEFAULTS.PAGE_SIZE || 20);
+  const [pageSize, setPageSize] = useState<number>(DEFAULTS.PAGE_SIZE || 20);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const isSearching = searchTerm !== debouncedSearchTerm;
