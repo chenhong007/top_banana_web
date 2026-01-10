@@ -6,6 +6,7 @@
 export {
   usePromptsQuery,
   usePromptsInfiniteQuery,
+  usePromptsPaginatedQuery,
   usePromptQuery,
   useCreatePromptMutation,
   useUpdatePromptMutation,

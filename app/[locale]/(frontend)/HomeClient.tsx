@@ -7,12 +7,11 @@
  * Enhanced with modern glass effects and animations
  */
 
-import { Sparkles, Settings, LogOut, Loader2 } from 'lucide-react';
+import { Sparkles, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { useInView } from 'react-intersection-observer';
 
 // Sub-components
 import {
@@ -31,13 +30,12 @@ import { Footer } from './components/Footer';
 
 // Hooks
 import { useDebounce } from '@/hooks/useDebounce';
-import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/hooks/useAuth';
-import { usePromptsInfiniteQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
+import { usePromptsPaginatedQuery, useTagsQuery, useCategoriesQuery, useModelTagsQuery } from '@/hooks/queries';
 
 // Types and config
 import { PromptItem } from '@/types';
-import { ADMIN_CONFIG } from '@/lib/constants';
+import { ADMIN_CONFIG, DEFAULTS } from '@/lib/constants';
 import { PaginatedResponse } from '@/services/prompt.service';
 
 interface HomeClientProps {
@@ -90,6 +88,10 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedModelTag, setSelectedModelTag] = useState<string>('');
   
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULTS.PAGE_SIZE || 20);
+
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const isSearching = searchTerm !== debouncedSearchTerm;
 
@@ -100,39 +102,30 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
     modelTag: selectedModelTag
   }), [debouncedSearchTerm, selectedCategory, selectedTag, selectedModelTag]);
 
-  // Use React Query Infinite Query with filters
+  // Use React Query for paginated data
   const { 
     data, 
-    fetchNextPage, 
-    hasNextPage, 
-    isFetchingNextPage, 
-    isLoading: promptsLoading 
-  } = usePromptsInfiniteQuery(initialPagination, filters);
+    isLoading: promptsLoading,
+    isPlaceholderData
+  } = usePromptsPaginatedQuery(currentPage, pageSize, filters, initialPagination);
   
-  // Flatten prompts from all pages
+  // Current page prompts
   const prompts = useMemo(() => {
-    return data?.pages.flatMap(page => page.data) || initialPrompts;
+    return data?.data || initialPrompts;
   }, [data, initialPrompts]);
 
-  // 获取数据库真实总量（从第一页的分页信息中获取）
+  // 获取数据库真实总量
   const databaseTotal = useMemo(() => {
-    const firstPage = data?.pages[0];
-    if (firstPage?.pagination?.total) {
-      return firstPage.pagination.total;
+    if (data?.pagination?.total) {
+      return data.pagination.total;
     }
-    return initialPagination?.pagination?.total;
+    return initialPagination?.pagination?.total || 0;
   }, [data, initialPagination]);
 
-  const loading = promptsLoading && !data;
+  const loading = promptsLoading && !isPlaceholderData; // Only show full loading on initial load or non-placeholder fetch
 
-  // Infinite scroll trigger
-  const { ref, inView } = useInView();
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, fetchNextPage]);
+  // Infinite scroll trigger removed - using pagination mode
+  const hasNextPage = data?.pagination?.hasNext || false;
 
   // Server data for filter options
   const { data: serverTags = [] } = useTagsQuery();
@@ -175,47 +168,47 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
     router.refresh();
   };
 
-  // Pagination with configurable page size
-  // Note: We use usePagination hook to handle pagination of the *filtered* list on the client side.
-  // The "Infinite Scroll" fetches data from server, adding to the pool.
-  // The client-side pagination here splits the *currently loaded* filtered pool into pages for display.
-  // Ideally, if we have infinite scroll, we shouldn't have pages numbers, but just a long list.
-  // However, the design uses PromptGrid which might use pagination.
-  // Let's keep the existing client-side pagination for now as it's part of the UI, 
-  // but usually infinite scroll replaces numbered pagination.
-  // If the user wants "remainder loaded by client scrolling", they typically want infinite scroll behavior.
-  // If we keep usePagination, it will paginate the currently loaded items.
-  const pagination = usePagination(filteredPrompts);
-
-  // 获取数据库真实总页数（基于数据库总量和当前页面大小计算）
-  const databaseTotalPages = useMemo(() => {
-    const firstPage = data?.pages[0];
-    const total = firstPage?.pagination?.total ?? initialPagination?.pagination?.total;
-    if (total && pagination.pageSize) {
-      return Math.ceil(total / pagination.pageSize);
+  // Pagination object construction
+  const pagination = useMemo(() => ({
+    currentPage,
+    totalPages: data?.pagination?.totalPages || 1,
+    totalItems: databaseTotal,
+    pageSize,
+    hasNextPage: data?.pagination?.hasNext || false,
+    hasPreviousPage: data?.pagination?.hasPrev || false,
+    paginatedItems: prompts, // The current page items
+    goToPage: (page: number) => {
+      setCurrentPage(page);
+      // Scroll handling is done in PromptGrid
+    },
+    changePageSize: (size: number) => {
+      setPageSize(size);
+      setCurrentPage(1);
     }
-    return initialPagination?.pagination?.totalPages;
-  }, [data, initialPagination, pagination.pageSize]);
+  }), [currentPage, data, databaseTotal, pageSize, prompts]);
+
+  // 获取数据库真实总页数
+  const databaseTotalPages = data?.pagination?.totalPages || initialPagination?.pagination?.totalPages || 1;
 
   // Reset to first page when filters change
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-    pagination.resetPagination();
+    setCurrentPage(1);
   };
 
   const handleTagChange = (tag: string) => {
     setSelectedTag(tag);
-    pagination.resetPagination();
+    setCurrentPage(1);
   };
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    pagination.resetPagination();
+    setCurrentPage(1);
   };
 
   const handleModelTagChange = (modelTag: string) => {
     setSelectedModelTag(modelTag);
-    pagination.resetPagination();
+    setCurrentPage(1);
   };
 
   // Image Preview State
@@ -342,22 +335,10 @@ export default function HomeClient({ initialPrompts, initialPagination }: HomeCl
               databaseTotal={databaseTotal}
               databaseTotalPages={databaseTotalPages}
               isSearching={isSearching}
-              enableInfiniteScroll={true}
+              enableInfiniteScroll={false}
             />
             
-            {/* Infinite Scroll Loader */}
-            {hasNextPage && (
-              <div ref={ref} className="flex justify-center py-8">
-                {isFetchingNextPage ? (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                     <Loader2 className="h-6 w-6 animate-spin" />
-                     <span>Loading more...</span>
-                  </div>
-                ) : (
-                  <div className="h-4" /> // Spacer for intersection observer
-                )}
-              </div>
-            )}
+            {/* Infinite Scroll Loader Removed */}
           </div>
         </div>
       </main>
